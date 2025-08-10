@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +27,6 @@
       font-weight: bold;
       margin: 0;
       letter-spacing: 2px;
-      line-height: 1em;
     }
 
     .star-wars {
@@ -48,7 +48,7 @@
       text-align: justify;
       transform: rotateX(25deg);
       transform-origin: 50% 100%;
-      animation: crawl 50s linear;
+      animation: crawl 50s linear forwards;
     }
 
     @keyframes crawl {
@@ -94,7 +94,7 @@
 
   <!-- STAR WARS CRAWL -->
   <div class="star-wars">
-    <div class="crawl" id="crawl">
+    <div class="crawl">
       <p>🌠 <strong>Backstory</strong></p>
       <p>
         A long time ago, in a galaxy filled with silenced voices, the ancient language of Hangul was nearly forgotten across the stars.
@@ -121,18 +121,5 @@
     &copy; 2025 Star Words. All rights reserved.
   </footer>
 
-  <!-- LOOPING SCRIPT -->
-  <script>
-    const crawl = document.getElementById("crawl");
-
-    crawl.addEventListener("animationend", () => {
-      crawl.style.animation = "none";
-      crawl.offsetHeight; // trigger reflow
-      crawl.style.top = "100%";
-      setTimeout(() => {
-        crawl.style.animation = "crawl 50s linear";
-      }, 100);
-    });
-  </script>
 </body>
 </html>
