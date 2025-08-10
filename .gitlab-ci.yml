@@ -16,18 +16,14 @@ build:
 deploy_production:
   image: amazon/aws-cli:2.17.16
   stage: deploy
-  needs: ["build"]
+  needs:
+    - build
   environment:
     name: production
     url: https://starwords.space
   script:
-    # Sync everything except index.html with long cache
-    - aws s3 sync "$CI_PROJECT_DIR/$PUBLIC_DIR" "s3://$S3_BUCKET" --delete --exclude "index.html"
-      --metadata-directive REPLACE --cache-control "public,max-age=31536000,immutable"
-    # Upload index.html as no-cache
-    - aws s3 cp "$CI_PROJECT_DIR/$PUBLIC_DIR/index.html" "s3://$S3_BUCKET/index.html"
-      --metadata-directive REPLACE --cache-control "no-cache, no-store, must-revalidate"
-    # Invalidate CloudFront
+    - aws s3 sync "$CI_PROJECT_DIR/$PUBLIC_DIR" "s3://$S3_BUCKET" --delete --exclude "index.html" --metadata-directive REPLACE --cache-control "public,max-age=31536000,immutable"
+    - aws s3 cp "$CI_PROJECT_DIR/$PUBLIC_DIR/index.html" "s3://$S3_BUCKET/index.html" --metadata-directive REPLACE --cache-control "no-cache, no-store, must-revalidate"
     - aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" --paths "/*"
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: '$CI_COMMIT_BRANCH == "main"'
