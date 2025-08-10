@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mission 1 — Star Words</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --gold:#ffe066; --gold2:#f7d547; --ink:#111; --line:#333; }
+    html,body { height:100%; }
+    body{
+      margin:0;background:#000;color:var(--gold);
+      font-family: Arial, Helvetica, sans-serif;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .card{
+      background:#111;border:1px solid #333;border-radius:14px;
+      padding:24px 26px;max-width:720px;width:min(92%, 720px);
+      box-shadow:0 10px 30px rgba(0,0,0,.6)
+    }
+    .title{margin:0 0 6px 0}
+    .muted{opacity:.85;margin:.2rem 0 .8rem}
+    .btn{background:var(--gold2);border:0;border-radius:10px;
+      padding:10px 16px;font-weight:700;cursor:pointer}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    code{background:#000;border:1px solid #333;padding:2px 6px;border-radius:6px}
+    .ok{border:1px solid #2f7; background:rgba(0,255,128,.08); padding:10px;border-radius:10px}
+    .err{border:1px solid #f66; background:rgba(255,0,0,.08); padding:10px;border-radius:10px}
+
+    /* Lesson styles */
+    .lesson{margin-top:14px;border:1px solid #333;background:#0a0a0a;border-radius:12px;padding:14px}
+    .big{font-size:46px;line-height:1;margin:0}
+    .row-slim{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+    .input{background:#000;border:1px solid #333;color:#ffe066;border-radius:8px;padding:8px}
+    .chip{border:1px solid #333;border-radius:999px;padding:6px 10px;background:#000}
+    .success{color:#9cffb0}
+    .fail{color:#ff9c9c}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1 class="title">Mission 1: Welcome, Rebel</h1>
+    <p id="status" class="muted">Authenticating with the Hangul Force…</p>
+
+    <div id="content" hidden>
+      <p class="ok" id="hello"></p>
+
+      <h3>Your Objective</h3>
+      <p>Learn your first Hangul word and report back. Click <code>Start Task</code> to begin.</p>
+
+      <div class="row">
+        <button class="btn" id="startTask">Start Task</button>
+        <button class="btn" id="toHome">Return to Base</button>
+        <button class="btn" id="signOut">Sign Out</button>
+      </div>
+
+      <!-- Lesson: 고양이 (cat) -->
+      <section id="task" class="lesson" hidden>
+        <h3>오늘의 단어 — <span class="chip">Today’s Word</span></h3>
+        <p class="big" id="word">고양이</p>
+        <div class="row-slim">
+          <span>Pronunciation:</span>
+          <strong id="roman">goyangi</strong>
+          <button class="btn" id="btnSpeak" title="Play pronunciation">🔊 Hear it</button>
+        </div>
+        <div class="row-slim" style="margin-top:8px">
+          <span>Meaning:</span><strong> cat</strong>
+        </div>
+
+        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
+
+        <h4>Example</h4>
+        <p><em id="exKo">저는 고양이를 좋아해요.</em></p>
+        <p class="muted">I like cats.</p>
+
+        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
+
+        <h4>Quick Check</h4>
+        <p class="muted">Type the Korean word for <strong>cat</strong>:</p>
+        <div class="row-slim">
+          <input id="answer" class="input" placeholder="type here: 고양이" />
+          <button class="btn" id="btnCheck">Check</button>
+          <span id="result" class="muted"></span>
+        </div>
+
+        <div style="margin-top:14px">
+          <button class="btn" id="btnDone">Mark Complete ✅</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="error" class="err" hidden></div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" style="
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+    background:#111;border:1px solid #333;color:#ffe066;
+    padding:10px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.6);
+    display:none;z-index:9999;"></div>
+
+  <!-- Supabase (optional; remove if you’re not using auth here) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Init only if you actually need auth on this page:
+    const SUPABASE_URL = "https://zvhjoupdxkzbbqanbrby.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aGpvdXBkeGt6YmJxYW5icmJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3NjYyNjcsImV4cCI6MjA3MDM0MjI2N30.ZCWqACzlCqgbVb1R7goLnmfsdws50wsGYQrnWrYW998";
+
+    let supabaseClient = null;
+    try {
+      supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) || null;
+    } catch(_) { /* ok if not using auth here */ }
+
+    const $ = (id) => document.getElementById(id);
+    const statusEl = $('status');
+    const contentEl = $('content');
+    const errorEl = $('error');
+    const toast = $('toast');
+
+    function showToast(msg, ms=1600){
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(()=> toast.style.display='none', ms);
+    }
+
+    async function init(){
+      try {
+        // If you require sign-in, check it here. Otherwise, just show content.
+        if (supabaseClient) {
+          const { data: { session } } = await supabaseClient.auth.getSession();
+          if (!session) {
+            statusEl.textContent = 'Welcome, Guest Rebel — no login required for Mission 1.';
+          } else {
+            statusEl.textContent = 'Welcome, Rebel!';
+          }
+        } else {
+          statusEl.textContent = 'Welcome, Rebel!';
+        }
+
+        $('hello').textContent = 'You are cleared for Mission 1.';
+        contentEl.hidden = false;
+
+        // Wire buttons
+        $('startTask').onclick = () => { $('task').hidden = false; showToast('Task unlocked!'); };
+        $('toHome').onclick = () => { window.location.href = '/'; };
+        $('signOut').onclick = async () => {
+          try { await supabaseClient?.auth.signOut(); } catch(_){}
+          showToast('Signed out. Returning to base…');
+          setTimeout(()=> window.location.href='/', 600);
+        };
+
+        $('btnCheck').onclick = () => {
+          const ok = $('answer').value.trim() === '고양이';
+          const res = $('result');
+          res.textContent = ok ? '✅ Correct!' : '❌ Try again';
+          res.className = ok ? 'muted success' : 'muted fail';
+          if (ok) showToast('Nice!');
+        };
+
+        $('btnSpeak').onclick = () => {
+          try {
+            const u = new SpeechSynthesisUtterance('go-yan-gee');
+            speechSynthesis.speak(u);
+          } catch(_) { showToast('Speech not supported on this device'); }
+        };
+
+        $('btnDone').onclick = () => {
+          showToast('Mission 1 complete! 🚀');
+          setTimeout(()=> window.location.href='/', 900);
+        };
+      } catch (e){
+        errorEl.hidden = false;
+        errorEl.textContent = 'Error loading mission: ' + e.message;
+      }
+    }
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
