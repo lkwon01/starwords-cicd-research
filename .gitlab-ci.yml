@@ -19,10 +19,25 @@ deploy:
     # Debug – make sure vars exist (won't print secrets)
     - aws --version
     - echo "Branch: $CI_COMMIT_BRANCH"
-    - test -n "$S3_BUCKET" || (echo "ERROR: S3_BUCKET is empty" && exit 1)
-    - test -n "$AWS_DEFAULT_REGION" || (echo "ERROR: AWS_DEFAULT_REGION is empty" && exit 1)
-    - aws sts get-caller-identity || (echo "ERROR: AWS creds not working" && exit 1)
-    - aws s3 ls "s3://$S3_BUCKET" || (echo "ERROR: Cannot access bucket: $S3_BUCKET" && exit 1)
+    - |
+      if [ -z "$S3_BUCKET" ]; then
+        echo "ERROR: S3_BUCKET is empty"; exit 1;
+      fi
+      if [ -z "$AWS_DEFAULT_REGION" ]; then
+        echo "ERROR: AWS_DEFAULT_REGION is empty"; exit 1;
+      fi
+      # Verify creds and bucket access
+      if ! aws sts get-caller-identity; then
+        echo "ERROR: AWS creds not working"; exit 1;
+      fi
+      if ! aws s3 ls "s3://$S3_BUCKET"; then
+        echo "ERROR: Cannot access bucket: $S3_BUCKET"; exit 1;
+      fi
+    - aws s3 sync . "s3://$S3_BUCKET" --delete --exclude ".git/*" --exclude ".gitlab-ci.yml"
+    - |
+      if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+        aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" --paths "/*"
+      fi
 
     - aws s3 sync . s3://$S3_BUCKET --delete --exclude ".git/*" --exclude ".gitlab-ci.yml"
     - |
