@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lesson 01 — Star Words</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: #feda4a;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    h1 { font-size: 2.5rem; margin-top: 40px; }
+
+    .hangul {
+      font-size: 3rem;
+      margin: 20px 0;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pronunciation { font-size: 1.5rem; margin-bottom: 10px; }
+    .meaning { font-size: 1.2rem; color: #ccc; }
+
+    .example {
+      margin-top: 20px;
+      background: #111;
+      padding: 20px;
+      border-radius: 8px;
+      display: inline-block;
+      text-align: left;
+      max-width: 760px;
+    }
+
+    .example-sentence {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+    }
+
+    .audio-btn {
+      background-color: #feda4a;
+      border: none;
+      color: black;
+      font-size: 1rem;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .audio-btn:hover { background-color: #ffe870; }
+
+    a { color: #feda4a; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <h1>Lesson 01: Welcome to Your Mission</h1>
+  <p>This is your first step as a Hangul Jedi! Today, you will learn how to say <strong>cat</strong> in Korean.</p>
+
+  <div class="hangul">
+    고양이
+    <button class="audio-btn" type="button" onclick="playCat()" aria-label="Hear pronunciation of 고양이">🔊</button>
+  </div>
+  <div class="pronunciation"><em>goyang-i</em></div>
+  <div class="meaning">Meaning: Cat 🐱</div>
+
+  <div class="example">
+    <p><strong>Example Sentence:</strong></p>
+    <div class="example-sentence">
+      <span>저는 고양이를 좋아해요.</span>
+      <button class="audio-btn" type="button" onclick="playSentence()" aria-label="Hear example sentence">🔊</button>
+    </div>
+    <p><em>Jeoneun goyangi-reul joahaeyo.</em></p>
+    <p><small>I like cats.</small></p>
+  </div>
+
+  <p style="margin-top: 40px;">
+    <a href="../../index.html">← Back to Home</a>
+  </p>
+
+  <script>
+    // --- Mobile-friendly Speech Synthesis helper ---
+    let koreanVoice = null;
+    let voicesLoaded = false;
+
+    function loadVoices() {
+      const voices = speechSynthesis.getVoices();
+      // Prefer exact ko-KR, fall back to any Korean-ish voice
+      koreanVoice =
+        voices.find(v => v.lang === 'ko-KR') ||
+        voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ko')) ||
+        null;
+      voicesLoaded = voices.length > 0;
+    }
+
+    // iOS/Android often populate voices after a delay
+    speechSynthesis.onvoiceschanged = loadVoices;
+    // Attempt an early load too
+    loadVoices();
+
+    function speakText(text) {
+      // Must be called from a user gesture (our buttons do that)
+      if (!voicesLoaded) loadVoices();
+
+      // Cancel any queued speech (fixes the "silent first play" bug)
+      try { speechSynthesis.cancel(); } catch (e) {}
+
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ko-KR';
+      if (koreanVoice) u.voice = koreanVoice;
+
+      // Slightly slower for learners; adjust 0.8–1.0 if you prefer
+      u.rate = 0.9;
+
+      // On some mobiles, the first call can be slow; this helps ensure playback
+      setTimeout(() => speechSynthesis.speak(u), 0);
+    }
+
+    function playCat() { speakText("고양이"); }
+    function playSentence() { speakText("저는 고양이를 좋아해요"); }
+  </script>
+
+</body>
+</html>
