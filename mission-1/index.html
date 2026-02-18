@@ -89,7 +89,31 @@
     </div>
 
     <div id="error" class="err" hidden></div>
-  </main>
+
+  <!-- Free Translate Tool -->
+  <section class="lesson" style="margin-top:20px">
+    <h3>Quick Translate</h3>
+    <p class="muted">Look up any word or sentence without leaving the mission.</p>
+
+    <div class="row-slim">
+      <select id="langDir" class="input">
+        <option value="en-ko">English → Korean</option>
+        <option value="ko-en">Korean → English</option>
+      </select>
+    </div>
+
+    <div class="row-slim" style="margin-top:8px">
+      <input id="translateInput" class="input" style="min-width:260px"
+             placeholder="Type a word or sentence…" />
+      <button class="btn" id="btnTranslate">Translate</button>
+    </div>
+
+    <div class="row-slim" style="margin-top:10px">
+      <strong>Result:</strong>
+      <span id="translateResult" class="chip"></span>
+      <button class="btn" id="btnSpeakResult" title="Hear Korean" hidden>🔊</button>
+    </div>
+  </section>
 
   <!-- Toast -->
   <div id="toast" style="
@@ -172,6 +196,50 @@
         errorEl.textContent = 'Error loading mission: ' + e.message;
       }
     }
+
+    async function translateText(text, source, target) {
+      const res = await fetch('https://libretranslate.de/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          q: text,
+          source,
+          target,
+          format: 'text'
+        })
+      });
+      const data = await res.json();
+      return data.translatedText;
+    }
+
+    $('btnTranslate').onclick = async () => {
+      const text = $('translateInput').value.trim();
+      if (!text) return showToast('Type something first 🙂');
+
+      const dir = $('langDir').value;
+      const [source, target] = dir.split('-');
+
+      $('translateResult').textContent = 'Translating…';
+      $('btnSpeakResult').hidden = true;
+
+      try {
+        const translated = await translateText(text, source, target);
+        $('translateResult').textContent = translated;
+
+        // Show speaker only for Korean output
+        if (target === 'ko') {
+          $('btnSpeakResult').hidden = false;
+          $('btnSpeakResult').onclick = () => {
+            const u = new SpeechSynthesisUtterance(translated);
+            u.lang = 'ko-KR';
+            speechSynthesis.speak(u);
+          };
+        }
+      } catch (e) {
+        $('translateResult').textContent = 'Error translating 😢';
+      }
+    };
+
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
