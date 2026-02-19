@@ -42,3 +42,6 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
+      - name: Debug region presence (safe)
+        run: |
+          echo "AWS_DEFAULT_REGION is set? -> ${{ secrets.AWS_DEFAULT_REGION != '' }}"
