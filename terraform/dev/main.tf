@@ -1,3 +1,5 @@
+#Initiate Terraform configuration for Starwords DEV environment
+
 terraform {
   required_version = ">= 1.4"
 
