@@ -164,7 +164,7 @@
 
         $('btnCheck').onclick = () => {
           const ok = $('answer').value.trim() === '고양이';
-          const res = $('result');
+         
           res.textContent = ok ? '✅ Correct!' : '❌ Try again';
           res.className = ok ? 'muted success' : 'muted fail';
           if (ok) showToast('Nice!');
