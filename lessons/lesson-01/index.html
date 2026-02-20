@@ -1,232 +1,488 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Mission 1 — Star Words</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lesson 01 — Star Words</title>
   <style>
-    :root { --gold:#ffe066; --gold2:#f7d547; --ink:#111; --line:#333; }
-    html,body { height:100%; }
-    body{
-      margin:0;background:#000;color:var(--gold);
-      font-family: Arial, Helvetica, sans-serif;
-      display:flex;align-items:center;justify-content:center;
+    body {
+      margin: 0;
+      background-color: black;
+      color: #feda4a;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      line-height: 1.6;
+      padding: 20px;
     }
-    .card{
-      background:#111;border:1px solid #333;border-radius:14px;
-      padding:24px 26px;max-width:720px;width:min(92%, 720px);
-      box-shadow:0 10px 30px rgba(0,0,0,.6)
-    }
-    .title{margin:0 0 6px 0}
-    .muted{opacity:.85;margin:.2rem 0 .8rem}
-    .btn{background:var(--gold2);border:0;border-radius:10px;
-      padding:10px 16px;font-weight:700;cursor:pointer}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    code{background:#000;border:1px solid #333;padding:2px 6px;border-radius:6px}
-    .ok{border:1px solid #2f7; background:rgba(0,255,128,.08); padding:10px;border-radius:10px}
-    .err{border:1px solid #f66; background:rgba(255,0,0,.08); padding:10px;border-radius:10px}
 
-    /* Lesson styles */
-    .lesson{margin-top:14px;border:1px solid #333;background:#0a0a0a;border-radius:12px;padding:14px}
-    .big{font-size:46px;line-height:1;margin:0}
-    .row-slim{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-    .input{background:#000;border:1px solid #333;color:#ffe066;border-radius:8px;padding:8px}
-    .chip{border:1px solid #333;border-radius:999px;padding:6px 10px;background:#000}
-    .success{color:#9cffb0}
-    .fail{color:#ff9c9c}
+    h1 { font-size: 2.5rem; margin-top: 40px; }
+
+    /* --- Video block --- */
+    .video-section {
+      max-width: 900px;
+      margin: 24px auto 10px;
+      text-align: center;
+    }
+    .video-title {
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    /* Responsive 16:9 embed container */
+    .video-embed {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08);
+    }
+    .video-embed iframe,
+    .video-embed video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-note {
+      color: #ccc;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+
+    .hangul {
+      font-size: 3rem;
+      margin: 20px 0;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pronunciation { font-size: 1.5rem; margin-bottom: 10px; }
+    .meaning { font-size: 1.2rem; color: #ccc; }
+
+    .example {
+      margin-top: 20px;
+      background: #111;
+      padding: 20px;
+      border-radius: 8px;
+      display: inline-block;
+      text-align: left;
+      max-width: 760px;
+    }
+
+    .example-sentence {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+    }
+
+    .audio-btn {
+      background-color: #feda4a;
+      border: none;
+      color: black;
+      font-size: 1rem;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .audio-btn:hover { background-color: #ffe870; }
+
+    a { color: #feda4a; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Quick Translate styles */
+    .quick-translate { max-width: 900px; margin: 28px auto; background: #111; padding: 16px; border-radius: 8px; text-align: left; }
+    .quick-translate textarea { width: 100%; padding: 8px; border-radius: 6px; background: black; color: #feda4a; border: 1px solid rgba(255,255,255,0.06); resize: vertical; }
+    .quick-translate select { background: #000; color: #feda4a; border: 1px solid rgba(255,255,255,0.06); padding: 6px; border-radius: 6px; }
+    .quick-translate .result { margin-top: 12px; color: #ccc; }
+
+    /* Voice Recorder styles */
+    .voice-recorder { max-width: 900px; margin: 20px auto; background: #111; padding: 12px; border-radius: 8px; text-align: left; }
+    .voice-recorder .controls { display:flex; gap:8px; align-items:center; }
+    .voice-recorder #rec-status { color:#ccc; font-size:0.95rem; margin-left:8px; }
+    .voice-recorder #rec-transcript { color:#ccc; margin-top:8px; white-space:pre-wrap; }
+
+    /* YouGlish styles */
+    .youglish { max-width: 900px; margin: 20px auto; background: #111; padding: 12px; border-radius: 8px; text-align: left; }
+    .youglish .yg-row { display:flex; gap:8px; align-items:center; }
+    .youglish input[type="search"] { flex:1; padding:8px; border-radius:6px; background:black; color:#feda4a; border:1px solid rgba(255,255,255,0.06); }
+    .youglish .yg-embed { margin-top:12px; border-radius:6px; overflow:hidden; background:#000; min-height:120px; }
+    .youglish #yg-note { color:#ccc; font-size:0.9rem; margin-top:8px; }
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1 class="title">Mission 1: Welcome, Rebel</h1>
-    <p id="status" class="muted">Authenticating with the Hangul Force…</p>
 
-    <div id="content" hidden>
-      <p class="ok" id="hello"></p>
+  <h1>Lesson 01: Welcome to Your Mission</h1>
+  <p>This is your first step as a Hangul Jedi! Today, you will learn how to say <strong>cat</strong> in Korean.</p>
 
-      <h3>Your Objective</h3>
-      <p>Learn your first Hangul word and report back. Click <code>Start Task</code> to begin.</p>
+  <!-- ✅ Mission video section -->
+  <div class="video-section" aria-label="Mission 001 video">
+    <div class="video-title">MISSION 001: LEARN KOREAN 🐱</div>
 
-      <div class="row">
-        <button class="btn" id="startTask">Start Task</button>
-        <button class="btn" id="toHome">Return to Base</button>
-        <button class="btn" id="signOut">Sign Out</button>
-      </div>
-
-      <!-- Lesson: 고양이 (cat) -->
-      <section id="task" class="lesson" hidden>
-        <h3>오늘의 단어 — <span class="chip">Today’s Word</span></h3>
-        <p class="big" id="word">고양이</p>
-        <div class="row-slim">
-          <span>Pronunciation:</span>
-          <strong id="roman">goyangi</strong>
-          <button class="btn" id="btnSpeak" title="Play pronunciation">🔊 Hear it</button>
-        </div>
-        <div class="row-slim" style="margin-top:8px">
-          <span>Meaning:</span><strong> cat</strong>
-        </div>
-
-        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
-
-        <h4>Example</h4>
-        <p><em id="exKo">저는 고양이를 좋아해요.</em></p>
-        <p class="muted">I like cats.</p>
-
-        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
-
-        <h4>Quick Check</h4>
-        <p class="muted">Type the Korean word for <strong>cat</strong>:</p>
-        <div class="row-slim">
-          <input id="answer" class="input" placeholder="type here: 고양이" />
-          <button class="btn" id="btnCheck">Check</button>
-          <span id="result" class="muted"></span>
-        </div>
-
-        <div style="margin-top:14px">
-          <button class="btn" id="btnDone">Mark Complete ✅</button>
-        </div>
-      </section>
+    <div class="video-embed">
+      <iframe
+        src="https://www.youtube.com/embed/XnWaoQ9hxsQ?si=YUId2Vs-ln4SUua5"
+        title="StarWords Mission 001 - Cat"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
     </div>
 
-    <div id="error" class="err" hidden></div>
+    <div class="video-note">
+      Watch the mission briefing before starting the lesson.
+    </div>
+  </div>
 
- 
 
     
+  </div>
 
-    <div class="row-slim" style="margin-top:10px">
-      <strong>Result:</strong>
-      <span id="translateResult" class="chip"></span>
-      <button class="btn" id="btnSpeakResult" title="Hear Korean" hidden>🔊</button>
+  <div class="hangul">
+    고양이
+    <button class="audio-btn" type="button" onclick="playCat()" aria-label="Hear pronunciation of 고양이">🔊</button>
+  </div>
+  <div class="pronunciation"><em>goyang-i</em></div>
+  <div class="meaning">Meaning: Cat 🐱</div>
+
+  <div class="example">
+    <p><strong>Example Sentence:</strong></p>
+    <div class="example-sentence">
+      <span>저는 고양이를 좋아해요.</span>
+      <button class="audio-btn" type="button" onclick="playSentence()" aria-label="Hear example sentence">🔊</button>
+    </div>
+    <p><em>Jeoneun goyangi-reul joahaeyo.</em></p>
+    <p><small>I like cats.</small></p>
+  </div>
+
+  <!-- Quick Translate 🔎 -->
+  <section class="quick-translate" aria-label="Quick Translate">
+    <h2 style="color:#fff;font-size:1.1rem;margin:0 0 8px;">Quick Translate 🔎</h2>
+    <div>
+      <textarea id="qt-input" rows="2" placeholder="Type a word or sentence here..."></textarea>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <label for="qt-target" style="color:#ccc;font-size:0.95rem;">Translate to:</label>
+        <select id="qt-target" aria-label="Target language">
+          <option value="ko" selected>Korean (한국어)</option>
+          <option value="en">English</option>
+          <option value="zh">Chinese (中文)</option>
+          <!-- add more as needed -->
+        </select>
+        <button id="qt-translate" class="audio-btn" type="button">Translate</button>
+        <button id="qt-clear" class="audio-btn" type="button">Clear</button>
+      </div>
+      <div id="qt-result" class="result" aria-live="polite"></div>
     </div>
   </section>
 
-  <!-- Toast -->
-  <div id="toast" style="
-    position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
-    background:#111;border:1px solid #333;color:#ffe066;
-    padding:10px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.6);
-    display:none;z-index:9999;"></div>
+  <!-- Voice Recorder 🎤 -->
+  <section class="voice-recorder" aria-label="Voice Recorder">
+    <h2 style="color:#fff;font-size:1.1rem;margin:12px 0 8px;">Record Voice 🎤</h2>
+    <div class="controls">
+      <button id="rec-start" class="audio-btn" type="button">Record</button>
+      <button id="rec-stop" class="audio-btn" type="button" disabled>Stop</button>
+      <button id="rec-play" class="audio-btn" type="button" disabled>Play</button>
+      <button id="rec-download" class="audio-btn" type="button" disabled>Download</button>
+      <button id="rec-translate" class="audio-btn" type="button" disabled>Use as Text</button>
+      <span id="rec-status"></span>
+    </div>
+    <div id="rec-timer" style="margin-top:8px;color:#ccc;font-size:0.9rem;"></div>
+    <div id="rec-transcript"></div>
+  </section>
 
-  <!-- Supabase (optional; remove if you’re not using auth here) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- YouGlish 🔊 Search -->
+  <section class="youglish" aria-label="YouGlish search">
+    <h2 style="color:#fff;font-size:1.1rem;margin:12px 0 8px;">YouGlish 🔊 — Real-world pronunciations</h2>
+    <div class="yg-row">
+      <input id="yg-input" type="search" placeholder="Enter a word or short phrase (e.g., 고양이)" aria-label="YouGlish search" />
+      <select id="yg-lang" aria-label="YouGlish language" style="background:#000;color:#feda4a;border:1px solid rgba(255,255,255,0.06);padding:6px;border-radius:6px;">
+        <option value="english">English</option>
+        <option value="korean" selected>Korean</option>
+        <option value="spanish">Spanish</option>
+      </select>
+      <button id="yg-search" class="audio-btn" type="button">Search</button>
+      <button id="yg-open" class="audio-btn" type="button">Open in new tab</button>
+    </div>
+    <div class="yg-embed">
+      <iframe id="yg-iframe" src="" style="width:100%;height:260px;border:0;"></iframe>
+      <div id="yg-note">Tip: If embedding is blocked by the site, click "Open in new tab" to view results while keeping this page open.</div>
+    </div>
+  </section>
+
+  <p style="margin-top: 40px;">
+    <a href="../../index.html">← Back to Home</a>
+  </p>
+
   <script>
-    // Init only if you actually need auth on this page:
-    const SUPABASE_URL = "https://zvhjoupdxkzbbqanbrby.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aGpvdXBkeGt6YmJxYW5icmJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3NjYyNjcsImV4cCI6MjA3MDM0MjI2N30.ZCWqACzlCqgbVb1R7goLnmfsdws50wsGYQrnWrYW998";
+    // --- Mobile-friendly Speech Synthesis helper + Quick Translate ---
+    let preferredVoices = {};
+    let voicesLoaded = false;
 
-    let supabaseClient = null;
-    try {
-      supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) || null;
-    } catch(_) { /* ok if not using auth here */ }
-
-    const $ = (id) => document.getElementById(id);
-    const statusEl = $('status');
-    const contentEl = $('content');
-    const errorEl = $('error');
-    const toast = $('toast');
-
-    function showToast(msg, ms=1600){
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      setTimeout(()=> toast.style.display='none', ms);
+    function loadVoices() {
+      const voices = speechSynthesis.getVoices();
+      // Save language-specific preferred voices
+      voicesLoaded = voices.length > 0;
+      // common mappings
+      preferredVoices['ko'] = voices.find(v => v.lang === 'ko-KR') || voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ko')) || null;
+      preferredVoices['en'] = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en')) || null;
+      preferredVoices['ja'] = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ja')) || null;
     }
 
-    async function init(){
+    speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
+    function speakText(text, lang='ko') {
+      if (!voicesLoaded) loadVoices();
+      try { speechSynthesis.cancel(); } catch (e) {}
+      const u = new SpeechSynthesisUtterance(text);
+      // Map our shorthand to BCP-47 where possible
+      const langMap = { 'ko': 'ko-KR', 'en': 'en-US', 'ja': 'ja-JP' };
+      const bcp = langMap[lang] || lang;
+      u.lang = bcp;
+      if (preferredVoices[lang]) u.voice = preferredVoices[lang];
+      u.rate = 0.9;
+      setTimeout(() => speechSynthesis.speak(u), 0);
+    }
+
+    function playCat() { speakText("고양이", 'ko'); }
+    function playSentence() { speakText("저는 고양이를 좋아해요", 'ko'); }
+
+    // --- Quick Translate using LibreTranslate (public instance) ---
+    async function translateText(text, target='ko') {
+      // Lightweight client-only call; if the public instance is down, we'll show a friendly message
+      const endpoint = 'https://libretranslate.com/translate';
       try {
-        // If you require sign-in, check it here. Otherwise, just show content.
-        if (supabaseClient) {
-          const { data: { session } } = await supabaseClient.auth.getSession();
-          if (!session) {
-            statusEl.textContent = 'Welcome, Guest Rebel — no login required for Mission 1.';
-          } else {
-            statusEl.textContent = 'Welcome, Rebel!';
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q: text, source: 'auto', target: target, format: 'text' })
+        });
+        if (!res.ok) throw new Error('Translation failed');
+        const data = await res.json();
+        return data.translatedText;
+      } catch (err) {
+        console.warn('Translation error', err);
+        throw err;
+      }
+    }
+
+    // UI wiring
+    document.getElementById('qt-translate').addEventListener('click', async () => {
+      const input = document.getElementById('qt-input').value.trim();
+      const target = document.getElementById('qt-target').value;
+      const resultNode = document.getElementById('qt-result');
+
+      if (!input) {
+        resultNode.innerHTML = '<em style="color:#ffb3b3;">Please enter text to translate.</em>';
+        return;
+      }
+
+      resultNode.textContent = 'Translating…';
+      try {
+        const translated = await translateText(input, target);
+        resultNode.innerHTML = `
+          <div><strong>Original:</strong> ${escapeHtml(input)} <button class="audio-btn" type="button" onclick="speakText(\`${escapeForJs(input)}\`, '${detectLangFromText(input)}')">🔊</button></div>
+          <div style="margin-top:6px;"><strong>Translation:</strong> ${escapeHtml(translated)} <button class="audio-btn" type="button" onclick="speakText(\`${escapeForJs(translated)}\`, '${target}')">🔊</button></div>
+          <div style="margin-top:8px;"><button id="qt-use-youglish" class="audio-btn" type="button" onclick="qtUseYouglish(\`${escapeForJs(translated)}\`, '${target}')">Use in YouGlish</button></div>
+        `;
+      } catch (err) {
+        resultNode.innerHTML = '<em style="color:#ffb3b3;">Translation unavailable right now. Try again later.</em>';
+      }
+    });
+
+    document.getElementById('qt-clear').addEventListener('click', () => {
+      document.getElementById('qt-input').value = '';
+      document.getElementById('qt-result').textContent = '';
+    });
+
+    // Helper: very small sanitizer for inserting into HTML
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    }
+    // Helper to escape backticks and ${} for inline JS template strings
+    function escapeForJs(str) {
+      return String(str).replace(/`/g, '\\`').replace(/\\\$/g, '\\\\$');
+    }
+
+    // Quick heuristic: detect if text contains Hangul (Korean), else assume not
+    function detectLangFromText(text) {
+      return /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF]/.test(text) ? 'ko' : 'en';
+    }
+
+    // --- Voice Recorder (MediaRecorder + optional SpeechRecognition) ---
+    let mediaRecorder = null;
+    let mediaStream = null;
+    let recordedChunks = [];
+    let audioBlob = null;
+    let recognition = null;
+    let transcriptText = '';
+    let recTimer = null;
+    let recStartTime = 0;
+
+    function formatElapsed(ms) {
+      const s = Math.floor(ms/1000);
+      const m = Math.floor(s/60);
+      const sec = s%60;
+      return m + ':' + (sec<10? '0'+sec : sec);
+    }
+
+    function startRecording() {
+      const status = document.getElementById('rec-status');
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        status.textContent = 'Microphone not supported by this browser.';
+        return;
+      }
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        mediaStream = stream;
+        mediaRecorder = new MediaRecorder(stream);
+        recordedChunks = [];
+        mediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size) recordedChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          audioBlob = new Blob(recordedChunks, { type: recordedChunks[0]?.type || 'audio/webm' });
+          document.getElementById('rec-play').disabled = false;
+          document.getElementById('rec-download').disabled = false;
+          document.getElementById('rec-translate').disabled = false;
+          const url = URL.createObjectURL(audioBlob);
+          document.getElementById('rec-play').dataset.url = url;
+          status.textContent = 'Recording stopped.';
+          // show translate link if we have transcript
+          if (transcriptText) {
+            document.getElementById('rec-transcript').textContent = 'Transcript: ' + transcriptText + ' (placed in Quick Translate)';
+            document.getElementById('qt-input').value = transcriptText;
           }
-        } else {
-          statusEl.textContent = 'Welcome, Rebel!';
-        }
-
-        $('hello').textContent = 'You are cleared for Mission 1.';
-        contentEl.hidden = false;
-
-        // Wire buttons
-        $('startTask').onclick = () => { $('task').hidden = false; showToast('Task unlocked!'); };
-        $('toHome').onclick = () => { window.location.href = '/'; };
-        $('signOut').onclick = async () => {
-          try { await supabaseClient?.auth.signOut(); } catch(_){}
-          showToast('Signed out. Returning to base…');
-          setTimeout(()=> window.location.href='/', 600);
         };
+        mediaRecorder.start();
+        document.getElementById('rec-start').disabled = true;
+        document.getElementById('rec-stop').disabled = false;
+        document.getElementById('rec-status').textContent = 'Recording…';
+        // timer
+        recStartTime = Date.now();
+        recTimer = setInterval(() => { document.getElementById('rec-timer').textContent = 'Elapsed: ' + formatElapsed(Date.now() - recStartTime); }, 250);
 
-        $('btnCheck').onclick = () => {
-          const ok = $('answer').value.trim() === '고양이';
-         
-          res.textContent = ok ? '✅ Correct!' : '❌ Try again';
-          res.className = ok ? 'muted success' : 'muted fail';
-          if (ok) showToast('Nice!');
-        };
-
-        $('btnSpeak').onclick = () => {
-          try {
-            const u = new SpeechSynthesisUtterance('go-yan-gee');
-            speechSynthesis.speak(u);
-          } catch(_) { showToast('Speech not supported on this device'); }
-        };
-
-        $('btnDone').onclick = () => {
-          showToast('Mission 1 complete! 🚀');
-          setTimeout(()=> window.location.href='/', 900);
-        };
-      } catch (e){
-        errorEl.hidden = false;
-        errorEl.textContent = 'Error loading mission: ' + e.message;
-      }
-    }
-
-    async function translateText(text, source, target) {
-      const res = await fetch('https://libretranslate.de/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          q: text,
-          source,
-          target,
-          format: 'text'
-        })
-      });
-      const data = await res.json();
-      return data.translatedText;
-    }
-
-    $('btnTranslate').onclick = async () => {
-      const text = $('translateInput').value.trim();
-      if (!text) return showToast('Type something first 🙂');
-
-      const dir = $('langDir').value;
-      const [source, target] = dir.split('-');
-
-      $('translateResult').textContent = 'Translating…';
-      $('btnSpeakResult').hidden = true;
-
-      try {
-        const translated = await translateText(text, source, target);
-        $('translateResult').textContent = translated;
-
-        // Show speaker only for Korean output
-        if (target === 'ko') {
-          $('btnSpeakResult').hidden = false;
-          $('btnSpeakResult').onclick = () => {
-            const u = new SpeechSynthesisUtterance(translated);
-            u.lang = 'ko-KR';
-            speechSynthesis.speak(u);
+        // optional speech recognition for transcription
+        if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+          const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+          recognition = new SR();
+          // default to Korean as primary lesson language; users can edit transcript before translating
+          recognition.lang = 'ko-KR';
+          recognition.interimResults = true;
+          recognition.continuous = true;
+          recognition.onresult = (e) => {
+            let interim = '';
+            let final = '';
+            for (let i = 0; i < e.results.length; i++) {
+              if (e.results[i].isFinal) final += e.results[i][0].transcript;
+              else interim += e.results[i][0].transcript;
+            }
+            transcriptText = final || interim;
+            document.getElementById('rec-transcript').textContent = 'Transcript: ' + transcriptText;
+            // also place into Quick Translate input for convenience
+            document.getElementById('qt-input').value = transcriptText;
           };
+          recognition.onerror = (err) => { console.warn('SpeechRecognition error', err); };
+          try { recognition.start(); } catch (e) { console.warn('Recognition start error', e); }
+        } else {
+          document.getElementById('rec-transcript').textContent = 'Transcription not supported in this browser.';
         }
-      } catch (e) {
-        $('translateResult').textContent = 'Error translating 😢';
-      }
-    };
+      }).catch(err => {
+        console.warn('getUserMedia error', err);
+        document.getElementById('rec-status').textContent = 'Microphone access denied or unavailable.';
+      });
+    }
 
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
-</html>
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+      if (recognition) { try { recognition.stop(); } catch (e) {} recognition = null; }
+      document.getElementById('rec-start').disabled = false;
+      document.getElementById('rec-stop').disabled = true;
+      clearInterval(recTimer); document.getElementById('rec-timer').textContent = '';
+    }
+
+    function playRecording() {
+      const url = document.getElementById('rec-play').dataset.url;
+      if (!url) return;
+      const a = new Audio(url);
+      a.play();
+    }
+
+    function downloadRecording() {
+      if (!audioBlob) return;
+      const url = URL.createObjectURL(audioBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'recording.webm';
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    document.getElementById('rec-start').addEventListener('click', startRecording);
+    document.getElementById('rec-stop').addEventListener('click', stopRecording);
+    document.getElementById('rec-play').addEventListener('click', playRecording);
+    document.getElementById('rec-download').addEventListener('click', downloadRecording);
+    document.getElementById('rec-translate').addEventListener('click', () => {
+      // place transcript into Quick Translate input and open attention to user
+      if (transcriptText) {
+        document.getElementById('qt-input').value = transcriptText;
+        document.getElementById('qt-result').textContent = '';
+        document.getElementById('qt-translate').click();
+      }
+    });
+
+    // Helper: let Quick Translate push translation into YouGlish and trigger a search
+    function qtUseYouglish(phrase, targetCode) {
+      const map = { 'ko': 'korean', 'en': 'english', 'zh': 'english' };
+      const ygLang = map[targetCode] || 'english';
+      const inp = document.getElementById('yg-input');
+      const sel = document.getElementById('yg-lang');
+      if (inp) inp.value = phrase;
+      if (sel) sel.value = ygLang;
+      // trigger the search button to load results
+      const btn = document.getElementById('yg-search');
+      if (btn) btn.click();
+    }
+
+    // --- YouGlish search helper (embed + open in new tab fallback) ---
+    function buildYouglishUrl(query, lang) {
+      const base = 'https://youglish.com';
+      if (!query) {
+        // Open the language homepage (user requested default language experience)
+        if (lang === 'korean') return base + '/korean';
+        if (lang === 'english') return base + '/english';
+        return base;
+      }
+      const hasSpace = /\s/.test(query);
+      // For single words prefer the pronounce route, for phrases use search
+      if (!hasSpace) return `${base}/pronounce/${encodeURIComponent(query)}/${encodeURIComponent(lang)}`;
+      return `${base}/search?search=${encodeURIComponent(query)}&lang=${encodeURIComponent(lang)}`;
+    }
+
+    document.getElementById('yg-search').addEventListener('click', () => {
+      const q = document.getElementById('yg-input').value.trim();
+      const note = document.getElementById('yg-note');
+      const lang = document.getElementById('yg-lang').value || 'korean';
+      const iframe = document.getElementById('yg-iframe');
+      if (!q) {
+        // load the language homepage if no query
+        const url = buildYouglishUrl('', lang);
+        iframe.src = url;
+        note.textContent = 'Opening YouGlish language page… If embedding is blocked, click "Open in new tab".';
+        return;
+      }
+      const url = buildYouglishUrl(q, lang);
+      iframe.src = url;
+      note.textContent = 'Loading YouGlish results… If embedding is blocked, click "Open in new tab".';
+      iframe.onload = () => { note.textContent = 'Results loaded — play examples inside the box.'; };
+    });
+
+    document.getElementById('yg-open').addEventListener('click', () => {
+      const q = document.getElementById('yg-input').value.trim();
+      const note = document.getElementById('yg-note');
+      const lang = document.getElementById('yg-lang').value || 'korean';
+      const url = buildYouglishUrl(q, lang);
+      window.open(url, '_blank');
+    });
