@@ -1,0 +1,38 @@
+permissions:
+  id-token: write
+  contents: read
+
+
+name: Deploy Lessons DEV
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "lessons/**"
+      - ".github/workflows/deploy-lessons-dev.yml"
+
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::308705121669:role/GitHubActionDeployDev
+          aws-region: us-east-1
+
+      - name: Sync lessons to S3 (DEV)
+        run: |
+          aws s3 sync lessons/ s3://starwords-dev-laura-20251226 --delete
+
+      - name: Invalidate CloudFront (DEV)
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id EN8HM6X3I0LOK \
+            --paths "/*"
