@@ -1,246 +1,206 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Mission 1 — Star Words</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root { --gold:#ffe066; --gold2:#f7d547; --ink:#111; --line:#333; }
-    html,body { height:100%; }
-    body{
-      margin:0;background:#000;color:var(--gold);
-      font-family: Arial, Helvetica, sans-serif;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .card{
-      background:#111;border:1px solid #333;border-radius:14px;
-      padding:24px 26px;max-width:720px;width:min(92%, 720px);
-      box-shadow:0 10px 30px rgba(0,0,0,.6)
-    }
-    .title{margin:0 0 6px 0}
-    .muted{opacity:.85;margin:.2rem 0 .8rem}
-    .btn{background:var(--gold2);border:0;border-radius:10px;
-      padding:10px 16px;font-weight:700;cursor:pointer}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    code{background:#000;border:1px solid #333;padding:2px 6px;border-radius:6px}
-    .ok{border:1px solid #2f7; background:rgba(0,255,128,.08); padding:10px;border-radius:10px}
-    .err{border:1px solid #f66; background:rgba(255,0,0,.08); padding:10px;border-radius:10px}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lesson 01 — Star Words</title>
 
-    /* Lesson styles */
-    .lesson{margin-top:14px;border:1px solid #333;background:#0a0a0a;border-radius:12px;padding:14px}
-    .big{font-size:46px;line-height:1;margin:0}
-    .row-slim{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-    .input{background:#000;border:1px solid #333;color:#ffe066;border-radius:8px;padding:8px}
-    .chip{border:1px solid #333;border-radius:999px;padding:6px 10px;background:#000}
-    .success{color:#9cffb0}
-    .fail{color:#ff9c9c}
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: #feda4a;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    h1 { font-size: 2.5rem; margin-top: 40px; }
+
+    .video-section {
+      max-width: 900px;
+      margin: 24px auto 10px;
+    }
+
+    .video-title {
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .video-embed {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-note {
+      color: #ccc;
+      margin-top: 10px;
+    }
+
+    .hangul {
+      font-size: 3rem;
+      margin: 20px 0;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pronunciation { font-size: 1.5rem; }
+    .meaning { font-size: 1.2rem; color: #ccc; }
+
+    .example {
+      margin-top: 20px;
+      background: #111;
+      padding: 20px;
+      border-radius: 8px;
+      display: inline-block;
+      text-align: left;
+      max-width: 760px;
+    }
+
+    .example-sentence {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+    }
+
+    .audio-btn {
+      background-color: #feda4a;
+      border: none;
+      color: black;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .audio-btn:hover { background-color: #ffe870; }
+
+    a { color: #feda4a; text-decoration: none; }
   </style>
 </head>
+
 <body>
-  <main class="card">
-    <h1 class="title">Mission 1: Welcome, Rebel</h1>
-    <p id="status" class="muted">Authenticating with the Hangul Force…</p>
 
-    <div id="content" hidden>
-      <p class="ok" id="hello"></p>
+  <h1>Lesson 01: Welcome to Your Mission</h1>
+  <p>This is your first step as a Hangul Jedi! Today, you will learn how to say <strong>cat</strong> in Korean.</p>
 
-      <h3>Your Objective</h3>
-      <p>Learn your first Hangul word and report back. Click <code>Start Task</code> to begin.</p>
+  <div class="video-section">
+    <div class="video-title">MISSION 001: LEARN KOREAN 🐱</div>
 
-      <div class="row">
-        <button class="btn" id="startTask">Start Task</button>
-        <button class="btn" id="toHome">Return to Base</button>
-        <button class="btn" id="signOut">Sign Out</button>
-      </div>
-
-      <!-- Lesson: 고양이 (cat) -->
-      <section id="task" class="lesson" hidden>
-        <h3>오늘의 단어 — <span class="chip">Today’s Word</span></h3>
-        <p class="big" id="word">고양이</p>
-        <div class="row-slim">
-          <span>Pronunciation:</span>
-          <strong id="roman">goyangi</strong>
-          <button class="btn" id="btnSpeak" title="Play pronunciation">🔊 Hear it</button>
-        </div>
-        <div class="row-slim" style="margin-top:8px">
-          <span>Meaning:</span><strong> cat</strong>
-        </div>
-
-        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
-
-        <h4>Example</h4>
-        <p><em id="exKo">저는 고양이를 좋아해요.</em></p>
-        <p class="muted">I like cats.</p>
-
-        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
-
-        <h4>Quick Check</h4>
-        <p class="muted">Type the Korean word for <strong>cat</strong>:</p>
-        <div class="row-slim">
-          <input id="answer" class="input" placeholder="type here: 고양이" />
-          <button class="btn" id="btnCheck">Check</button>
-          <span id="result" class="muted"></span>
-        </div>
-
-        <div style="margin-top:14px">
-          <button class="btn" id="btnDone">Mark Complete ✅</button>
-        </div>
-      </section>
+    <div class="video-embed">
+      <iframe
+        src="https://www.youtube.com/embed/XnWaoQ9hxsQ"
+        allowfullscreen>
+      </iframe>
     </div>
 
-    <div id="error" class="err" hidden></div>
+    <div class="video-note">
+      Watch the mission briefing before starting the lesson.
+    </div>
+  </div>
 
-  <!-- Free Translate Tool -->
-  <section class="lesson" style="margin-top:20px">
-    <h3>Quick Translate</h3>
-    <p class="muted">Look up any word or sentence without leaving the mission.</p>
+  <div class="hangul">
+    고양이
+    <button class="audio-btn" onclick="playCat()">🔊</button>
+  </div>
 
-    <div class="row-slim">
-      <select id="langDir" class="input">
-        <option value="en-ko">English → Korean</option>
-        <option value="ko-en">Korean → English</option>
-      </select>
+  <div class="pronunciation"><em>goyang-i</em></div>
+  <div class="meaning">Meaning: Cat 🐱</div>
+
+  <div class="example">
+    <p><strong>Example Sentence:</strong></p>
+
+    <div class="example-sentence">
+      <span>저는 고양이를 좋아해요.</span>
+      <button class="audio-btn" onclick="playSentence()">🔊</button>
     </div>
 
-    <div class="row-slim" style="margin-top:8px">
-      <input id="translateInput" class="input" style="min-width:260px"
-             placeholder="Type a word or sentence…" />
-      <button class="btn" id="btnTranslate">Translate</button>
-    </div>
+    <p><em>Jeoneun goyangi-reul joahaeyo.</em></p>
+    <p><small>I like cats.</small></p>
+  </div>
 
-    <div class="row-slim" style="margin-top:10px">
-      <strong>Result:</strong>
-      <span id="translateResult" class="chip"></span>
-      <button class="btn" id="btnSpeakResult" title="Hear Korean" hidden>🔊</button>
-    </div>
-  </section>
+  <!-- ✅ Progress Button -->
+  <div style="margin-top: 30px;">
+    <button id="saveProgressBtn" class="audio-btn">Mark Lesson Complete</button>
+    <p id="progressMessage" style="color:#ccc;"></p>
+  </div>
 
-  <!-- Toast -->
-  <div id="toast" style="
-    position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
-    background:#111;border:1px solid #333;color:#ffe066;
-    padding:10px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.6);
-    display:none;z-index:9999;"></div>
+  <p style="margin-top: 40px;">
+    <a href="../../index.html">← Back to Home</a>
+  </p>
 
-  <!-- Supabase (optional; remove if you’re not using auth here) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- ✅ SCRIPT -->
   <script>
-    // Init only if you actually need auth on this page:
-    const SUPABASE_URL = "https://zvhjoupdxkzbbqanbrby.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aGpvdXBkeGt6YmJxYW5icmJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3NjYyNjcsImV4cCI6MjA3MDM0MjI2N30.ZCWqACzlCqgbVb1R7goLnmfsdws50wsGYQrnWrYW998";
+    const progressUrl = "https://v9e4dgcrnd.execute-api.us-east-1.amazonaws.com/progress";
 
-    let supabaseClient = null;
-    try {
-      supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) || null;
-    } catch(_) { /* ok if not using auth here */ }
-
-    const $ = (id) => document.getElementById(id);
-    const statusEl = $('status');
-    const contentEl = $('content');
-    const errorEl = $('error');
-    const toast = $('toast');
-
-    function showToast(msg, ms=1600){
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      setTimeout(()=> toast.style.display='none', ms);
+    function getUserId() {
+      let userId = localStorage.getItem("starwordsUserId");
+      if (!userId) {
+        userId = "user-" + Math.random().toString(36).slice(2);
+        localStorage.setItem("starwordsUserId", userId);
+      }
+      return userId;
     }
 
-    async function init(){
+    async function saveProgress() {
+      const messageEl = document.getElementById("progressMessage");
+
+      const payload = {
+        userId: getUserId(),
+        lessonId: "lesson-01",
+        completed: true
+      };
+
       try {
-        // If you require sign-in, check it here. Otherwise, just show content.
-        if (supabaseClient) {
-          const { data: { session } } = await supabaseClient.auth.getSession();
-          if (!session) {
-            statusEl.textContent = 'Welcome, Guest Rebel — no login required for Mission 1.';
-          } else {
-            statusEl.textContent = 'Welcome, Rebel!';
-          }
-        } else {
-          statusEl.textContent = 'Welcome, Rebel!';
-        }
+        const response = await fetch(progressUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
-        $('hello').textContent = 'You are cleared for Mission 1.';
-        contentEl.hidden = false;
+        const data = await response.json();
 
-        // Wire buttons
-        $('startTask').onclick = () => { $('task').hidden = false; showToast('Task unlocked!'); };
-        $('toHome').onclick = () => { window.location.href = '/'; };
-        $('signOut').onclick = async () => {
-          try { await supabaseClient?.auth.signOut(); } catch(_){}
-          showToast('Signed out. Returning to base…');
-          setTimeout(()=> window.location.href='/', 600);
-        };
+        if (!response.ok) throw new Error(data.message);
 
-        $('btnCheck').onclick = () => {
-          const ok = $('answer').value.trim() === '고양이';
-          const res = $('result');
-          res.textContent = ok ? '✅ Correct!' : '❌ Try again';
-          res.className = ok ? 'muted success' : 'muted fail';
-          if (ok) showToast('Nice!');
-        };
+        messageEl.textContent = "✅ Progress saved!";
+        console.log(data);
 
-        $('btnSpeak').onclick = () => {
-          try {
-            const u = new SpeechSynthesisUtterance('go-yan-gee');
-            speechSynthesis.speak(u);
-          } catch(_) { showToast('Speech not supported on this device'); }
-        };
-
-        $('btnDone').onclick = () => {
-          showToast('Mission 1 complete! 🚀');
-          setTimeout(()=> window.location.href='/', 900);
-        };
-      } catch (e){
-        errorEl.hidden = false;
-        errorEl.textContent = 'Error loading mission: ' + e.message;
+      } catch (error) {
+        console.error(error);
+        messageEl.textContent = "❌ Failed to save progress";
       }
     }
 
-    async function translateText(text, source, target) {
-      const res = await fetch('https://libretranslate.de/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          q: text,
-          source,
-          target,
-          format: 'text'
-        })
-      });
-      const data = await res.json();
-      return data.translatedText;
+    document.getElementById("saveProgressBtn").addEventListener("click", saveProgress);
+
+    function playCat() {
+      const u = new SpeechSynthesisUtterance("고양이");
+      u.lang = "ko-KR";
+      speechSynthesis.speak(u);
     }
 
-    $('btnTranslate').onclick = async () => {
-      const text = $('translateInput').value.trim();
-      if (!text) return showToast('Type something first 🙂');
-
-      const dir = $('langDir').value;
-      const [source, target] = dir.split('-');
-
-      $('translateResult').textContent = 'Translating…';
-      $('btnSpeakResult').hidden = true;
-
-      try {
-        const translated = await translateText(text, source, target);
-        $('translateResult').textContent = translated;
-
-        // Show speaker only for Korean output
-        if (target === 'ko') {
-          $('btnSpeakResult').hidden = false;
-          $('btnSpeakResult').onclick = () => {
-            const u = new SpeechSynthesisUtterance(translated);
-            u.lang = 'ko-KR';
-            speechSynthesis.speak(u);
-          };
-        }
-      } catch (e) {
-        $('translateResult').textContent = 'Error translating 😢';
-      }
-    };
-
-    document.addEventListener('DOMContentLoaded', init);
+    function playSentence() {
+      const u = new SpeechSynthesisUtterance("저는 고양이를 좋아해요.");
+      u.lang = "ko-KR";
+      speechSynthesis.speak(u);
+    }
   </script>
+
 </body>
 </html>
