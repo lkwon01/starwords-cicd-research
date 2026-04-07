@@ -5,11 +5,7 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - "lessons/**"
-      - ".github/workflows/deploy-lessons-prod.yml"
+  workflow_dispatch:
 
 jobs:
   deploy:
