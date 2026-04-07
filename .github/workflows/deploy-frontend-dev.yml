@@ -27,9 +27,9 @@ jobs:
           role-to-assume: arn:aws:iam::308705121669:role/GitHubActionDeployDev
           aws-region: us-east-1
 
-      - name: Sync lessons to S3 (DEV)
+      - name: Sync frontend to S3 (DEV)
         run: |
-          aws s3 sync lessons/ s3://starwords-dev-laura-20251226 --delete
+          aws s3 sync frontend/ s3://starwords-dev-laura-20251226 --delete
 
       - name: Invalidate CloudFront (DEV)
         run: |
