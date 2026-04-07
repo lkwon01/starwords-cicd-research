@@ -6,7 +6,7 @@ permissions:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "restructure-project" ]
     paths:
       - "frontend/**"
       - ".github/workflows/deploy-frontend-dev.yml"
