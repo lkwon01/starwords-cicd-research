@@ -1,9 +1,8 @@
+name: Deploy Frontend DEV
+
 permissions:
   id-token: write
   contents: read
-
-
-name: Deploy Lessons DEV
 
 on:
   push:
@@ -12,11 +11,10 @@ on:
       - "frontend/**"
       - ".github/workflows/deploy-frontend-dev.yml"
 
-
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
