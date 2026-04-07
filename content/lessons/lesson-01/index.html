@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lesson 01 — Star Words</title>
+
   <style>
     body {
       margin: 0;
@@ -17,19 +18,17 @@
 
     h1 { font-size: 2.5rem; margin-top: 40px; }
 
-    /* --- Video block --- */
     .video-section {
       max-width: 900px;
       margin: 24px auto 10px;
-      text-align: center;
     }
+
     .video-title {
       font-size: 1.15rem;
       color: #fff;
       margin-bottom: 10px;
-      letter-spacing: 0.5px;
     }
-    /* Responsive 16:9 embed container */
+
     .video-embed {
       position: relative;
       width: 100%;
@@ -37,19 +36,18 @@
       background: #111;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.08);
     }
-    .video-embed iframe,
-    .video-embed video {
+
+    .video-embed iframe {
       position: absolute;
       top: 0; left: 0;
       width: 100%;
       height: 100%;
       border: 0;
     }
+
     .video-note {
       color: #ccc;
-      font-size: 0.95rem;
       margin-top: 10px;
     }
 
@@ -62,7 +60,7 @@
       gap: 10px;
     }
 
-    .pronunciation { font-size: 1.5rem; margin-bottom: 10px; }
+    .pronunciation { font-size: 1.5rem; }
     .meaning { font-size: 1.2rem; color: #ccc; }
 
     .example {
@@ -86,33 +84,28 @@
       background-color: #feda4a;
       border: none;
       color: black;
-      font-size: 1rem;
       padding: 6px 10px;
       border-radius: 5px;
       cursor: pointer;
     }
+
     .audio-btn:hover { background-color: #ffe870; }
 
     a { color: #feda4a; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-
   </style>
 </head>
+
 <body>
 
   <h1>Lesson 01: Welcome to Your Mission</h1>
   <p>This is your first step as a Hangul Jedi! Today, you will learn how to say <strong>cat</strong> in Korean.</p>
 
-  <!-- ✅ Mission video section -->
-  <div class="video-section" aria-label="Mission 001 video">
+  <div class="video-section">
     <div class="video-title">MISSION 001: LEARN KOREAN 🐱</div>
 
     <div class="video-embed">
       <iframe
-        src="https://www.youtube.com/embed/XnWaoQ9hxsQ?si=YUId2Vs-ln4SUua5"
-        title="StarWords Mission 001 - Cat"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        src="https://www.youtube.com/embed/XnWaoQ9hxsQ"
         allowfullscreen>
       </iframe>
     </div>
@@ -122,33 +115,92 @@
     </div>
   </div>
 
-
-    
-  </div>
-
   <div class="hangul">
     고양이
-    <button class="audio-btn" type="button" onclick="playCat()" aria-label="Hear pronunciation of 고양이">🔊</button>
+    <button class="audio-btn" onclick="playCat()">🔊</button>
   </div>
+
   <div class="pronunciation"><em>goyang-i</em></div>
   <div class="meaning">Meaning: Cat 🐱</div>
 
   <div class="example">
     <p><strong>Example Sentence:</strong></p>
+
     <div class="example-sentence">
       <span>저는 고양이를 좋아해요.</span>
-      <button class="audio-btn" type="button" onclick="playSentence()" aria-label="Hear example sentence">🔊</button>
+      <button class="audio-btn" onclick="playSentence()">🔊</button>
     </div>
+
     <p><em>Jeoneun goyangi-reul joahaeyo.</em></p>
     <p><small>I like cats.</small></p>
   </div>
 
-  
-
-  
+  <!-- ✅ Progress Button -->
+  <div style="margin-top: 30px;">
+    <button id="saveProgressBtn" class="audio-btn">Mark Lesson Complete</button>
+    <p id="progressMessage" style="color:#ccc;"></p>
+  </div>
 
   <p style="margin-top: 40px;">
     <a href="../../index.html">← Back to Home</a>
   </p>
 
-  
+  <!-- ✅ SCRIPT -->
+  <script>
+    const progressUrl = "https://v9e4dgcrnd.execute-api.us-east-1.amazonaws.com/progress";
+
+    function getUserId() {
+      let userId = localStorage.getItem("starwordsUserId");
+      if (!userId) {
+        userId = "user-" + Math.random().toString(36).slice(2);
+        localStorage.setItem("starwordsUserId", userId);
+      }
+      return userId;
+    }
+
+    async function saveProgress() {
+      const messageEl = document.getElementById("progressMessage");
+
+      const payload = {
+        userId: getUserId(),
+        lessonId: "lesson-01",
+        completed: true
+      };
+
+      try {
+        const response = await fetch(progressUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.message);
+
+        messageEl.textContent = "✅ Progress saved!";
+        console.log(data);
+
+      } catch (error) {
+        console.error(error);
+        messageEl.textContent = "❌ Failed to save progress";
+      }
+    }
+
+    document.getElementById("saveProgressBtn").addEventListener("click", saveProgress);
+
+    function playCat() {
+      const u = new SpeechSynthesisUtterance("고양이");
+      u.lang = "ko-KR";
+      speechSynthesis.speak(u);
+    }
+
+    function playSentence() {
+      const u = new SpeechSynthesisUtterance("저는 고양이를 좋아해요.");
+      u.lang = "ko-KR";
+      speechSynthesis.speak(u);
+    }
+  </script>
+
+</body>
+</html>
