@@ -622,8 +622,7 @@
       margin-bottom: 8px;
     }
 
-    input[type="text"],
-    select {
+    input[type="text"] {
       width: 100%;
       padding: 16px 18px;
       border-radius: 16px;
@@ -635,8 +634,7 @@
       transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
     }
 
-    input[type="text"]:focus,
-    select:focus {
+    input[type="text"]:focus {
       border-color: rgba(120, 245, 255, 0.65);
       box-shadow: 0 0 0 4px rgba(120, 245, 255, 0.12);
       transform: translateY(-1px);
@@ -809,75 +807,6 @@
       display: none;
     }
 
-    .celebration-overlay {
-      position: fixed;
-      inset: 0;
-      display: none;
-      place-items: center;
-      padding: 24px;
-      background: radial-gradient(circle, rgba(255, 211, 107, 0.16), rgba(4, 7, 15, 0.88) 60%);
-      z-index: 40;
-      pointer-events: none;
-    }
-
-    .celebration-overlay.show {
-      display: grid;
-      animation: celebrationFade 3.2s ease forwards;
-    }
-
-    .celebration-burst span {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 8px;
-      height: 190px;
-      margin: -95px 0 0 -4px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(121, 246, 255, 0), rgba(121, 246, 255, 0.95), rgba(255, 211, 107, 0));
-      box-shadow: 0 0 18px rgba(121, 246, 255, 0.35);
-    }
-
-    .celebration-burst span:nth-child(1) { transform: rotate(0deg) translateY(-10px); }
-    .celebration-burst span:nth-child(2) { transform: rotate(22deg) translateY(-10px); }
-    .celebration-burst span:nth-child(3) { transform: rotate(45deg) translateY(-10px); }
-    .celebration-burst span:nth-child(4) { transform: rotate(67deg) translateY(-10px); }
-    .celebration-burst span:nth-child(5) { transform: rotate(90deg) translateY(-10px); }
-    .celebration-burst span:nth-child(6) { transform: rotate(112deg) translateY(-10px); }
-    .celebration-burst span:nth-child(7) { transform: rotate(135deg) translateY(-10px); }
-    .celebration-burst span:nth-child(8) { transform: rotate(157deg) translateY(-10px); }
-
-    .celebration-card {
-      position: relative;
-      z-index: 1;
-      width: min(440px, 100%);
-      padding: 26px 22px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 211, 107, 0.28);
-      background: rgba(10, 18, 35, 0.92);
-      text-align: center;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-    }
-
-    .celebration-card strong {
-      display: block;
-      margin-top: 6px;
-      font-size: clamp(28px, 4vw, 42px);
-      color: var(--gold);
-    }
-
-    .celebration-card p {
-      margin: 12px 0 0;
-      color: var(--text);
-      line-height: 1.6;
-      font-size: 17px;
-    }
-
-    @keyframes celebrationFade {
-      0% { opacity: 0; transform: scale(0.94); }
-      12%, 82% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1.04); }
-    }
-
     @media (max-width: 920px) {
       .layout {
         grid-template-columns: 1fr;
@@ -1032,7 +961,7 @@
           <p id="objectiveText">Stand by for mission initialization.</p>
           <ol class="objective-list">
             <li>Start the mission after the briefing completes.</li>
-            <li>Enter your trainee name and choose where you are from.</li>
+            <li>Enter your trainee name.</li>
             <li>Generate and hear your Korean self-introduction.</li>
             <li>Report completion to the Jedi master.</li>
           </ol>
@@ -1050,27 +979,15 @@
               <input id="nameInput" type="text" maxlength="20" placeholder="Enter your name" disabled />
             </div>
 
-            <div>
-              <label for="countryInput">Where Are You From?</label>
-              <select id="countryInput" disabled>
-                <option value="미국">America</option>
-                <option value="한국">Korea</option>
-                <option value="일본">Japan</option>
-                <option value="중국">China</option>
-                <option value="캐나다">Canada</option>
-                <option value="벨기에">Belgium</option>
-              </select>
-            </div>
-
             <div class="button-row">
               <button id="generateBtn" class="secondary" disabled>Generate Korean Intro</button>
               <button id="audioBtn" class="secondary" disabled>Play Greeting Audio</button>
             </div>
 
             <div class="phrase-output">
-              <p class="phrase-korean" id="phraseKorean">안녕하세요. 저는 [name]입니다. 저는 미국에서 왔어요.</p>
-              <p class="phrase-romanized" id="phraseRomanized">Annyeonghaseyo. Jeoneun [name] imnida. Jeoneun migugeseo wasseoyo.</p>
-              <p class="phrase-translation" id="phraseTranslation">Hello. I am [name]. I am from America.</p>
+              <p class="phrase-korean" id="phraseKorean">안녕하세요. 저는 [name]입니다.</p>
+              <p class="phrase-romanized" id="phraseRomanized">Annyeonghaseyo. Jeoneun [name] imnida.</p>
+              <p class="phrase-translation" id="phraseTranslation">Hello. I am [name].</p>
             </div>
           </div>
         </section>
@@ -1111,18 +1028,6 @@
     </section>
   </main>
 
-  <div class="celebration-overlay" id="celebrationOverlay" aria-hidden="true">
-    <div class="celebration-burst" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
-    <div class="celebration-card">
-      <span class="section-label">Mission Reward</span>
-      <strong id="celebrationTitle">Mission Clear</strong>
-      <p id="celebrationText">XP awarded.</p>
-    </div>
-  </div>
-
   <script>
     // This single-file prototype stores all mission state locally so the player can refresh
     // and continue from the same point in Day 1 of the 7-day campaign.
@@ -1138,26 +1043,7 @@
       missionCompleted: false,
       nextMissionUnlocked: false,
       playerName: "",
-      selectedCountry: "미국",
-      generatedPhrase: "안녕하세요. 저는 [name]입니다. 저는 미국에서 왔어요."
-    };
-
-    const countryRomanizations = {
-      "미국": "migugeseo wasseoyo",
-      "한국": "hangugeseo wasseoyo",
-      "일본": "ilboneseo wasseoyo",
-      "중국": "junggugeseo wasseoyo",
-      "캐나다": "kaenadeseo wasseoyo",
-      "벨기에": "belgieseo wasseoyo"
-    };
-
-    const countryEnglish = {
-      "미국": "America",
-      "한국": "Korea",
-      "일본": "Japan",
-      "중국": "China",
-      "캐나다": "Canada",
-      "벨기에": "Belgium"
+      generatedPhrase: "안녕하세요. 저는 [name]입니다."
     };
 
     const briefingLines = [
@@ -1182,7 +1068,6 @@
     const objectiveText = document.getElementById("objectiveText");
     const missionHint = document.getElementById("missionHint");
     const nameInput = document.getElementById("nameInput");
-    const countryInput = document.getElementById("countryInput");
     const generateBtn = document.getElementById("generateBtn");
     const audioBtn = document.getElementById("audioBtn");
     const reportBtn = document.getElementById("reportBtn");
@@ -1199,12 +1084,8 @@
     const reportPill = document.getElementById("reportPill");
     const saveStatus = document.getElementById("saveStatus");
     const avatarStatus = document.getElementById("avatarStatus");
-    const celebrationOverlay = document.getElementById("celebrationOverlay");
-    const celebrationTitle = document.getElementById("celebrationTitle");
-    const celebrationText = document.getElementById("celebrationText");
 
     let briefingFinished = false;
-    let celebrationTimer = null;
 
     // Reads the saved state if available and falls back to a clean mission profile.
     function loadState() {
@@ -1221,20 +1102,6 @@
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       saveStatus.innerHTML = "<strong>Local save online.</strong> Day 1 progress has been stored in this browser.";
-    }
-
-    function triggerCelebration(title, text) {
-      celebrationTitle.textContent = title;
-      celebrationText.textContent = text;
-      celebrationOverlay.classList.remove("show");
-      void celebrationOverlay.offsetWidth;
-      celebrationOverlay.classList.add("show");
-      celebrationOverlay.setAttribute("aria-hidden", "false");
-      clearTimeout(celebrationTimer);
-      celebrationTimer = setTimeout(() => {
-        celebrationOverlay.classList.remove("show");
-        celebrationOverlay.setAttribute("aria-hidden", "true");
-      }, 3200);
     }
 
     // Small helper to clamp progress calculations for the HUD bars.
@@ -1258,13 +1125,12 @@
     function renderMissionState() {
       phraseKorean.textContent = state.generatedPhrase;
       phraseRomanized.textContent = state.playerName
-        ? `Annyeonghaseyo. Jeoneun ${state.playerName} imnida. Jeoneun ${countryRomanizations[state.selectedCountry]}.`
-        : "Annyeonghaseyo. Jeoneun [name] imnida. Jeoneun migugeseo wasseoyo.";
+        ? `Annyeonghaseyo. Jeoneun ${state.playerName} imnida.`
+        : "Annyeonghaseyo. Jeoneun [name] imnida.";
       phraseTranslation.textContent = state.playerName
-        ? `Hello. I am ${state.playerName}. I am from ${countryEnglish[state.selectedCountry]}.`
-        : "Hello. I am [name]. I am from America.";
+        ? `Hello. I am ${state.playerName}.`
+        : "Hello. I am [name].";
       nameInput.value = state.playerName;
-      countryInput.value = state.selectedCountry;
 
       const canStart = briefingFinished && !state.missionStarted;
       const canGenerate = state.missionStarted && !state.missionCompleted;
@@ -1272,7 +1138,6 @@
 
       startMissionBtn.disabled = !canStart;
       nameInput.disabled = !canGenerate;
-      countryInput.disabled = !canGenerate;
       generateBtn.disabled = !canGenerate;
       audioBtn.disabled = !state.introGenerated;
       reportBtn.disabled = !canReport;
@@ -1287,8 +1152,8 @@
         briefingSummary.textContent = "The Jedi master will brief the mission automatically. No transcript will be shown on screen.";
         videoTimer.textContent = "Signal Syncing";
       } else if (!state.missionStarted) {
-        objectiveText.textContent = "Click Start Mission and prepare to introduce yourself and where you are from.";
-        missionHint.textContent = "Your objective: say hello, say your name, and say where you are from.";
+        objectiveText.textContent = "Click Start Mission and prepare to introduce yourself to the Jedi master.";
+        missionHint.textContent = "Your objective: say hello in Korean and introduce yourself.";
         statusText.innerHTML = "<strong>Briefing complete.</strong> The master is waiting for your formal introduction.";
         reportPill.textContent = "Jedi Master link: open";
         avatarStatus.textContent = "Awaiting trainee response";
@@ -1296,8 +1161,8 @@
         briefingSummary.textContent = "Voice briefing received. Proceed to mission start.";
         videoTimer.textContent = "Transmission Archived";
       } else if (!state.introGenerated) {
-        objectiveText.textContent = "Enter your name, choose your country, and generate your Korean self-introduction.";
-        missionHint.textContent = "Use your trainee name and choose where you are from.";
+        objectiveText.textContent = "Enter your name and generate your Korean self-introduction.";
+        missionHint.textContent = "Use your trainee name exactly as you want it spoken.";
         statusText.innerHTML = "<strong>Mission active.</strong> Build your greeting before checking in.";
         reportPill.textContent = "Jedi Master link: listening";
         avatarStatus.textContent = "Monitoring introduction console";
@@ -1311,7 +1176,7 @@
         reportPill.textContent = "Jedi Master link: ready for report";
         avatarStatus.textContent = "Ready to receive mission report";
         briefingStatusLine.textContent = "Awaiting mission turn-in";
-        briefingSummary.textContent = "Your introduction and country phrase are ready. Play them aloud, then complete the report.";
+        briefingSummary.textContent = "Your intro phrase is ready. Play it aloud, then complete the report.";
         videoTimer.textContent = "Awaiting Report";
       } else {
         objectiveText.textContent = "Mission complete. Day 1 cleared and Mission 2 unlocked.";
@@ -1382,7 +1247,7 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Builds the required sentence from the player's name and selected country.
+    // Builds the required sentence from the player's name while preserving the fixed Korean pattern.
     function generatePhrase() {
       const trimmedName = nameInput.value.trim();
       if (!trimmedName) {
@@ -1391,10 +1256,9 @@
       }
 
       state.playerName = trimmedName;
-      state.selectedCountry = countryInput.value;
-      state.generatedPhrase = `안녕하세요. 저는 ${trimmedName}입니다. 저는 ${state.selectedCountry}에서 왔어요.`;
+      state.generatedPhrase = `안녕하세요. 저는 ${trimmedName}입니다.`;
       state.introGenerated = true;
-      reportCopy.textContent = `Your introduction is ready. It now includes that you are from ${countryEnglish[state.selectedCountry]}. Play the audio, then report to the Jedi master.`;
+      reportCopy.textContent = "Your introduction is ready. Play the audio, then report to the Jedi master.";
       saveState();
       renderMissionState();
     }
@@ -1409,7 +1273,6 @@
       state.missionCompleted = true;
       state.nextMissionUnlocked = true;
       reportCopy.textContent = "Mission complete. The Jedi master acknowledges your greeting and unlocks Mission 2.";
-      triggerCelebration("Day 1 Clear", "100 XP awarded. Mission 2 unlocked.");
       saveState();
       renderHud();
       renderMissionState();
@@ -1428,7 +1291,7 @@
 
     startMissionBtn.addEventListener("click", () => {
       state.missionStarted = true;
-      reportCopy.textContent = "Mission active. Enter your trainee name, choose your country, and generate your greeting.";
+      reportCopy.textContent = "Mission active. Enter your trainee name and generate your greeting.";
       saveState();
       renderMissionState();
       nameInput.focus();

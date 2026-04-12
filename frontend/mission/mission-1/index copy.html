@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Day 1 - First Meeting in Korea</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #feda4a;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-top: 30px;
+    }
+
+    h2 {
+      color: #fff;
+      margin-top: 30px;
+    }
+
+    .section {
+      max-width: 900px;
+      margin: 24px auto;
+      background: #111;
+      padding: 24px;
+      border-radius: 12px;
+    }
+
+    .phrase {
+      margin: 20px 0;
+      padding: 16px;
+      background: #1a1a1a;
+      border-radius: 10px;
+    }
+
+    .korean {
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .pronunciation {
+      font-size: 1.2rem;
+      font-style: italic;
+    }
+
+    .meaning {
+      color: #ccc;
+      margin-top: 6px;
+    }
+
+    .audio-btn,
+    .action-btn,
+    .remove-btn {
+      background-color: #feda4a;
+      border: none;
+      color: black;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 8px 6px 0 6px;
+    }
+
+    .audio-btn:hover,
+    .action-btn:hover,
+    .remove-btn:hover {
+      background-color: #ffe870;
+    }
+
+    .remove-btn {
+      background-color: #ff8a80;
+      color: black;
+    }
+
+    .remove-btn:hover {
+      background-color: #ff9e95;
+    }
+
+    .builder-row {
+      margin: 12px 0;
+    }
+
+    .builder-input,
+    .builder-select {
+      padding: 10px;
+      width: 240px;
+      margin: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .result-box {
+      margin-top: 14px;
+      color: #fff;
+      font-size: 1.2rem;
+      min-height: 28px;
+    }
+
+    .roleplay {
+      text-align: left;
+      color: #fff;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .phrase-list {
+      text-align: left;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .saved-item {
+      background: #1a1a1a;
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 12px;
+      color: #fff;
+    }
+
+    .saved-text {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .empty-state {
+      color: #ccc;
+      margin-top: 10px;
+    }
+
+    .helper-text {
+      color: #ccc;
+      font-size: 0.95rem;
+      margin-top: 8px;
+    }
+
+    .success-text {
+      color: #8ef0a7;
+    }
+
+    .error-text {
+      color: #ff8a80;
+    }
+
+    a {
+      color: #feda4a;
+      text-decoration: none;
+    }
+    .game-box {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.npc-card {
+  background: linear-gradient(180deg, #1c1c1c, #111);
+  border: 2px solid #feda4a;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 18px rgba(254, 218, 74, 0.12);
+}
+
+.npc-title {
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.npc-speech {
+  color: #fff;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.game-hint {
+  color: #ccc;
+  font-size: 0.95rem;
+}
+
+.answer-buttons {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.answer-btn {
+  background: #feda4a;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.answer-btn:hover {
+  background: #ffe870;
+}
+
+.game-feedback {
+  min-height: 30px;
+  margin-top: 16px;
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+.feedback-correct {
+  color: #8ef0a7;
+}
+
+.feedback-wrong {
+  color: #ff8a80;
+}
+
+.game-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.progress-shell {
+  width: 100%;
+  height: 18px;
+  background: #2a2a2a;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #feda4a;
+  transition: width 0.3s ease;
+}
+
+.game-complete {
+  margin-top: 24px;
+  background: #1a1a1a;
+  border-radius: 14px;
+  padding: 20px;
+  color: #fff;
+}
+  </style>
+</head>
+<body>
+
+  <h1>Day 1: First Meeting in Korea</h1>
+  <p>Learn how to greet someone, introduce yourself, and ask for help in English.</p>
+
+  <div class="section">
+    <h2>Today’s Mission</h2>
+    <p>
+      By the end of this lesson, you will be able to say hello, say your name,
+      say where you are from, ask if someone speaks English, and say thank you.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Mission Video</h2>
+    <p>Add your avatar or lesson intro video here.</p>
+  </div>
+
+  <div class="section">
+    <h2>Core Survival Phrases</h2>
+
+    <div class="phrase">
+      <div class="korean">안녕하세요</div>
+      <div class="pronunciation">annyeonghaseyo</div>
+      <div class="meaning">Hello</div>
+      <button class="audio-btn" onclick="speakKorean('안녕하세요')">🔊 Listen</button>
+    </div>
+
+    <div class="phrase">
+      <div class="korean">저는 Kevin입니다</div>
+      <div class="pronunciation">jeoneun Kevin imnida</div>
+      <div class="meaning">I am Kevin</div>
+      <button class="audio-btn" onclick="speakKorean('저는 Kevin입니다')">🔊 Listen</button>
+    </div>
+
+    <div class="phrase">
+      <div class="korean">저는 미국에서 왔어요</div>
+      <div class="pronunciation">jeoneun migugeseo wasseoyo</div>
+      <div class="meaning">I came from America</div>
+      <button class="audio-btn" onclick="speakKorean('저는 미국에서 왔어요')">🔊 Listen</button>
+    </div>
+
+    <div class="phrase">
+      <div class="korean">영어 하세요?</div>
+      <div class="pronunciation">yeongeo haseyo?</div>
+      <div class="meaning">Do you speak English?</div>
+      <button class="audio-btn" onclick="speakKorean('영어 하세요?')">🔊 Listen</button>
+    </div>
+
+    <div class="phrase">
+      <div class="korean">감사합니다</div>
+      <div class="pronunciation">gamsahamnida</div>
+      <div class="meaning">Thank you</div>
+      <button class="audio-btn" onclick="speakKorean('감사합니다')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Build Your Own Sentences</h2>
+
+    <div class="builder-row">
+      <p><strong>1. Introduce yourself</strong></p>
+      <input id="nameInput" class="builder-input" placeholder="Enter your name" />
+      <button class="action-btn" onclick="buildNameSentence()">Build</button>
+    </div>
+    <div id="nameSentence" class="result-box"></div>
+    <div id="nameActions"></div>
+
+    <div class="builder-row" style="margin-top: 26px;">
+      <p><strong>2. Say where you are from</strong></p>
+      <select id="countrySelect" class="builder-select">
+        <option value="">Choose a country</option>
+        <option value="미국">America</option>
+        <option value="벨기에">Belgium</option>
+        <option value="한국">Korea</option>
+        <option value="프랑스">France</option>
+        <option value="일본">Japan</option>
+        <option value="중국">China</option>
+      </select>
+      <button class="action-btn" onclick="buildCountrySentence()">Build</button>
+    </div>
+    <div id="countrySentence" class="result-box"></div>
+    <div id="countryActions"></div>
+
+    <p class="helper-text">
+      Build a sentence, listen to the full sentence, then save it to your review list.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>My Phrase List</h2>
+    <div id="phraseList" class="phrase-list"></div>
+    <div id="emptyPhraseState" class="empty-state">No saved phrases yet.</div>
+  </div>
+
+  <div class="section">
+    <h2>Role Play</h2>
+    <div class="roleplay">
+      <p><strong>Counselor:</strong> 안녕하세요?</p>
+      <p><strong>You:</strong> 안녕하세요. 저는 Kevin입니다.</p>
+      <p><strong>Counselor:</strong> 어디에서 왔어요?</p>
+      <p><strong>You:</strong> 저는 미국에서 왔어요.</p>
+      <p><strong>You:</strong> 영어 하세요?</p>
+      <p><strong>Counselor:</strong> 네, 조금 해요.</p>
+      <p><strong>You:</strong> 감사합니다.</p>
+    </div>
+  </div>
+<div class="section">
+  <h2>🎮 Mission Game: First Meeting Quest</h2>
+  <p>Complete the conversation and earn XP.</p>
+
+  <div class="game-box">
+    <div class="npc-card">
+      <div class="npc-title">Camp Counselor</div>
+      <div id="gamePrompt" class="npc-speech">안녕하세요?</div>
+      <div id="gameHint" class="game-hint">Choose the best response.</div>
+    </div>
+
+    <div id="answerButtons" class="answer-buttons"></div>
+
+    <div id="gameFeedback" class="game-feedback"></div>
+
+    <div class="game-stats">
+      <div>XP: <span id="xpValue">0</span></div>
+      <div>Step: <span id="stepValue">1</span>/4</div>
+    </div>
+
+    <div class="progress-shell">
+      <div id="gameProgressBar" class="progress-fill" style="width: 25%;"></div>
+    </div>
+
+    <div id="gameCompleteBox" class="game-complete" style="display: none;">
+      <h3>🎉 Mission Complete!</h3>
+      <p>You survived your first conversation in Korea.</p>
+      <button class="action-btn" type="button" onclick="restartMissionGame()">Play Again</button>
+    </div>
+  </div>
+</div>
+  <div class="section">
+    <h2>Complete Mission</h2>
+    <button id="saveProgressBtn" class="action-btn">Mark Lesson Complete</button>
+    <p id="progressMessage"></p>
+  </div>
+
+  <p><a href="/index.html">← Back to Home</a></p>
+
+  <script>
+    const progressUrl = "https://v9e4dgcrnd.execute-api.us-east-1.amazonaws.com/progress";
+    const phraseStorageKey = "starwordsPhraseList";
+
+    function getUserId() {
+      let userId = localStorage.getItem("starwordsUserId");
+      if (!userId) {
+        userId = "user-" + Math.random().toString(36).slice(2);
+        localStorage.setItem("starwordsUserId", userId);
+      }
+      return userId;
+    }
+
+    function speakKorean(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ko-KR";
+      speechSynthesis.speak(utterance);
+    }
+
+    function getSavedPhrases() {
+      const saved = localStorage.getItem(phraseStorageKey);
+      return saved ? JSON.parse(saved) : [];
+    }
+
+    function setSavedPhrases(phrases) {
+      localStorage.setItem(phraseStorageKey, JSON.stringify(phrases));
+    }
+
+    function savePhrase(text) {
+      const cleaned = text.trim();
+      if (!cleaned) return;
+
+      const phrases = getSavedPhrases();
+
+      if (phrases.includes(cleaned)) {
+        return;
+      }
+
+      phrases.push(cleaned);
+      setSavedPhrases(phrases);
+      renderPhraseList();
+    }
+
+    function removePhrase(index) {
+      const phrases = getSavedPhrases();
+      phrases.splice(index, 1);
+      setSavedPhrases(phrases);
+      renderPhraseList();
+    }
+
+    function renderPhraseList() {
+      const phraseList = document.getElementById("phraseList");
+      const emptyState = document.getElementById("emptyPhraseState");
+      const phrases = getSavedPhrases();
+
+      phraseList.innerHTML = "";
+
+      if (phrases.length === 0) {
+        emptyState.style.display = "block";
+        return;
+      }
+
+      emptyState.style.display = "none";
+
+      phrases.forEach((phrase, index) => {
+        const item = document.createElement("div");
+        item.className = "saved-item";
+
+        item.innerHTML = `
+          <div class="saved-text">${phrase}</div>
+          <button class="audio-btn" type="button">🔊 Play</button>
+          <button class="remove-btn" type="button">🗑 Remove</button>
+        `;
+
+        const buttons = item.querySelectorAll("button");
+        buttons[0].addEventListener("click", () => speakKorean(phrase));
+        buttons[1].addEventListener("click", () => removePhrase(index));
+
+        phraseList.appendChild(item);
+      });
+    }
+
+    function renderGeneratedActions(targetId, sentence) {
+      const target = document.getElementById(targetId);
+
+      target.innerHTML = `
+        <button class="audio-btn" type="button">🔊 Play Sentence</button>
+        <button class="action-btn" type="button">➕ Save to My List</button>
+      `;
+
+      const buttons = target.querySelectorAll("button");
+      buttons[0].addEventListener("click", () => speakKorean(sentence));
+      buttons[1].addEventListener("click", () => savePhrase(sentence));
+    }
+
+    function buildNameSentence() {
+      const name = document.getElementById("nameInput").value.trim();
+      const result = document.getElementById("nameSentence");
+      const actions = document.getElementById("nameActions");
+
+      if (!name) {
+        result.textContent = "Please enter your name.";
+        result.className = "result-box error-text";
+        actions.innerHTML = "";
+        return;
+      }
+
+      const sentence = `저는 ${name}입니다`;
+      result.textContent = sentence;
+      result.className = "result-box success-text";
+      renderGeneratedActions("nameActions", sentence);
+    }
+
+    function buildCountrySentence() {
+      const country = document.getElementById("countrySelect").value;
+      const result = document.getElementById("countrySentence");
+      const actions = document.getElementById("countryActions");
+
+      if (!country) {
+        result.textContent = "Please choose a country.";
+        result.className = "result-box error-text";
+        actions.innerHTML = "";
+        return;
+      }
+
+      const sentence = `저는 ${country}에서 왔어요`;
+      result.textContent = sentence;
+      result.className = "result-box success-text";
+      renderGeneratedActions("countryActions", sentence);
+    }
+
+    async function saveProgress() {
+      const messageEl = document.getElementById("progressMessage");
+
+      const payload = {
+        userId: getUserId(),
+        lessonId: "day-1-first-meeting",
+        completed: true
+      };
+
+      try {
+        const response = await fetch(progressUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to save progress");
+        }
+
+        messageEl.textContent = "✅ Progress saved!";
+        messageEl.className = "success-text";
+      } catch (error) {
+        console.error(error);
+        messageEl.textContent = "❌ Failed to save progress";
+        messageEl.className = "error-text";
+      }
+    }
+
+    document.getElementById("saveProgressBtn").addEventListener("click", saveProgress);
+
+    renderPhraseList();
+
+
+  </script>
+
+  <script>
+  const missionGameSteps = [
+    {
+      prompt: "안녕하세요?",
+      hint: "Choose the best response.",
+      answers: [
+        { text: "저는 Kevin입니다", correct: true },
+        { text: "감사합니다", correct: false },
+        { text: "얼마예요?", correct: false }
+      ]
+    },
+    {
+      prompt: "이름이 뭐예요?",
+      hint: "How do you say your name?",
+      answers: [
+        { text: "저는 Kevin입니다", correct: true },
+        { text: "저는 미국에서 왔어요", correct: false },
+        { text: "영어 하세요?", correct: false }
+      ]
+    },
+    {
+      prompt: "어디에서 왔어요?",
+      hint: "Say where you are from.",
+      answers: [
+        { text: "저는 미국에서 왔어요", correct: true },
+        { text: "안녕하세요", correct: false },
+        { text: "감사합니다", correct: false }
+      ]
+    },
+    {
+      prompt: "Do you want to ask for help in English?",
+      hint: "Choose the Korean phrase.",
+      answers: [
+        { text: "영어 하세요?", correct: true },
+        { text: "저는 Kevin입니다", correct: false },
+        { text: "안녕하세요", correct: false }
+      ]
+    }
+  ];
+
+  let currentGameStep = 0;
+  let missionXP = 0;
+
+  function renderMissionGame() {
+    const step = missionGameSteps[currentGameStep];
+    const promptEl = document.getElementById("gamePrompt");
+    const hintEl = document.getElementById("gameHint");
+    const answerWrap = document.getElementById("answerButtons");
+    const feedbackEl = document.getElementById("gameFeedback");
+    const stepValueEl = document.getElementById("stepValue");
+    const progressBar = document.getElementById("gameProgressBar");
+    const completeBox = document.getElementById("gameCompleteBox");
+
+    if (currentGameStep >= missionGameSteps.length) {
+      answerWrap.innerHTML = "";
+      promptEl.textContent = "✅ Mission accomplished!";
+      hintEl.textContent = "You completed your first Korea arrival quest.";
+      feedbackEl.textContent = "";
+      completeBox.style.display = "block";
+      progressBar.style.width = "100%";
+      stepValueEl.textContent = missionGameSteps.length;
+      return;
+    }
+
+    completeBox.style.display = "none";
+    promptEl.textContent = step.prompt;
+    hintEl.textContent = step.hint;
+    feedbackEl.textContent = "";
+    feedbackEl.className = "game-feedback";
+    stepValueEl.textContent = currentGameStep + 1;
+    progressBar.style.width = `${((currentGameStep + 1) / missionGameSteps.length) * 100}%`;
+
+    answerWrap.innerHTML = "";
+    step.answers.forEach(answer => {
+      const btn = document.createElement("button");
+      btn.className = "answer-btn";
+      btn.type = "button";
+      btn.textContent = answer.text;
+      btn.addEventListener("click", () => handleMissionAnswer(answer));
+      answerWrap.appendChild(btn);
+    });
+  }
+
+  function handleMissionAnswer(answer) {
+    const feedbackEl = document.getElementById("gameFeedback");
+    const xpValueEl = document.getElementById("xpValue");
+
+    if (answer.correct) {
+      missionXP += 10;
+      xpValueEl.textContent = missionXP;
+      feedbackEl.textContent = "✅ Correct! +10 XP";
+      feedbackEl.className = "game-feedback feedback-correct";
+
+      setTimeout(() => {
+        currentGameStep += 1;
+        renderMissionGame();
+      }, 700);
+    } else {
+      feedbackEl.textContent = "❌ Try again!";
+      feedbackEl.className = "game-feedback feedback-wrong";
+    }
+  }
+
+  function restartMissionGame() {
+    currentGameStep = 0;
+    missionXP = 0;
+    document.getElementById("xpValue").textContent = "0";
+    renderMissionGame();
+  }
+
+  renderMissionGame();
+</script>
+</body>
+</html>
