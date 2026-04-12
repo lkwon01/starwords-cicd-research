@@ -3,6 +3,15 @@ window.mobileSpeechHelper = (() => {
   const isMobileDevice = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
   let voicesPromise = null;
   let speechPrimed = false;
+  let hasUserGesture = false;
+
+  function markUserGesture() {
+    hasUserGesture = true;
+  }
+
+  window.addEventListener("pointerdown", markUserGesture, { passive: true });
+  window.addEventListener("touchstart", markUserGesture, { passive: true });
+  window.addEventListener("keydown", markUserGesture, { passive: true });
 
   async function loadVoices() {
     if (!supportsSpeech) return [];
@@ -121,6 +130,10 @@ window.mobileSpeechHelper = (() => {
       return { ok: false, reason: "unsupported" };
     }
 
+    if (isMobileDevice && !hasUserGesture && !options.requireGesture) {
+      return { ok: false, reason: "gesture-required" };
+    }
+
     await loadVoices();
 
     try {
@@ -171,6 +184,7 @@ window.mobileSpeechHelper = (() => {
   }
 
   return {
+    hasUserGesture: () => hasUserGesture,
     isMobileDevice,
     supportsSpeech,
     speakText
