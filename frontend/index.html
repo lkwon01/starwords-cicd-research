@@ -38,14 +38,24 @@
 </head>
 <body>
   <main class="card">
-    <h1 class="title">Mission 1: Welcome, Rebel</h1>
+    <h1 class="title">Mission 1: Welcome, Space Cadet</h1>
     <p id="status" class="muted">Authenticating with the Hangul Force…</p>
 
     <div id="content" hidden>
       <p class="ok" id="hello"></p>
 
       <h3>Your Objective</h3>
-      <p>Learn your first Hangul word and report back. Click <code>Start Task</code> to begin.</p>
+      <p>You just landed in deep space. Say hello and introduce yourself to your Jedi before starting your Hangul mission.</p>
+
+      <section class="lesson" style="margin-top:10px">
+        <h4>Arrival Check-In</h4>
+        <p class="muted">Enter your name and transmit your greeting to your Jedi mentor.</p>
+        <div class="row-slim">
+          <input id="cadetName" class="input" placeholder="Your name, cadet" />
+          <button class="btn" id="btnIntroduce">Introduce Myself</button>
+        </div>
+        <p id="introMsg" class="muted" hidden></p>
+      </section>
 
       <div class="row">
         <button class="btn" id="startTask">Start Task</button>
@@ -152,20 +162,35 @@
         if (supabaseClient) {
           const { data: { session } } = await supabaseClient.auth.getSession();
           if (!session) {
-            statusEl.textContent = 'Welcome, Guest Rebel — no login required for Mission 1.';
+            statusEl.textContent = 'Landing complete, Cadet — no login required for Mission 1.';
           } else {
-            statusEl.textContent = 'Welcome, Rebel!';
+            statusEl.textContent = 'Landing complete. Welcome back, Cadet!';
           }
         } else {
-          statusEl.textContent = 'Welcome, Rebel!';
+          statusEl.textContent = 'Landing complete. Welcome, Cadet!';
         }
 
-        $('hello').textContent = 'You are cleared for Mission 1.';
+        $('hello').textContent = 'You landed safely in space. Signal your Jedi mentor to begin.';
         contentEl.hidden = false;
 
         // Wire buttons
         $('startTask').onclick = () => { $('task').hidden = false; showToast('Task unlocked!'); };
         $('toHome').onclick = () => { window.location.href = '/'; };
+        $('btnIntroduce').onclick = () => {
+          const enteredName = $('cadetName').value.trim();
+          const cadetName = enteredName || 'Cadet';
+          localStorage.setItem('starwordsCadetName', cadetName);
+          $('hello').textContent = `Landing confirmed, ${cadetName}.`;
+          $('introMsg').hidden = false;
+          $('introMsg').textContent = `Hello, Jedi Master. I'm ${cadetName}, ready to learn Hangul in this star system.`;
+          showToast('Introduction sent to your Jedi ✨');
+        };
+
+        const savedName = localStorage.getItem('starwordsCadetName');
+        if (savedName) {
+          $('cadetName').value = savedName;
+        }
+
         $('signOut').onclick = async () => {
           try { await supabaseClient?.auth.signOut(); } catch(_){}
           showToast('Signed out. Returning to base…');
