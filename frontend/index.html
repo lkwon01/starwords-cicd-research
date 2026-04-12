@@ -3,204 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lesson 01 — Star Words</title>
-
+  <title>Star Words: The Hangul Force</title>
   <style>
     body {
       margin: 0;
       background-color: black;
       color: #feda4a;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      line-height: 1.6;
-      padding: 20px;
-    }
-
-    h1 { font-size: 2.5rem; margin-top: 40px; }
-
-    .video-section {
-      max-width: 900px;
-      margin: 24px auto 10px;
-    }
-
-    .video-title {
-      font-size: 1.15rem;
-      color: #fff;
-      margin-bottom: 10px;
-    }
-
-    .video-embed {
-      position: relative;
-      width: 100%;
-      padding-top: 56.25%;
-      background: #111;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .video-embed iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    .video-note {
-      color: #ccc;
-      margin-top: 10px;
-    }
-
-    .hangul {
-      font-size: 3rem;
-      margin: 20px 0;
-      color: #fff;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .pronunciation { font-size: 1.5rem; }
-    .meaning { font-size: 1.2rem; color: #ccc; }
-
-    .example {
-      margin-top: 20px;
-      background: #111;
-      padding: 20px;
-      border-radius: 8px;
-      display: inline-block;
-      text-align: left;
-      max-width: 760px;
-    }
-
-    .example-sentence {
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1.2rem;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    .audio-btn {
+    header {
+      text-align: center;
+      padding: 40px 10px 20px;
+    }
+
+    header h1 {
+      font-size: 3em;
+      font-weight: bold;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .star-wars {
+      flex: 1;
+      position: relative;
+      height: 60vh;
+      overflow: hidden;
+      perspective: 400px;
+    }
+
+    .crawl {
+      position: absolute;
+      top: 100%;
+      width: 70%;
+      max-width: 800px;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      text-align: justify;
+      transform: rotateX(25deg);
+      transform-origin: 50% 100%;
+      animation: crawl 50s linear infinite; /* loop forever */
+    }
+
+    @keyframes crawl {
+      0%   { top: 100%; }
+      100% { top: -300%; }
+    }
+
+    .buttons {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    /* Shared styling for links and buttons */
+    .buttons a,
+    .buttons button {
+      display: inline-block;
       background-color: #feda4a;
-      border: none;
       color: black;
-      padding: 6px 10px;
+      font-size: 1.2rem;
+      padding: 12px 24px;
+      margin: 10px;
       border-radius: 5px;
       cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: background-color 0.3s ease;
     }
 
-    .audio-btn:hover { background-color: #ffe870; }
+    .buttons a:hover,
+    .buttons button:hover {
+      background-color: #ffe870;
+    }
 
-    a { color: #feda4a; text-decoration: none; }
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      padding: 10px 0;
+    }
   </style>
 </head>
-
 <body>
 
-  <h1>Lesson 01: Welcome to Your Mission</h1>
-  <p>This is your first step as a Hangul Jedi! Today, you will learn how to say <strong>cat</strong> in Korean.</p>
+  <!-- LOGO -->
+  <header>
+    <h1>STAR<br>WORDS</h1>
+  </header>
 
-  <div class="video-section">
-    <div class="video-title">MISSION 001: LEARN KOREAN 🐱</div>
-
-    <div class="video-embed">
-      <iframe
-        src="https://www.youtube.com/embed/XnWaoQ9hxsQ"
-        allowfullscreen>
-      </iframe>
+  <!-- STAR WARS CRAWL -->
+  <div class="star-wars">
+    <div class="crawl">
+      <p>🌠 <strong>Backstory</strong></p>
+      <p>
+        A long time ago, in a galaxy filled with silenced voices, the ancient language of Hangul was nearly forgotten across the stars.
+        A powerful Empire known as The Grammar Order suppressed free speech and erased cultural knowledge.
+      </p>
+      <p>
+        But a small group of rebels discovered ancient scrolls containing the secrets of Hangul.
+        You are one of them — a young Padawan of language, chosen by the Hangul Force.
+      </p>
+      <p>
+        Your mission: restore language, defeat confusion, and bring clarity to the galaxy… one Hangul word at a time.
+      </p>
     </div>
-
-    <div class="video-note">
-      Watch the mission briefing before starting the lesson.
-    </div>
   </div>
 
-  <div class="hangul">
-    고양이
-    <button class="audio-btn" onclick="playCat()">🔊</button>
+  <!-- ACTION BUTTONS -->
+  <div class="buttons">
+    <a class="sw-btn" href="lessons/lesson-01/index.html">Start Mission</a>
+    <a class="sw-btn" href="join/index.html">Join the Rebellion</a>
   </div>
 
-  <div class="pronunciation"><em>goyang-i</em></div>
-  <div class="meaning">Meaning: Cat 🐱</div>
-
-  <div class="example">
-    <p><strong>Example Sentence:</strong></p>
-
-    <div class="example-sentence">
-      <span>저는 고양이를 좋아해요.</span>
-      <button class="audio-btn" onclick="playSentence()">🔊</button>
-    </div>
-
-    <p><em>Jeoneun goyangi-reul joahaeyo.</em></p>
-    <p><small>I like cats.</small></p>
-  </div>
-
-  <!-- ✅ Progress Button -->
-  <div style="margin-top: 30px;">
-    <button id="saveProgressBtn" class="audio-btn">Mark Lesson Complete</button>
-    <p id="progressMessage" style="color:#ccc;"></p>
-  </div>
-
-  <p style="margin-top: 40px;">
-    <a href="../../index.html">← Back to Home</a>
-  </p>
-
-  <!-- ✅ SCRIPT -->
-  <script>
-    const progressUrl = "https://v9e4dgcrnd.execute-api.us-east-1.amazonaws.com/progress";
-
-    function getUserId() {
-      let userId = localStorage.getItem("starwordsUserId");
-      if (!userId) {
-        userId = "user-" + Math.random().toString(36).slice(2);
-        localStorage.setItem("starwordsUserId", userId);
-      }
-      return userId;
-    }
-
-    async function saveProgress() {
-      const messageEl = document.getElementById("progressMessage");
-
-      const payload = {
-        userId: getUserId(),
-        lessonId: "lesson-01",
-        completed: true
-      };
-
-      try {
-        const response = await fetch(progressUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) throw new Error(data.message);
-
-        messageEl.textContent = "✅ Progress saved!";
-        console.log(data);
-
-      } catch (error) {
-        console.error(error);
-        messageEl.textContent = "❌ Failed to save progress";
-      }
-    }
-
-    document.getElementById("saveProgressBtn").addEventListener("click", saveProgress);
-
-    function playCat() {
-      const u = new SpeechSynthesisUtterance("고양이");
-      u.lang = "ko-KR";
-      speechSynthesis.speak(u);
-    }
-
-    function playSentence() {
-      const u = new SpeechSynthesisUtterance("저는 고양이를 좋아해요.");
-      u.lang = "ko-KR";
-      speechSynthesis.speak(u);
-    }
-  </script>
+  <!-- COPYRIGHT -->
+  <footer>
+    &copy; 2025 Star Words. All rights reserved.
+  </footer>
 
 </body>
 </html>

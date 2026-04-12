@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Day 1 Survival Korean Camp</title>
+  <title>Day 2 Survival Korean Camp</title>
   <style>
     :root {
       --bg-0: #04070f;
@@ -622,7 +622,8 @@
       margin-bottom: 8px;
     }
 
-    input[type="text"] {
+    input[type="text"],
+    select {
       width: 100%;
       padding: 16px 18px;
       border-radius: 16px;
@@ -634,7 +635,8 @@
       transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
     }
 
-    input[type="text"]:focus {
+    input[type="text"]:focus,
+    select:focus {
       border-color: rgba(120, 245, 255, 0.65);
       box-shadow: 0 0 0 4px rgba(120, 245, 255, 0.12);
       transform: translateY(-1px);
@@ -754,28 +756,6 @@
       color: var(--green);
     }
 
-    .unlock-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 12px;
-      padding: 12px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(130, 246, 176, 0.28);
-      background: linear-gradient(135deg, rgba(130, 246, 176, 0.18), rgba(120, 245, 255, 0.18));
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
-      box-shadow: 0 12px 24px rgba(130, 246, 176, 0.14);
-    }
-
-    .unlock-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 30px rgba(130, 246, 176, 0.22);
-    }
-
     .report-pill {
       background: rgba(255, 211, 107, 0.08);
       color: var(--gold);
@@ -861,7 +841,7 @@
           <div class="brand-mark">✦</div>
           <div class="brand-copy">
             <small>7-Day Survival Korean Camp</small>
-            <h1>Day 1: Arrival of the Jedi Trainee</h1>
+            <h1>Day 2: Street Food Supply Run</h1>
           </div>
         </div>
         <div class="hud-stats">
@@ -871,11 +851,11 @@
           </div>
           <div class="stat-chip">
             <span class="meta-label">XP</span>
-            <strong id="xpValue">0 / 100</strong>
+            <strong id="xpValue">100 / 200</strong>
           </div>
           <div class="stat-chip">
             <span class="meta-label">Camp Progress</span>
-            <strong id="campValue">Day 1 / 7</strong>
+            <strong id="campValue">Day 2 / 7</strong>
           </div>
         </div>
       </div>
@@ -900,11 +880,11 @@
         <div class="mission-banner">
           <div>
             <span class="section-label">Primary Mission</span>
-            <h2>Introduce yourself to the Jedi Master in Korean.</h2>
+            <h2>Order food in Korean at the Seoul night market.</h2>
           </div>
           <div class="mission-rank">
             <span class="meta-label">Mission Code</span>
-            <strong>DAY-01</strong>
+            <strong>DAY-02</strong>
           </div>
         </div>
 
@@ -917,7 +897,7 @@
                   <span class="signal-dot" aria-hidden="true"></span>
                   Live Holo Briefing
                 </div>
-                <div class="video-timer" id="videoTimer">Day 1 Transmission</div>
+                <div class="video-timer" id="videoTimer">Day 2 Transmission</div>
               </div>
               <div class="video-layout">
                 <div class="avatar-card" aria-hidden="true">
@@ -958,50 +938,55 @@
 
         <section class="mission-card">
           <span class="section-label">Objective</span>
-          <p id="objectiveText">Stand by for mission initialization.</p>
+          <p id="objectiveText">Stand by for food-run mission initialization.</p>
           <ol class="objective-list">
             <li>Start the mission after the briefing completes.</li>
-            <li>Enter your trainee name.</li>
-            <li>Generate and hear your Korean self-introduction.</li>
+            <li>Select the food item you want to order.</li>
+            <li>Generate and hear the three core ordering phrases.</li>
             <li>Report completion to the Jedi master.</li>
           </ol>
           <div class="button-row" style="margin-top: 16px;">
             <button id="startMissionBtn">Start Mission</button>
           </div>
-          <p class="system-note" id="missionHint">Mission controls will unlock after the Jedi master finishes speaking.</p>
+          <p class="system-note" id="missionHint">Mission controls will unlock after the Jedi master finishes the Day 2 briefing.</p>
         </section>
 
         <section class="translator-box">
-          <span class="section-label">Phrase Builder</span>
+          <span class="section-label">Food Order Builder</span>
           <div class="translator-grid">
             <div>
-              <label for="nameInput">Trainee Name</label>
-              <input id="nameInput" type="text" maxlength="20" placeholder="Enter your name" disabled />
+              <label for="itemInput">Select Food Target</label>
+              <select id="itemInput" disabled>
+                <option value="tteokbokki">Tteokbokki</option>
+                <option value="gimbap">Gimbap</option>
+                <option value="ramyeon">Ramyeon</option>
+                <option value="hotteok">Hotteok</option>
+              </select>
             </div>
 
             <div class="button-row">
-              <button id="generateBtn" class="secondary" disabled>Generate Korean Intro</button>
-              <button id="audioBtn" class="secondary" disabled>Play Greeting Audio</button>
+              <button id="generateBtn" class="secondary" disabled>Generate Food Order</button>
+              <button id="audioBtn" class="secondary" disabled>Play Order Audio</button>
             </div>
 
             <div class="phrase-output">
-              <p class="phrase-korean" id="phraseKorean">안녕하세요. 저는 [name]입니다.</p>
-              <p class="phrase-romanized" id="phraseRomanized">Annyeonghaseyo. Jeoneun [name] imnida.</p>
-              <p class="phrase-translation" id="phraseTranslation">Hello. I am [name].</p>
+              <p class="phrase-korean" id="phraseKorean">이거 주세요. 얼마예요? 감사합니다.</p>
+              <p class="phrase-romanized" id="phraseRomanized">Igeo juseyo. Eolmayeyo? Gamsahamnida.</p>
+              <p class="phrase-translation" id="phraseTranslation">Please give me this. How much is it? Thank you.</p>
             </div>
           </div>
         </section>
 
         <section class="reward-box">
           <span class="section-label">Mission Turn-In</span>
-          <p class="reward-copy" id="reportCopy">Generate your intro first, then report back to the Jedi master.</p>
+          <p class="reward-copy" id="reportCopy">Generate your food order first, then report back to the Jedi master.</p>
           <div class="button-row">
             <button id="reportBtn" class="success" disabled>Report Completion</button>
-            <button id="resetBtn" class="secondary">Reset Day 1</button>
+            <button id="resetBtn" class="secondary">Reset Day 2</button>
           </div>
           <div class="level-flash" id="levelFlash">
             <strong>Level Up</strong>
-            <p style="margin: 8px 0 0;">Day 1 cleared. Mission 2 is now unlocked.</p>
+            <p style="margin: 8px 0 0;">Day 2 cleared. Mission 3 is now unlocked.</p>
           </div>
         </section>
       </article>
@@ -1009,50 +994,56 @@
       <aside class="side-panel">
         <section class="side-card">
           <span class="section-label">Mission Status</span>
-          <p class="status-text" id="statusText"><strong>Awaiting briefing.</strong> New arrival detected above the Korean peninsula.</p>
+          <p class="status-text" id="statusText"><strong>Awaiting briefing.</strong> The camp quartermaster has assigned a night-market supply run.</p>
           <div class="report-pill" id="reportPill">Jedi Master link: pending</div>
         </section>
 
         <section class="side-card">
-          <span class="section-label">Day 1 Rewards</span>
-          <p class="reward-copy">Complete the mission to earn 100 XP, level up your trainee badge, and advance the 7-day campaign tracker.</p>
-          <div class="unlock-pill hidden" id="unlockPill">Mission 2 unlocked: Survival Phrases</div>
-          <a class="unlock-link hidden" id="mission2Link" href="../lesson-02/index.html">Go To Mission 2</a>
+          <span class="section-label">Day 2 Rewards</span>
+          <p class="reward-copy">Complete the mission to earn 100 more XP, level up your trainee badge, and unlock Mission 3.</p>
+          <div class="unlock-pill hidden" id="unlockPill">Mission 3 unlocked: Market Survival</div>
         </section>
 
         <section class="side-card">
           <span class="section-label">Saved Progress</span>
-          <p class="status-text" id="saveStatus"><strong>Local save online.</strong> Your Day 1 state is stored in this browser with `localStorage`.</p>
+          <p class="status-text" id="saveStatus"><strong>Local save online.</strong> Your Day 2 state is stored in this browser with `localStorage`.</p>
         </section>
       </aside>
     </section>
   </main>
 
   <script>
-    // This single-file prototype stores all mission state locally so the player can refresh
-    // and continue from the same point in Day 1 of the 7-day campaign.
-    const STORAGE_KEY = "survival-korean-camp-day1";
+    // This single-file lesson stores all mission state locally so the player can refresh
+    // and continue from the same point in Day 2 of the 7-day campaign.
+    const STORAGE_KEY = "survival-korean-camp-day2";
 
     // Central game state keeps the UI and persistence in sync.
     const defaultState = {
-      level: 1,
-      xp: 0,
-      day: 1,
+      level: 2,
+      xp: 100,
+      day: 2,
       missionStarted: false,
       introGenerated: false,
       missionCompleted: false,
       nextMissionUnlocked: false,
-      playerName: "",
-      generatedPhrase: "안녕하세요. 저는 [name]입니다."
+      selectedItem: "tteokbokki",
+      generatedPhrase: "이거 주세요. 얼마예요? 감사합니다."
     };
 
     const briefingLines = [
       "Transmission incoming...",
-      "Jedi Master Han: Trainee, you have landed in Korea for Day 1 of Survival Korean Camp.",
-      "Your first test is simple, but essential.",
-      "Approach your master with respect. Say hello in Korean. Introduce yourself with confidence.",
-      "Complete this and you will earn your first camp XP and unlock the next mission."
+      "Jedi Master Han: Day 2 begins now. Your mission is to secure food at the Seoul night market.",
+      "You will point to the food you want and use three survival phrases with confidence.",
+      "Say, please give me this. Ask, how much is it. Finish with, thank you.",
+      "Complete this supply run and you will earn more camp experience and unlock the next mission."
     ];
+
+    const foodLabels = {
+      tteokbokki: "tteokbokki",
+      gimbap: "gimbap",
+      ramyeon: "ramyeon",
+      hotteok: "hotteok"
+    };
 
     const state = loadState();
 
@@ -1067,7 +1058,7 @@
     const videoTimer = document.getElementById("videoTimer");
     const objectiveText = document.getElementById("objectiveText");
     const missionHint = document.getElementById("missionHint");
-    const nameInput = document.getElementById("nameInput");
+    const itemInput = document.getElementById("itemInput");
     const generateBtn = document.getElementById("generateBtn");
     const audioBtn = document.getElementById("audioBtn");
     const reportBtn = document.getElementById("reportBtn");
@@ -1079,13 +1070,13 @@
     const reportCopy = document.getElementById("reportCopy");
     const levelFlash = document.getElementById("levelFlash");
     const unlockPill = document.getElementById("unlockPill");
-    const mission2Link = document.getElementById("mission2Link");
     const statusText = document.getElementById("statusText");
     const reportPill = document.getElementById("reportPill");
     const saveStatus = document.getElementById("saveStatus");
     const avatarStatus = document.getElementById("avatarStatus");
 
     let briefingFinished = false;
+    let briefingForceUnlockTimer = null;
 
     // Reads the saved state if available and falls back to a clean mission profile.
     function loadState() {
@@ -1101,7 +1092,7 @@
     // Saves the current state after each significant mission update.
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      saveStatus.innerHTML = "<strong>Local save online.</strong> Day 1 progress has been stored in this browser.";
+      saveStatus.innerHTML = "<strong>Local save online.</strong> Day 2 progress has been stored in this browser.";
     }
 
     // Small helper to clamp progress calculations for the HUD bars.
@@ -1118,26 +1109,21 @@
       dayFill.style.width = `${toPercent(state.day, 7)}%`;
       levelFlash.classList.toggle("show", state.missionCompleted);
       unlockPill.classList.toggle("hidden", !state.nextMissionUnlocked);
-      mission2Link.classList.toggle("hidden", !state.nextMissionUnlocked);
     }
 
     // Renders mission-specific controls based on the current progress checkpoints.
     function renderMissionState() {
       phraseKorean.textContent = state.generatedPhrase;
-      phraseRomanized.textContent = state.playerName
-        ? `Annyeonghaseyo. Jeoneun ${state.playerName} imnida.`
-        : "Annyeonghaseyo. Jeoneun [name] imnida.";
-      phraseTranslation.textContent = state.playerName
-        ? `Hello. I am ${state.playerName}.`
-        : "Hello. I am [name].";
-      nameInput.value = state.playerName;
+      phraseRomanized.textContent = "Igeo juseyo. Eolmayeyo? Gamsahamnida.";
+      phraseTranslation.textContent = `Please give me this. How much is it? Thank you. Target food: ${foodLabels[state.selectedItem]}.`;
+      itemInput.value = state.selectedItem;
 
       const canStart = briefingFinished && !state.missionStarted;
       const canGenerate = state.missionStarted && !state.missionCompleted;
       const canReport = state.introGenerated && !state.missionCompleted;
 
       startMissionBtn.disabled = !canStart;
-      nameInput.disabled = !canGenerate;
+      itemInput.disabled = !canGenerate;
       generateBtn.disabled = !canGenerate;
       audioBtn.disabled = !state.introGenerated;
       reportBtn.disabled = !canReport;
@@ -1145,48 +1131,48 @@
       if (!briefingFinished && !state.missionStarted) {
         objectiveText.textContent = "Receiving Jedi master briefing...";
         missionHint.textContent = "Mission controls will unlock after the auto-play intro finishes.";
-        statusText.innerHTML = "<strong>Awaiting briefing.</strong> New arrival detected above the Korean peninsula.";
+        statusText.innerHTML = "<strong>Awaiting briefing.</strong> The camp quartermaster has assigned a night-market supply run.";
         reportPill.textContent = "Jedi Master link: pending";
         avatarStatus.textContent = "Connecting to camp hololink";
         briefingStatusLine.textContent = "Stand by for incoming transmission";
         briefingSummary.textContent = "The Jedi master will brief the mission automatically. No transcript will be shown on screen.";
         videoTimer.textContent = "Signal Syncing";
       } else if (!state.missionStarted) {
-        objectiveText.textContent = "Click Start Mission and prepare to introduce yourself to the Jedi master.";
-        missionHint.textContent = "Your objective: say hello in Korean and introduce yourself.";
-        statusText.innerHTML = "<strong>Briefing complete.</strong> The master is waiting for your formal introduction.";
+        objectiveText.textContent = "Click Start Mission and prepare to order food in Korean at the night market.";
+        missionHint.textContent = "Your objective: say please give me this, how much is it, and thank you.";
+        statusText.innerHTML = "<strong>Briefing complete.</strong> The food vendors are waiting for your order.";
         reportPill.textContent = "Jedi Master link: open";
         avatarStatus.textContent = "Awaiting trainee response";
         briefingStatusLine.textContent = "Briefing complete";
         briefingSummary.textContent = "Voice briefing received. Proceed to mission start.";
         videoTimer.textContent = "Transmission Archived";
       } else if (!state.introGenerated) {
-        objectiveText.textContent = "Enter your name and generate your Korean self-introduction.";
-        missionHint.textContent = "Use your trainee name exactly as you want it spoken.";
-        statusText.innerHTML = "<strong>Mission active.</strong> Build your greeting before checking in.";
+        objectiveText.textContent = "Select a food item and generate your Korean ordering script.";
+        missionHint.textContent = "Focus on the three core phrases for buying food.";
+        statusText.innerHTML = "<strong>Mission active.</strong> Build your food order before checking in.";
         reportPill.textContent = "Jedi Master link: listening";
-        avatarStatus.textContent = "Monitoring introduction console";
+        avatarStatus.textContent = "Monitoring market comms";
         briefingStatusLine.textContent = "Mission channel open";
-        briefingSummary.textContent = "The briefing is complete. Build your intro and prepare to report back.";
+        briefingSummary.textContent = "The briefing is complete. Build your food order and prepare to report back.";
         videoTimer.textContent = "Mission Feed Open";
       } else if (!state.missionCompleted) {
-        objectiveText.textContent = "Play the audio, practice the line, and report completion to the Jedi master.";
+        objectiveText.textContent = "Play the audio, practice the food-ordering lines, and report completion to the Jedi master.";
         missionHint.textContent = "Mission ready for turn-in.";
-        statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your greeting and confirm success.";
+        statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your food order and confirm success.";
         reportPill.textContent = "Jedi Master link: ready for report";
         avatarStatus.textContent = "Ready to receive mission report";
         briefingStatusLine.textContent = "Awaiting mission turn-in";
-        briefingSummary.textContent = "Your intro phrase is ready. Play it aloud, then complete the report.";
+        briefingSummary.textContent = "Your food-ordering script is ready. Play it aloud, then complete the report.";
         videoTimer.textContent = "Awaiting Report";
       } else {
-        objectiveText.textContent = "Mission complete. Day 1 cleared and Mission 2 unlocked.";
+        objectiveText.textContent = "Mission complete. Day 2 cleared and Mission 3 unlocked.";
         missionHint.textContent = "Your progress is saved. Refreshing the page will preserve the unlock.";
-        reportCopy.textContent = "Jedi Master Han: Well done, trainee. You earned 100 XP and cleared Day 1.";
-        statusText.innerHTML = "<strong>Day 1 complete.</strong> You may proceed to the next mission when ready.";
+        reportCopy.textContent = "Jedi Master Han: Well done, trainee. You earned 100 XP and cleared Day 2.";
+        statusText.innerHTML = "<strong>Day 2 complete.</strong> You may proceed to the next mission when ready.";
         reportPill.textContent = "Jedi Master link: mission accepted";
         avatarStatus.textContent = "Mission cleared";
         briefingStatusLine.textContent = "Transmission archived";
-        briefingSummary.textContent = "Day 1 briefing complete. Mission 2 is now unlocked.";
+        briefingSummary.textContent = "Day 2 briefing complete. Mission 3 is now unlocked.";
         videoTimer.textContent = "Mission Cleared";
       }
     }
@@ -1203,18 +1189,33 @@
       speechSynthesis.speak(utterance);
     }
 
+    function finalizeBriefing() {
+      briefingFinished = true;
+      briefingVideo.dataset.speaking = "false";
+      renderMissionState();
+    }
+
     // Plays the cinematic intro automatically without showing the spoken script on screen.
     async function playBriefing() {
       if (state.missionStarted || state.missionCompleted) {
-        briefingFinished = true;
-        briefingVideo.dataset.speaking = "false";
-        renderMissionState();
+        finalizeBriefing();
         return;
       }
 
+      clearTimeout(briefingForceUnlockTimer);
+      briefingForceUnlockTimer = setTimeout(() => {
+        if (!briefingFinished) {
+          avatarStatus.textContent = "Briefing fallback complete";
+          briefingStatusLine.textContent = "Briefing complete";
+          briefingSummary.textContent = "Auto-briefing ended. Start Mission is now available.";
+          videoTimer.textContent = "Transmission Archived";
+          finalizeBriefing();
+        }
+      }, 12000);
+
       briefingVideo.dataset.speaking = "true";
       briefingStatusLine.textContent = "Broadcasting mission briefing";
-      briefingSummary.textContent = "Jedi Master Han is delivering your Day 1 arrival briefing.";
+      briefingSummary.textContent = "Jedi Master Han is delivering your Day 2 market briefing.";
       videoTimer.textContent = "Now Playing";
 
       for (const line of briefingLines) {
@@ -1223,9 +1224,8 @@
         await wait(240);
       }
 
-      briefingFinished = true;
-      briefingVideo.dataset.speaking = "false";
-      renderMissionState();
+      clearTimeout(briefingForceUnlockTimer);
+      finalizeBriefing();
     }
 
     // Safe wrapper around speech synthesis for browsers that support it.
@@ -1247,42 +1247,38 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Builds the required sentence from the player's name while preserving the fixed Korean pattern.
+    // Builds the Day 2 food-ordering script using the fixed three survival phrases.
     function generatePhrase() {
-      const trimmedName = nameInput.value.trim();
-      if (!trimmedName) {
-        statusText.innerHTML = "<strong>Name required.</strong> Enter your trainee name to generate the line.";
-        return;
-      }
-
-      state.playerName = trimmedName;
-      state.generatedPhrase = `안녕하세요. 저는 ${trimmedName}입니다.`;
+      state.selectedItem = itemInput.value;
+      state.generatedPhrase = "이거 주세요. 얼마예요? 감사합니다.";
       state.introGenerated = true;
-      reportCopy.textContent = "Your introduction is ready. Play the audio, then report to the Jedi master.";
+      reportCopy.textContent = `Your ${foodLabels[state.selectedItem]} order script is ready. Play the audio, then report to the Jedi master.`;
       saveState();
       renderMissionState();
     }
 
-    // Awards Day 1 XP, levels up the player, and marks the next mission as unlocked.
+    // Awards Day 2 XP, levels up the player, and marks the next mission as unlocked.
     function completeMission() {
       if (state.missionCompleted) return;
 
-      state.xp = 100;
-      state.level = 2;
-      state.day = 1;
+      state.xp = 200;
+      state.level = 3;
+      state.day = 2;
       state.missionCompleted = true;
       state.nextMissionUnlocked = true;
-      reportCopy.textContent = "Mission complete. The Jedi master acknowledges your greeting and unlocks Mission 2.";
+      reportCopy.textContent = "Mission complete. The Jedi master acknowledges your market order and unlocks Mission 3.";
       saveState();
       renderHud();
       renderMissionState();
     }
 
-    // Restores the page to a clean Day 1 state for replay testing.
+    // Restores the page to a clean Day 2 state for replay testing.
     function resetMission() {
       Object.assign(state, { ...defaultState });
       briefingFinished = false;
-      speechSynthesis.cancel();
+      if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+      }
       saveState();
       renderHud();
       renderMissionState();
@@ -1291,19 +1287,13 @@
 
     startMissionBtn.addEventListener("click", () => {
       state.missionStarted = true;
-      reportCopy.textContent = "Mission active. Enter your trainee name and generate your greeting.";
+      reportCopy.textContent = "Mission active. Select a food item and generate your food-ordering script.";
       saveState();
       renderMissionState();
-      nameInput.focus();
+      itemInput.focus();
     });
 
     generateBtn.addEventListener("click", generatePhrase);
-
-    nameInput.addEventListener("keydown", event => {
-      if (event.key === "Enter" && !generateBtn.disabled) {
-        generatePhrase();
-      }
-    });
 
     audioBtn.addEventListener("click", () => {
       if (!("speechSynthesis" in window)) {
@@ -1311,7 +1301,7 @@
         return;
       }
       speakPhrase();
-      statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean line.";
+      statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean food-ordering lines.";
     });
 
     reportBtn.addEventListener("click", completeMission);
