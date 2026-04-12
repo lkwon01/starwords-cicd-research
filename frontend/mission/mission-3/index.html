@@ -197,7 +197,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 18px;
     }
 
@@ -205,6 +205,11 @@
     .side-panel {
       border-radius: 28px;
       padding: 22px;
+    }
+
+    .main-panel {
+      width: min(100%, 860px);
+      margin: 0 auto;
     }
 
     .mission-banner {
@@ -328,7 +333,7 @@
       position: relative;
       z-index: 2;
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: 1fr;
       gap: 20px;
       align-items: stretch;
     }
@@ -515,75 +520,6 @@
       from { transform: translateX(-50%) translateY(0); }
       50% { transform: translateX(-50%) translateY(-8px); }
       to { transform: translateX(-50%) translateY(0); }
-    }
-
-    .briefing-audio {
-      border-radius: 20px;
-      border: 1px solid rgba(120, 245, 255, 0.12);
-      background:
-        radial-gradient(circle at top left, rgba(120, 245, 255, 0.08), transparent 28%),
-        linear-gradient(180deg, rgba(7, 12, 24, 0.92), rgba(10, 18, 35, 0.96));
-      padding: 18px;
-      display: grid;
-      align-content: center;
-      gap: 14px;
-      min-height: 250px;
-    }
-
-    .audio-visual {
-      display: flex;
-      gap: 8px;
-      align-items: end;
-      height: 74px;
-    }
-
-    .audio-bar {
-      flex: 1;
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(120, 245, 255, 0.2), rgba(120, 245, 255, 0.9));
-      box-shadow: 0 0 12px rgba(120, 245, 255, 0.22);
-      animation: equalizer 1.2s ease-in-out infinite;
-      transform-origin: bottom center;
-      opacity: 0.35;
-    }
-
-    .audio-bar:nth-child(2) { animation-delay: 0.15s; }
-    .audio-bar:nth-child(3) { animation-delay: 0.3s; }
-    .audio-bar:nth-child(4) { animation-delay: 0.45s; }
-    .audio-bar:nth-child(5) { animation-delay: 0.6s; }
-    .audio-bar:nth-child(6) { animation-delay: 0.75s; }
-
-    .briefing-video[data-speaking="true"] .audio-bar {
-      opacity: 1;
-    }
-
-    .briefing-video[data-speaking="false"] .audio-bar {
-      animation-play-state: paused;
-      transform: scaleY(0.32);
-    }
-
-    .audio-title {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: 0.04em;
-    }
-
-    .audio-subtitle {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .audio-status-line {
-      color: var(--cyan);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: 12px;
-    }
-
-    @keyframes equalizer {
-      0%, 100% { transform: scaleY(0.28); }
-      50% { transform: scaleY(1); }
     }
 
     @keyframes pulseSignal {
@@ -1006,8 +942,7 @@
         min-height: 0;
       }
 
-      .avatar-card,
-      .briefing-audio {
+      .avatar-card {
         min-height: 220px;
       }
     }
@@ -1115,20 +1050,6 @@
                     <div class="avatar-status" id="avatarStatus">Connecting to camp hololink</div>
                   </div>
                 </div>
-                <div class="briefing-audio" aria-live="polite">
-                  <span class="section-label">Mission Feed</span>
-                  <p class="audio-title">Voice Channel Active</p>
-                  <p class="audio-subtitle" id="briefingSummary">The Jedi master will brief the mission automatically. No transcript will be shown on screen.</p>
-                  <div class="audio-visual" aria-hidden="true">
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                  </div>
-                  <div class="audio-status-line" id="briefingStatusLine">Stand by for incoming transmission</div>
-                </div>
               </div>
             </div>
           </div>
@@ -1187,29 +1108,16 @@
           <div class="level-flash" id="levelFlash">
             <strong>Level Up</strong>
             <p style="margin: 8px 0 0;">Day 3 cleared. Mission 4 is now unlocked.</p>
+            <button
+              id="nextMissionBtn"
+              class="success"
+              style="display: none; margin-top: 12px;"
+              onclick="window.location.href='../mission-4/index.html'">
+              Proceed to Mission 4
+            </button>
           </div>
         </section>
       </article>
-
-      <aside class="side-panel">
-        <section class="side-card">
-          <span class="section-label">Mission Status</span>
-          <p class="status-text" id="statusText"><strong>Awaiting briefing.</strong> The social training room is preparing a hobbies conversation drill.</p>
-          <div class="report-pill" id="reportPill">Jedi Master link: pending</div>
-        </section>
-
-        <section class="side-card">
-          <span class="section-label">Day 3 Rewards</span>
-          <p class="reward-copy">Complete the mission to earn 100 more XP, level up your trainee badge, and unlock Mission 4.</p>
-          <div class="unlock-pill hidden" id="unlockPill">Mission 4 unlocked: Friends and Plans</div>
-          <a class="unlock-link hidden" id="mission4Link" href="../mission-4/index.html">Go To Mission 4</a>
-        </section>
-
-        <section class="side-card">
-          <span class="section-label">Saved Progress</span>
-          <p class="status-text" id="saveStatus"><strong>Local save online.</strong> Your Day 3 state is stored in this browser with `localStorage`.</p>
-        </section>
-      </aside>
     </section>
   </main>
 
@@ -1303,6 +1211,7 @@
     const reportCopy = document.getElementById("reportCopy");
     const grammarHelpMount = document.getElementById("grammarHelpMount");
     const levelFlash = document.getElementById("levelFlash");
+    const nextMissionBtn = document.getElementById("nextMissionBtn");
     const unlockPill = document.getElementById("unlockPill");
     const mission4Link = document.getElementById("mission4Link");
     const statusText = document.getElementById("statusText");
@@ -1331,7 +1240,9 @@
     // Saves the current state after each significant mission update.
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      saveStatus.innerHTML = "<strong>Local save online.</strong> Day 3 progress has been stored in this browser.";
+      if (saveStatus) {
+        saveStatus.innerHTML = "<strong>Local save online.</strong> Day 3 progress has been stored in this browser.";
+      }
     }
 
     function triggerCelebration(title, text) {
@@ -1361,8 +1272,9 @@
       xpFill.style.width = `${toPercent(state.xp, 100)}%`;
       dayFill.style.width = `${toPercent(state.day, 7)}%`;
       levelFlash.classList.toggle("show", state.missionCompleted);
-      unlockPill.classList.toggle("hidden", !state.nextMissionUnlocked);
-      mission4Link.classList.toggle("hidden", !state.nextMissionUnlocked);
+      nextMissionBtn.style.display = state.missionCompleted ? "block" : "none";
+      unlockPill?.classList.toggle("hidden", !state.nextMissionUnlocked);
+      mission4Link?.classList.toggle("hidden", !state.nextMissionUnlocked);
     }
 
     // Renders mission-specific controls based on the current progress checkpoints.
@@ -1386,48 +1298,88 @@
       if (!briefingFinished && !state.missionStarted) {
         objectiveText.textContent = "Receiving Jedi master briefing...";
         missionHint.textContent = "Mission controls will unlock after the auto-play intro finishes.";
-        statusText.innerHTML = "<strong>Awaiting briefing.</strong> The social training room is preparing a hobbies conversation drill.";
-        reportPill.textContent = "Jedi Master link: pending";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Awaiting briefing.</strong> The social training room is preparing a hobbies conversation drill.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: pending";
+        }
         avatarStatus.textContent = "Connecting to camp hololink";
-        briefingStatusLine.textContent = "Stand by for incoming transmission";
-        briefingSummary.textContent = "The Jedi master will brief the mission automatically. No transcript will be shown on screen.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Stand by for incoming transmission";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "The Jedi master will brief the mission automatically. No transcript will be shown on screen.";
+        }
         videoTimer.textContent = "Signal Syncing";
       } else if (!state.missionStarted) {
         objectiveText.textContent = "Click Start Mission and prepare to talk about hobbies and likes in Korean.";
         missionHint.textContent = "Your objective: ask what someone likes and answer with what you like.";
-        statusText.innerHTML = "<strong>Briefing complete.</strong> The conversation room is ready for your hobby talk.";
-        reportPill.textContent = "Jedi Master link: open";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Briefing complete.</strong> The conversation room is ready for your hobby talk.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: open";
+        }
         avatarStatus.textContent = "Awaiting trainee response";
-        briefingStatusLine.textContent = "Briefing complete";
-        briefingSummary.textContent = "Voice briefing received. Proceed to mission start.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Briefing complete";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "Voice briefing received. Proceed to mission start.";
+        }
         videoTimer.textContent = "Transmission Archived";
       } else if (!state.introGenerated) {
         objectiveText.textContent = "Select a hobby and generate your Korean question-and-answer dialogue.";
         missionHint.textContent = "Focus on asking what someone likes and saying what you like.";
-        statusText.innerHTML = "<strong>Mission active.</strong> Build your hobby dialogue before checking in.";
-        reportPill.textContent = "Jedi Master link: listening";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Mission active.</strong> Build your hobby dialogue before checking in.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: listening";
+        }
         avatarStatus.textContent = "Monitoring social training comms";
-        briefingStatusLine.textContent = "Mission channel open";
-        briefingSummary.textContent = "The briefing is complete. Build your hobby dialogue and prepare to report back.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Mission channel open";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "The briefing is complete. Build your hobby dialogue and prepare to report back.";
+        }
         videoTimer.textContent = "Mission Feed Open";
       } else if (!state.missionCompleted) {
         objectiveText.textContent = "Play the audio, practice the hobbies dialogue, and report completion to the Jedi master.";
         missionHint.textContent = "Mission ready for turn-in.";
-        statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your hobby dialogue and confirm success.";
-        reportPill.textContent = "Jedi Master link: ready for report";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your hobby dialogue and confirm success.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: ready for report";
+        }
         avatarStatus.textContent = "Ready to receive mission report";
-        briefingStatusLine.textContent = "Awaiting mission turn-in";
-        briefingSummary.textContent = "Your hobby dialogue is ready. Play it aloud, then complete the report.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Awaiting mission turn-in";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "Your hobby dialogue is ready. Play it aloud, then complete the report.";
+        }
         videoTimer.textContent = "Awaiting Report";
       } else {
         objectiveText.textContent = "Mission complete. Day 3 cleared and Mission 4 unlocked.";
         missionHint.textContent = "Your progress is saved. Refreshing the page will preserve the unlock.";
         reportCopy.textContent = "Jedi Master Han: Well done, trainee. You earned 100 XP and cleared Day 3.";
-        statusText.innerHTML = "<strong>Day 3 complete.</strong> You may proceed to the next mission when ready.";
-        reportPill.textContent = "Jedi Master link: mission accepted";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Day 3 complete.</strong> You may proceed to the next mission when ready.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: mission accepted";
+        }
         avatarStatus.textContent = "Mission cleared";
-        briefingStatusLine.textContent = "Transmission archived";
-        briefingSummary.textContent = "Day 3 briefing complete. Mission 4 is now unlocked.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Transmission archived";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "Day 3 briefing complete. Mission 4 is now unlocked.";
+        }
         videoTimer.textContent = "Mission Cleared";
       }
     }
@@ -1516,16 +1468,24 @@
       briefingForceUnlockTimer = setTimeout(() => {
         if (!briefingFinished) {
           avatarStatus.textContent = "Briefing fallback complete";
-          briefingStatusLine.textContent = "Briefing complete";
-          briefingSummary.textContent = "Auto-briefing ended. Start Mission is now available.";
+          if (briefingStatusLine) {
+            briefingStatusLine.textContent = "Briefing complete";
+          }
+          if (briefingSummary) {
+            briefingSummary.textContent = "Auto-briefing ended. Start Mission is now available.";
+          }
           videoTimer.textContent = "Transmission Archived";
           finalizeBriefing();
         }
       }, 12000);
 
       briefingVideo.dataset.speaking = "true";
-      briefingStatusLine.textContent = "Broadcasting mission briefing";
-      briefingSummary.textContent = "Jedi Master Han is delivering your Day 3 hobbies briefing.";
+      if (briefingStatusLine) {
+        briefingStatusLine.textContent = "Broadcasting mission briefing";
+      }
+      if (briefingSummary) {
+        briefingSummary.textContent = "Jedi Master Han is delivering your Day 3 hobbies briefing.";
+      }
       videoTimer.textContent = "Now Playing";
 
       for (const line of briefingLines) {
@@ -1577,6 +1537,7 @@
       state.day = 3;
       state.missionCompleted = true;
       state.nextMissionUnlocked = true;
+      nextMissionBtn.style.display = "block";
       reportCopy.textContent = "Mission complete. The Jedi master acknowledges your hobby dialogue and unlocks Mission 4.";
       triggerCelebration("Day 3 Clear", "100 XP awarded. Mission 4 unlocked.");
       saveState();
@@ -1609,11 +1570,15 @@
 
     audioBtn.addEventListener("click", () => {
       if (!("speechSynthesis" in window)) {
-        statusText.innerHTML = "<strong>Audio unavailable.</strong> This browser does not support speech playback.";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Audio unavailable.</strong> This browser does not support speech playback.";
+        }
         return;
       }
       speakPhrase();
-      statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean hobbies dialogue.";
+      if (statusText) {
+        statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean hobbies dialogue.";
+      }
     });
 
     reportBtn.addEventListener("click", completeMission);
