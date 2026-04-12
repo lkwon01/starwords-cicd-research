@@ -1204,6 +1204,7 @@
     </div>
   </div>
 
+  <script src="../shared/speech-helper.js"></script>
   <script>
     // This single-file lesson stores all mission state locally so the player can refresh
     // and continue from the same point in Day 4 of the 7-day campaign.
@@ -1451,16 +1452,17 @@
       }
     }
 
-    // Speaks the generated Korean phrase using the browser's speech synthesis engine.
+    // Speaks the generated Korean phrase using a mobile-safe speech helper.
     function speakPhrase() {
-      if (!state.introGenerated) return;
+      if (!state.introGenerated) {
+        return Promise.resolve({ ok: false, reason: "empty" });
+      }
 
-      const utterance = new SpeechSynthesisUtterance(state.generatedPhrase);
-      utterance.lang = "ko-KR";
-      utterance.rate = 0.92;
-      utterance.pitch = 1.02;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utterance);
+      return window.mobileSpeechHelper.speakText(state.generatedPhrase, "ko-KR", {
+        rate: 0.92,
+        pitch: 1.02,
+        prime: true
+      });
     }
 
     function createGrammarHelp(title, intro, items) {
@@ -1565,19 +1567,10 @@
       finalizeBriefing();
     }
 
-    // Safe wrapper around speech synthesis for browsers that support it.
     function autoSpeak(line) {
-      if (!("speechSynthesis" in window)) return Promise.resolve();
-
-      return new Promise(resolve => {
-        const utterance = new SpeechSynthesisUtterance(line);
-        utterance.rate = 1;
-        utterance.pitch = 0.82;
-        utterance.lang = "en-US";
-        utterance.onend = () => resolve();
-        utterance.onerror = () => resolve();
-        speechSynthesis.speak(utterance);
-      });
+      return window.mobileSpeechHelper
+        .speakText(line, "en-US", { rate: 1, pitch: 0.82 })
+        .then(() => undefined);
     }
 
     function wait(ms) {
@@ -1635,14 +1628,24 @@
 
     generateBtn.addEventListener("click", generatePhrase);
 
-    audioBtn.addEventListener("click", () => {
-      if (!("speechSynthesis" in window)) {
+    audioBtn.addEventListener("click", async () => {
+      if (!window.mobileSpeechHelper.supportsSpeech) {
         if (statusText) {
           statusText.innerHTML = "<strong>Audio unavailable.</strong> This browser does not support speech playback.";
         }
         return;
       }
-      speakPhrase();
+
+      const result = await speakPhrase();
+      if (!result.ok) {
+        if (statusText) {
+          statusText.innerHTML = window.mobileSpeechHelper.isMobileDevice
+            ? "<strong>Audio unavailable.</strong> On phones, open this in Safari or Chrome and make sure a Korean voice is installed."
+            : "<strong>Audio unavailable.</strong> This browser could not start speech playback.";
+        }
+        return;
+      }
+
       if (statusText) {
         statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean family introduction.";
       }
