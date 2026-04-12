@@ -1178,6 +1178,13 @@
           <div class="level-flash" id="levelFlash">
             <strong>Level Up</strong>
             <p style="margin: 8px 0 0;">Day 5 cleared. Mission 6 is now unlocked.</p>
+            <button
+              id="nextMissionBtn"
+              class="success"
+              style="display: none; margin-top: 12px;"
+              onclick="window.location.href='../mission-6/index.html'">
+              Proceed to Mission 6
+            </button>
           </div>
         </section>
       </article>
@@ -1271,6 +1278,7 @@
     const reportCopy = document.getElementById("reportCopy");
     const grammarHelpMount = document.getElementById("grammarHelpMount");
     const levelFlash = document.getElementById("levelFlash");
+    const nextMissionBtn = document.getElementById("nextMissionBtn");
     const unlockPill = document.getElementById("unlockPill");
     const mission6Link = document.getElementById("mission6Link");
     const statusText = document.getElementById("statusText");
@@ -1331,6 +1339,7 @@
       xpFill.style.width = `${toPercent(state.xp, 100)}%`;
       dayFill.style.width = `${toPercent(state.day, 7)}%`;
       levelFlash.classList.toggle("show", state.missionCompleted);
+      nextMissionBtn.style.display = state.missionCompleted ? "block" : "none";
       unlockPill?.classList.toggle("hidden", !state.nextMissionUnlocked);
       mission6Link?.classList.toggle("hidden", !state.nextMissionUnlocked);
     }
@@ -1595,6 +1604,7 @@
       state.day = 5;
       state.missionCompleted = true;
       state.nextMissionUnlocked = true;
+      nextMissionBtn.style.display = "block";
       reportCopy.textContent = "Mission complete. The Jedi master acknowledges your work dialogue and unlocks Mission 6.";
       triggerCelebration("Day 5 Clear", "100 XP awarded. Mission 6 unlocked.");
       saveState();

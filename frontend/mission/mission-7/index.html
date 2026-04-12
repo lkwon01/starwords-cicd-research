@@ -1171,6 +1171,13 @@
           <div class="level-flash" id="levelFlash">
             <strong>Level Up</strong>
             <p style="margin: 8px 0 0;">Day 7 cleared. You finished Survival Korean Camp.</p>
+            <button
+              id="nextMissionBtn"
+              class="success"
+              style="display: none; margin-top: 12px;"
+              onclick="window.location.href='../congratulations/index.html'">
+              View Graduation
+            </button>
           </div>
         </section>
       </article>
@@ -1261,6 +1268,7 @@
     const reportCopy = document.getElementById("reportCopy");
     const grammarHelpMount = document.getElementById("grammarHelpMount");
     const levelFlash = document.getElementById("levelFlash");
+    const nextMissionBtn = document.getElementById("nextMissionBtn");
     const unlockPill = document.getElementById("unlockPill");
     const statusText = document.getElementById("statusText");
     const reportPill = document.getElementById("reportPill");
@@ -1318,6 +1326,7 @@
       xpFill.style.width = `${toPercent(state.xp, 100)}%`;
       dayFill.style.width = `${toPercent(state.day, 7)}%`;
       levelFlash.classList.toggle("show", state.missionCompleted);
+      nextMissionBtn.style.display = state.missionCompleted ? "block" : "none";
       unlockPill?.classList.toggle("hidden", !state.nextMissionUnlocked);
     }
 
@@ -1581,6 +1590,7 @@
       state.day = 7;
       state.missionCompleted = true;
       state.nextMissionUnlocked = true;
+      nextMissionBtn.style.display = "block";
       reportCopy.textContent = "Mission complete. The Jedi master acknowledges your final invite dialogue and awards camp graduation.";
       saveState();
       renderHud();
