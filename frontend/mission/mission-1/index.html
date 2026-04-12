@@ -197,7 +197,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 18px;
     }
 
@@ -205,6 +205,11 @@
     .side-panel {
       border-radius: 28px;
       padding: 22px;
+    }
+
+    .main-panel {
+      width: min(100%, 860px);
+      margin: 0 auto;
     }
 
     .mission-banner {
@@ -328,7 +333,7 @@
       position: relative;
       z-index: 2;
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: 1fr;
       gap: 20px;
       align-items: stretch;
     }
@@ -647,6 +652,113 @@
       border-radius: 18px;
       background: linear-gradient(180deg, rgba(120, 245, 255, 0.08), rgba(112, 163, 255, 0.08));
       border: 1px solid rgba(120, 245, 255, 0.18);
+    }
+
+    .grammar-help {
+      margin-top: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(120, 245, 255, 0.2);
+      background:
+        radial-gradient(circle at top right, rgba(255, 211, 107, 0.08), transparent 30%),
+        linear-gradient(180deg, rgba(10, 18, 35, 0.92), rgba(7, 12, 24, 0.96));
+      overflow: hidden;
+    }
+
+    .grammar-help summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+    }
+
+    .grammar-help summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .grammar-help-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .grammar-help-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      background: rgba(255, 211, 107, 0.12);
+      border: 1px solid rgba(255, 211, 107, 0.2);
+      flex: 0 0 auto;
+    }
+
+    .grammar-help-hint {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .grammar-help-chevron {
+      color: var(--cyan);
+      transition: transform 180ms ease;
+    }
+
+    .grammar-help[open] .grammar-help-chevron {
+      transform: rotate(180deg);
+    }
+
+    .grammar-help-body {
+      padding: 0 18px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .grammar-help-intro {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .grammar-help-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .grammar-help-card {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .grammar-help-card strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .grammar-help-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .grammar-help-note {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      margin-top: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(120, 245, 255, 0.16);
+      background: rgba(120, 245, 255, 0.08);
+      color: var(--cyan);
+      font-size: 12px;
+      letter-spacing: 0.04em;
     }
 
     .phrase-output p {
@@ -1008,20 +1120,6 @@
                     <div class="avatar-status" id="avatarStatus">Connecting to camp hololink</div>
                   </div>
                 </div>
-                <div class="briefing-audio" aria-live="polite">
-                  <span class="section-label">Mission Feed</span>
-                  <p class="audio-title">Voice Channel Active</p>
-                  <p class="audio-subtitle" id="briefingSummary">The Jedi master will brief the mission automatically. No transcript will be shown on screen.</p>
-                  <div class="audio-visual" aria-hidden="true">
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                    <span class="audio-bar"></span>
-                  </div>
-                  <div class="audio-status-line" id="briefingStatusLine">Stand by for incoming transmission</div>
-                </div>
               </div>
             </div>
           </div>
@@ -1072,6 +1170,8 @@
               <p class="phrase-romanized" id="phraseRomanized">Annyeonghaseyo. Jeoneun [name] imnida. Jeoneun migugeseo wasseoyo.</p>
               <p class="phrase-translation" id="phraseTranslation">Hello. I am [name]. I am from America.</p>
             </div>
+
+            <div id="grammarHelpMount"></div>
           </div>
         </section>
 
@@ -1085,29 +1185,18 @@
           <div class="level-flash" id="levelFlash">
             <strong>Level Up</strong>
             <p style="margin: 8px 0 0;">Day 1 cleared. Mission 2 is now unlocked.</p>
+            <!-- Change: add the Mission 2 progression button under the completion section. -->
+            <button
+              id="nextMissionBtn"
+              class="success"
+              style="display: none; margin-top: 12px;"
+              onclick="window.location.href='../mission-2/index.html'">
+              Proceed to Mission 2
+            </button>
           </div>
         </section>
       </article>
 
-      <aside class="side-panel">
-        <section class="side-card">
-          <span class="section-label">Mission Status</span>
-          <p class="status-text" id="statusText"><strong>Awaiting briefing.</strong> New arrival detected above the Korean peninsula.</p>
-          <div class="report-pill" id="reportPill">Jedi Master link: pending</div>
-        </section>
-
-        <section class="side-card">
-          <span class="section-label">Day 1 Rewards</span>
-          <p class="reward-copy">Complete the mission to earn 100 XP, level up your trainee badge, and advance the 7-day campaign tracker.</p>
-          <div class="unlock-pill hidden" id="unlockPill">Mission 2 unlocked: Survival Phrases</div>
-          <a class="unlock-link hidden" id="mission2Link" href="../mission-2/index.html">Go To Mission 2</a>
-        </section>
-
-        <section class="side-card">
-          <span class="section-label">Saved Progress</span>
-          <p class="status-text" id="saveStatus"><strong>Local save online.</strong> Your Day 1 state is stored in this browser with `localStorage`.</p>
-        </section>
-      </aside>
     </section>
   </main>
 
@@ -1192,7 +1281,10 @@
     const phraseRomanized = document.getElementById("phraseRomanized");
     const phraseTranslation = document.getElementById("phraseTranslation");
     const reportCopy = document.getElementById("reportCopy");
+    const grammarHelpMount = document.getElementById("grammarHelpMount");
     const levelFlash = document.getElementById("levelFlash");
+    // Change: cache the Mission 2 button so its visibility can be toggled in the existing flow.
+    const nextMissionBtn = document.getElementById("nextMissionBtn");
     const unlockPill = document.getElementById("unlockPill");
     const mission2Link = document.getElementById("mission2Link");
     const statusText = document.getElementById("statusText");
@@ -1220,7 +1312,9 @@
     // Saves the current state after each significant mission update.
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      saveStatus.innerHTML = "<strong>Local save online.</strong> Day 1 progress has been stored in this browser.";
+      if (saveStatus) {
+        saveStatus.innerHTML = "<strong>Local save online.</strong> Day 1 progress has been stored in this browser.";
+      }
     }
 
     function triggerCelebration(title, text) {
@@ -1250,8 +1344,10 @@
       xpFill.style.width = `${toPercent(state.xp, 100)}%`;
       dayFill.style.width = `${toPercent(state.day, 7)}%`;
       levelFlash.classList.toggle("show", state.missionCompleted);
-      unlockPill.classList.toggle("hidden", !state.nextMissionUnlocked);
-      mission2Link.classList.toggle("hidden", !state.nextMissionUnlocked);
+      // Change: keep the new Mission 2 button in sync with saved completion state.
+      nextMissionBtn.style.display = state.missionCompleted ? "block" : "none";
+      unlockPill?.classList.toggle("hidden", !state.nextMissionUnlocked);
+      mission2Link?.classList.toggle("hidden", !state.nextMissionUnlocked);
     }
 
     // Renders mission-specific controls based on the current progress checkpoints.
@@ -1280,48 +1376,88 @@
       if (!briefingFinished && !state.missionStarted) {
         objectiveText.textContent = "Receiving Jedi master briefing...";
         missionHint.textContent = "Mission controls will unlock after the auto-play intro finishes.";
-        statusText.innerHTML = "<strong>Awaiting briefing.</strong> New arrival detected above the Korean peninsula.";
-        reportPill.textContent = "Jedi Master link: pending";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Awaiting briefing.</strong> New arrival detected above the Korean peninsula.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: pending";
+        }
         avatarStatus.textContent = "Connecting to camp hololink";
-        briefingStatusLine.textContent = "Stand by for incoming transmission";
-        briefingSummary.textContent = "The Jedi master will brief the mission automatically. No transcript will be shown on screen.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Stand by for incoming transmission";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "The Jedi master will brief the mission automatically. No transcript will be shown on screen.";
+        }
         videoTimer.textContent = "Signal Syncing";
       } else if (!state.missionStarted) {
         objectiveText.textContent = "Click Start Mission and prepare to introduce yourself and where you are from.";
         missionHint.textContent = "Your objective: say hello, say your name, and say where you are from.";
-        statusText.innerHTML = "<strong>Briefing complete.</strong> The master is waiting for your formal introduction.";
-        reportPill.textContent = "Jedi Master link: open";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Briefing complete.</strong> The master is waiting for your formal introduction.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: open";
+        }
         avatarStatus.textContent = "Awaiting trainee response";
-        briefingStatusLine.textContent = "Briefing complete";
-        briefingSummary.textContent = "Voice briefing received. Proceed to mission start.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Briefing complete";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "Voice briefing received. Proceed to mission start.";
+        }
         videoTimer.textContent = "Transmission Archived";
       } else if (!state.introGenerated) {
         objectiveText.textContent = "Enter your name, choose your country, and generate your Korean self-introduction.";
         missionHint.textContent = "Use your trainee name and choose where you are from.";
-        statusText.innerHTML = "<strong>Mission active.</strong> Build your greeting before checking in.";
-        reportPill.textContent = "Jedi Master link: listening";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Mission active.</strong> Build your greeting before checking in.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: listening";
+        }
         avatarStatus.textContent = "Monitoring introduction console";
-        briefingStatusLine.textContent = "Mission channel open";
-        briefingSummary.textContent = "The briefing is complete. Build your intro and prepare to report back.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Mission channel open";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "The briefing is complete. Build your intro and prepare to report back.";
+        }
         videoTimer.textContent = "Mission Feed Open";
       } else if (!state.missionCompleted) {
         objectiveText.textContent = "Play the audio, practice the line, and report completion to the Jedi master.";
         missionHint.textContent = "Mission ready for turn-in.";
-        statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your greeting and confirm success.";
-        reportPill.textContent = "Jedi Master link: ready for report";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your greeting and confirm success.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: ready for report";
+        }
         avatarStatus.textContent = "Ready to receive mission report";
-        briefingStatusLine.textContent = "Awaiting mission turn-in";
-        briefingSummary.textContent = "Your introduction and country phrase are ready. Play them aloud, then complete the report.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Awaiting mission turn-in";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "Your introduction and country phrase are ready. Play them aloud, then complete the report.";
+        }
         videoTimer.textContent = "Awaiting Report";
       } else {
         objectiveText.textContent = "Mission complete. Day 1 cleared and Mission 2 unlocked.";
         missionHint.textContent = "Your progress is saved. Refreshing the page will preserve the unlock.";
         reportCopy.textContent = "Jedi Master Han: Well done, trainee. You earned 100 XP and cleared Day 1.";
-        statusText.innerHTML = "<strong>Day 1 complete.</strong> You may proceed to the next mission when ready.";
-        reportPill.textContent = "Jedi Master link: mission accepted";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Day 1 complete.</strong> You may proceed to the next mission when ready.";
+        }
+        if (reportPill) {
+          reportPill.textContent = "Jedi Master link: mission accepted";
+        }
         avatarStatus.textContent = "Mission cleared";
-        briefingStatusLine.textContent = "Transmission archived";
-        briefingSummary.textContent = "Day 1 briefing complete. Mission 2 is now unlocked.";
+        if (briefingStatusLine) {
+          briefingStatusLine.textContent = "Transmission archived";
+        }
+        if (briefingSummary) {
+          briefingSummary.textContent = "Day 1 briefing complete. Mission 2 is now unlocked.";
+        }
         videoTimer.textContent = "Mission Cleared";
       }
     }
@@ -1348,8 +1484,12 @@
       }
 
       briefingVideo.dataset.speaking = "true";
-      briefingStatusLine.textContent = "Broadcasting mission briefing";
-      briefingSummary.textContent = "Jedi Master Han is delivering your Day 1 arrival briefing.";
+      if (briefingStatusLine) {
+        briefingStatusLine.textContent = "Broadcasting mission briefing";
+      }
+      if (briefingSummary) {
+        briefingSummary.textContent = "Jedi Master Han is delivering your Day 1 arrival briefing.";
+      }
       videoTimer.textContent = "Now Playing";
 
       for (const line of briefingLines) {
@@ -1382,11 +1522,68 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    function createGrammarHelp(title, intro, items) {
+      return `
+        <details class="grammar-help">
+          <summary>
+            <span class="grammar-help-toggle">
+              <span class="grammar-help-icon">?</span>
+              <span>${title}</span>
+            </span>
+            <span class="grammar-help-hint">
+              Adults can open this
+              <span class="grammar-help-chevron">▾</span>
+            </span>
+          </summary>
+          <div class="grammar-help-body">
+            <p class="grammar-help-intro">${intro}</p>
+            <div class="grammar-help-grid">
+              ${items.map(item => `
+                <section class="grammar-help-card">
+                  <strong>${item.phrase}</strong>
+                  <p>${item.explanation}</p>
+                  <span class="grammar-help-note">${item.note}</span>
+                </section>
+              `).join("")}
+            </div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderGrammarHelp() {
+      if (!grammarHelpMount) return;
+
+      grammarHelpMount.innerHTML = createGrammarHelp(
+        "Why This Works",
+        "The speaking lesson stays simple. Open this only if you want a fast adult explanation of the pattern.",
+        [
+          {
+            phrase: "안녕하세요",
+            explanation: "This is a polite hello. You can use it with teachers, staff, and new people without sounding too casual.",
+            note: "Polite greeting"
+          },
+          {
+            phrase: "저는 __입니다.",
+            explanation: "`저는` means \"as for me\". `-은/는` is the topic marker, and `입니다` is a polite \"am/is\" ending.",
+            note: "Topic marker + polite ending"
+          },
+          {
+            phrase: "저는 __에서 왔어요.",
+            explanation: "`__에서` marks the place you come from. `왔어요` means \"came\" and works like \"I am from __\" in beginner conversation.",
+            note: "Place marker + past form"
+          }
+        ]
+      );
+    }
+
     // Builds the required sentence from the player's name and selected country.
     function generatePhrase() {
       const trimmedName = nameInput.value.trim();
       if (!trimmedName) {
-        statusText.innerHTML = "<strong>Name required.</strong> Enter your trainee name to generate the line.";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Name required.</strong> Enter your trainee name to generate the line.";
+        }
         return;
       }
 
@@ -1408,6 +1605,8 @@
       state.day = 1;
       state.missionCompleted = true;
       state.nextMissionUnlocked = true;
+      // Change: reveal the Mission 2 button when the user reports completion.
+      document.getElementById("nextMissionBtn").style.display = "block";
       reportCopy.textContent = "Mission complete. The Jedi master acknowledges your greeting and unlocks Mission 2.";
       triggerCelebration("Day 1 Clear", "100 XP awarded. Mission 2 unlocked.");
       saveState();
@@ -1444,16 +1643,21 @@
 
     audioBtn.addEventListener("click", () => {
       if (!("speechSynthesis" in window)) {
-        statusText.innerHTML = "<strong>Audio unavailable.</strong> This browser does not support speech playback.";
+        if (statusText) {
+          statusText.innerHTML = "<strong>Audio unavailable.</strong> This browser does not support speech playback.";
+        }
         return;
       }
       speakPhrase();
-      statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean line.";
+      if (statusText) {
+        statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean line.";
+      }
     });
 
     reportBtn.addEventListener("click", completeMission);
     resetBtn.addEventListener("click", resetMission);
 
+    renderGrammarHelp();
     renderHud();
     renderMissionState();
     playBriefing();

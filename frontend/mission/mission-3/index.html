@@ -649,6 +649,113 @@
       border: 1px solid rgba(120, 245, 255, 0.18);
     }
 
+    .grammar-help {
+      margin-top: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(120, 245, 255, 0.2);
+      background:
+        radial-gradient(circle at top right, rgba(255, 211, 107, 0.08), transparent 30%),
+        linear-gradient(180deg, rgba(10, 18, 35, 0.92), rgba(7, 12, 24, 0.96));
+      overflow: hidden;
+    }
+
+    .grammar-help summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+    }
+
+    .grammar-help summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .grammar-help-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .grammar-help-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      background: rgba(255, 211, 107, 0.12);
+      border: 1px solid rgba(255, 211, 107, 0.2);
+      flex: 0 0 auto;
+    }
+
+    .grammar-help-hint {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .grammar-help-chevron {
+      color: var(--cyan);
+      transition: transform 180ms ease;
+    }
+
+    .grammar-help[open] .grammar-help-chevron {
+      transform: rotate(180deg);
+    }
+
+    .grammar-help-body {
+      padding: 0 18px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .grammar-help-intro {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .grammar-help-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .grammar-help-card {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .grammar-help-card strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .grammar-help-card p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .grammar-help-note {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      margin-top: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(120, 245, 255, 0.16);
+      background: rgba(120, 245, 255, 0.08);
+      color: var(--cyan);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
     .phrase-output p {
       margin: 0;
     }
@@ -1065,6 +1172,8 @@
               <p class="phrase-romanized" id="phraseRomanized">Mwo joahaseyo? Jeoneun eumageul joahaeyo.</p>
               <p class="phrase-translation" id="phraseTranslation">What do you like? I like music.</p>
             </div>
+
+            <div id="grammarHelpMount"></div>
           </div>
         </section>
 
@@ -1192,6 +1301,7 @@
     const phraseRomanized = document.getElementById("phraseRomanized");
     const phraseTranslation = document.getElementById("phraseTranslation");
     const reportCopy = document.getElementById("reportCopy");
+    const grammarHelpMount = document.getElementById("grammarHelpMount");
     const levelFlash = document.getElementById("levelFlash");
     const unlockPill = document.getElementById("unlockPill");
     const mission4Link = document.getElementById("mission4Link");
@@ -1334,6 +1444,61 @@
       speechSynthesis.speak(utterance);
     }
 
+    function createGrammarHelp(title, intro, items) {
+      return `
+        <details class="grammar-help">
+          <summary>
+            <span class="grammar-help-toggle">
+              <span class="grammar-help-icon">?</span>
+              <span>${title}</span>
+            </span>
+            <span class="grammar-help-hint">
+              Adult-friendly notes
+              <span class="grammar-help-chevron">▾</span>
+            </span>
+          </summary>
+          <div class="grammar-help-body">
+            <p class="grammar-help-intro">${intro}</p>
+            <div class="grammar-help-grid">
+              ${items.map(item => `
+                <section class="grammar-help-card">
+                  <strong>${item.label}</strong>
+                  <p>${item.copy}</p>
+                  <span class="grammar-help-note">${item.note}</span>
+                </section>
+              `).join("")}
+            </div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderGrammarHelp() {
+      if (!grammarHelpMount) return;
+
+      grammarHelpMount.innerHTML = createGrammarHelp(
+        "Why This Works",
+        "The lesson stays speaking-first. Open this only if you want a quick adult explanation of the hobby pattern.",
+        [
+          {
+            label: "뭐 좋아하세요?",
+            copy: "This means \"what do you like?\" `-세요` makes the question polite, so it works well with new people.",
+            note: "Polite question"
+          },
+          {
+            label: "저는 __을/를 좋아해요",
+            copy: "`저는` sets up your topic as \"me.\" `을/를` marks the thing you like, and `좋아해요` means \"like\" politely.",
+            note: "Topic marker + object marker"
+          },
+          {
+            label: "을 / 를",
+            copy: "These are object markers. The lesson switches them automatically so the sentence sounds natural with each hobby word.",
+            note: "Object particle choice"
+          }
+        ]
+      );
+    }
+
     function finalizeBriefing() {
       briefingFinished = true;
       briefingVideo.dataset.speaking = "false";
@@ -1454,6 +1619,7 @@
     reportBtn.addEventListener("click", completeMission);
     resetBtn.addEventListener("click", resetMission);
 
+    renderGrammarHelp();
     renderHud();
     renderMissionState();
     playBriefing();
