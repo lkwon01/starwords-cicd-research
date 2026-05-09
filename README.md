@@ -1,61 +1,99 @@
-# StarWords
+# StarWords Korean
 
-# 📊 Cloud Performance Analysis
+StarWords Korean is a cloud-hosted Korean language learning web application designed to make beginner Korean practice more interactive, mission-based, and engaging.
 
-To better understand how cloud infrastructure behaves in real-world usage, I enabled **CloudFront access logging** and analyzed request data using a Python-based pipeline.
+The project combines language learning, AI-assisted content, cloud deployment, infrastructure automation, and CI/CD practices. It is being developed as both a learning platform and a technical portfolio project focused on cloud-native application design.
 
----
+## Live Site
 
-## 🔍 What I Measured
+- Production: https://starwordskorean.com
+- Development: https://dev.starwordskorean.com
 
-- Request latency (`time-taken`)
-- HTTP status codes (`sc-status`)
-- Error rates (4xx vs 5xx)
+## Project Overview
 
----
+StarWords Korean is designed for beginner Korean learners, heritage learners, and students who want a more engaging way to practice vocabulary, phrases, and short missions.
 
-## 📈 Results
+The long-term vision is to create a game-inspired Korean learning platform where users can complete missions, review vocabulary, hear Korean pronunciation, and track progress over time.
 
-- **Average Latency:** 0.079 seconds  
-- **Client Error Rate (4xx):** 42.86%  
-- **Server Error Rate (5xx):** 0.00%  
+## Key Features
 
----
+Current and planned features include:
 
-## 🧠 Interpretation
+- Beginner Korean learning missions
+- Vocabulary and phrase practice
+- Interactive lesson content
+- Korean language learning pages
+- Frontend hosted through AWS S3 and CloudFront
+- Development and production deployment environments
+- Backend API planning with AWS Lambda and API Gateway
+- Progress tracking design using DynamoDB
+- Infrastructure-as-Code using Terraform
+- Automated deployment using GitHub Actions
 
-- ⚡ **Low latency** indicates fast content delivery through CloudFront CDN  
-- ✅ **Zero server-side errors (5xx)** suggests strong infrastructure reliability  
-- ⚠️ **4xx errors** are primarily client-side (invalid paths, blocked access, or direct requests), not system failures  
+## Technical Highlights
 
----
+This project demonstrates hands-on experience with:
 
-## 🛠️ How It Works
+- Static website hosting on AWS S3
+- CloudFront CDN distribution
+- Custom domain routing
+- HTTPS/TLS certificate setup
+- GitHub Actions CI/CD workflow
+- AWS IAM permissions and least-privilege deployment roles
+- Terraform infrastructure planning
+- Serverless backend architecture
+- Frontend/backend project organization
+- Dev and production environment separation
 
-1. CloudFront access logs are delivered to S3  
-2. Logs are stored in compressed (`.gz`) format  
-3. A Python script:
-   - decompresses logs  
-   - parses JSON records  
-   - extracts latency and status codes  
-   - computes metrics  
+## Tech Stack
 
----
+### Frontend
 
-## 💡 Why This Matters
+- HTML
+- CSS
+- JavaScript
+- Static website architecture
 
-This project goes beyond building a frontend application — it demonstrates:
+### Backend
 
-- Cloud observability  
-- Metrics-driven analysis  
-- Understanding of system reliability vs user behavior  
-- Real-world performance validation using production-like data  
+- Python
+- AWS Lambda
+- API Gateway
+- DynamoDB
 
----
+### Cloud and DevOps
 
-## 🚀 Next Steps
+- AWS S3
+- AWS CloudFront
+- AWS IAM
+- AWS Route 53 / DNS
+- AWS Certificate Manager
+- Terraform
+- GitHub Actions
+- CI/CD deployment pipelines
 
-- Add DynamoDB for user progress tracking and scalability  
-- Introduce API Gateway + Lambda for backend services  
-- Expand analytics to measure user engagement and behavior  
-- Automate analysis using CI/CD pipelines  
+## Repository Structure
+
+```text
+StarWords/
+│
+├── .github/
+│   └── workflows/
+│       └── GitHub Actions deployment workflows
+│
+├── backend/
+│   └── Backend API and serverless application code
+│
+├── content/
+│   └── Lesson and learning content
+│
+├── frontend/
+│   └── Frontend website files
+│
+├── infra/
+│   └── Terraform infrastructure files
+│
+├── .gitignore
+├── main.py
+└── README.md
+
