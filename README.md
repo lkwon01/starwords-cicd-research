@@ -239,3 +239,7 @@ StarWords Korean is part of my technical portfolio and represents my transition 
 - Live Project: https://starwordskorean.com
 - Portfolio: Add your portfolio link here
 - LinkedIn: Add your LinkedIn link here
+
+---
+
+README complete.
