@@ -96,6 +96,8 @@ StarWords/
 ├── .gitignore
 ├── main.py
 └── README.md
+Cloud Architecture
 
+StarWords Korean uses a cloud-native architecture designed for scalability, low maintenance, and secure deployment.
 
 
