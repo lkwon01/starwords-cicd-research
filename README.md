@@ -1,93 +1,241 @@
-# StarWords
+# StarWords Korean
 
+StarWords Korean is a cloud-hosted Korean language learning web application designed to make beginner Korean practice more interactive, mission-based, and engaging.
 
+The project combines language learning, AI-assisted content, cloud deployment, infrastructure automation, and CI/CD practices. It is being developed as both a learning platform and a technical portfolio project focused on cloud-native application design.
 
-## Getting started
+## Live Site
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- Production: https://starwordskorean.com
+- Development: https://dev.starwordskorean.com
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Project Overview
 
-## Add your files
+StarWords Korean is designed for beginner Korean learners, heritage learners, and students who want a more engaging way to practice vocabulary, phrases, and short missions.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+The long-term vision is to create a game-inspired Korean learning platform where users can complete missions, review vocabulary, hear Korean pronunciation, and track progress over time.
 
+## Key Features
+
+Current and planned features include:
+
+- Beginner Korean learning missions
+- Vocabulary and phrase practice
+- Interactive lesson content
+- Korean language learning pages
+- Frontend hosted through AWS S3 and CloudFront
+- Development and production deployment environments
+- Backend API planning with AWS Lambda and API Gateway
+- Progress tracking design using DynamoDB
+- Infrastructure-as-Code using Terraform
+- Automated deployment using GitHub Actions
+
+## Technical Highlights
+
+This project demonstrates hands-on experience with:
+
+- Static website hosting on AWS S3
+- CloudFront CDN distribution
+- Custom domain routing
+- HTTPS/TLS certificate setup
+- GitHub Actions CI/CD workflow
+- AWS IAM permissions and least-privilege deployment roles
+- Terraform infrastructure planning
+- Serverless backend architecture
+- Frontend/backend project organization
+- Dev and production environment separation
+
+## Tech Stack
+
+### Frontend
+
+- HTML
+- CSS
+- JavaScript
+- Static website architecture
+
+### Backend
+
+- Python
+- AWS Lambda
+- API Gateway
+- DynamoDB
+
+### Cloud and DevOps
+
+- AWS S3
+- AWS CloudFront
+- AWS IAM
+- AWS Route 53 / DNS
+- AWS Certificate Manager
+- Terraform
+- GitHub Actions
+- CI/CD deployment pipelines
+
+## Repository Structure
+
+```text
+StarWords/
+│
+├── .github/
+│   └── workflows/
+│       └── GitHub Actions deployment workflows
+│
+├── backend/
+│   └── Backend API and serverless application code
+│
+├── content/
+│   └── Lesson and learning content
+│
+├── frontend/
+│   └── Frontend website files
+│
+├── infra/
+│   └── Terraform infrastructure files
+│
+├── .gitignore
+├── main.py
+└── README.md
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/laurasmile1/starwords.git
-git branch -M main
-git push -uf origin main
+
+## Cloud Architecture
+
+StarWords Korean uses a cloud-native architecture designed for scalability, low maintenance, and secure deployment.
+
+```text
+User
+ │
+ ▼
+CloudFront CDN
+ │
+ ▼
+S3 Static Website Frontend
+ │
+ ▼
+API Gateway
+ │
+ ▼
+AWS Lambda
+ │
+ ▼
+DynamoDB
 ```
 
-## Integrate with your tools
+## CI/CD Workflow
 
-- [ ] [Set up project integrations](https://gitlab.com/laurasmile1/starwords/-/settings/integrations)
+The project uses GitHub Actions to automate deployment.
 
-## Collaborate with your team
+Planned deployment flow:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+```text
+Push to GitHub
+      │
+      ▼
+GitHub Actions Workflow
+      │
+      ▼
+Assume AWS IAM Role using OIDC
+      │
+      ▼
+Deploy frontend files to S3
+      │
+      ▼
+Create CloudFront invalidation
+      │
+      ▼
+Updated site is available online
+```
 
-## Test and Deploy
+This demonstrates a real-world DevOps workflow using source control, automated deployment, AWS permissions, and environment-based release management.
 
-Use the built-in continuous integration in GitLab.
+## Infrastructure as Code
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+The `infra` folder contains Terraform configuration for managing cloud resources.
 
-***
+Infrastructure-as-Code helps make the project:
 
-# Editing this README
+- Repeatable
+- Documented
+- Easier to maintain
+- Safer to update
+- More aligned with professional cloud engineering practices
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## Security Practices
 
-## Suggestions for a good README
+Security considerations in this project include:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- HTTPS with AWS Certificate Manager
+- CloudFront in front of the frontend application
+- IAM roles for GitHub Actions deployment
+- OIDC authentication instead of long-term AWS access keys
+- Separation between development and production environments
+- Least-privilege permissions for deployment workflows
 
-## Name
-Choose a self-explaining name for your project.
+## Why I Built This Project
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+I built StarWords Korean to combine my interests in language learning, cloud engineering, automation, and software development.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+The project allows me to practice real-world platform engineering skills, including:
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- Designing a cloud-hosted application
+- Building CI/CD deployment workflows
+- Managing AWS infrastructure
+- Organizing frontend, backend, and infrastructure code
+- Thinking about scalability, security, and maintainability
+- Applying software engineering concepts to a meaningful product
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Research and Portfolio Focus
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+StarWords Korean is also being used as a platform for studying cloud-native application design.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Areas of focus include:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- Cloud vs. traditional hosting tradeoffs
+- Serverless architecture benefits
+- Deployment automation
+- Infrastructure reliability
+- Performance through CDN caching
+- Security improvements through managed cloud services
+- Operational efficiency using managed AWS services
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Future Improvements
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Planned improvements include:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- Add user progress tracking
+- Add DynamoDB-backed lesson completion records
+- Expand backend API functionality
+- Add Korean text-to-speech support
+- Add more interactive missions
+- Improve UI/UX for younger learners
+- Add observability with CloudWatch metrics and logs
+- Add automated testing before deployment
+- Improve Terraform environment separation
+- Add screenshots and architecture diagrams
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## What This Project Demonstrates to Recruiters
 
-## License
-For open source projects, say how it is licensed.
+This project shows practical experience with:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- Cloud engineering
+- DevOps workflows
+- AWS deployment
+- GitHub Actions
+- Infrastructure-as-Code
+- Serverless architecture
+- Frontend/backend project organization
+- Security-conscious deployment practices
+- Building a real application from idea to production
+
+## About Me
+
+I am a Systems Engineering graduate student with experience in technical support, healthcare software systems, troubleshooting, and interface-related work. I am building hands-on skills in Python, AWS, cloud engineering, automation, CI/CD, and DevOps.
+
+StarWords Korean is part of my technical portfolio and represents my transition toward cloud, platform, and software engineering roles.
+
+## Contact
+
+- GitHub: https://github.com/lkwon01
+- Live Project: https://starwordskorean.com
+- Portfolio: Add your portfolio link here
+- LinkedIn: Add your LinkedIn link here
