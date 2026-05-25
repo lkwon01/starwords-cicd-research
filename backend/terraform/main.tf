@@ -84,8 +84,17 @@ resource "aws_lambda_function" "progress" {
   }
 }
 resource "aws_apigatewayv2_api" "starwords_api" {
-  name          = "${var.project_name}-${var.environment}-api"
+  name          = "${var.project_name}-${var.environment}-http-api"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = [
+      "https://starwords-dev-laura-20251226.s3.us-east-1.amazonaws.com"
+    ]
+    allow_methods = ["GET", "POST", "OPTIONS"]
+    allow_headers = ["content-type"]
+    max_age       = 300
+  }
 }
 
 resource "aws_apigatewayv2_integration" "health_lambda" {

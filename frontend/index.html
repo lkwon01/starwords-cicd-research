@@ -1,271 +1,160 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Mission 1 — Star Words</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Star Words: The Hangul Force</title>
   <style>
-    :root { --gold:#ffe066; --gold2:#f7d547; --ink:#111; --line:#333; }
-    html,body { height:100%; }
-    body{
-      margin:0;background:#000;color:var(--gold);
-      font-family: Arial, Helvetica, sans-serif;
-      display:flex;align-items:center;justify-content:center;
+    body {
+      margin: 0;
+      background-color: black;
+      color: #feda4a;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    .card{
-      background:#111;border:1px solid #333;border-radius:14px;
-      padding:24px 26px;max-width:720px;width:min(92%, 720px);
-      box-shadow:0 10px 30px rgba(0,0,0,.6)
-    }
-    .title{margin:0 0 6px 0}
-    .muted{opacity:.85;margin:.2rem 0 .8rem}
-    .btn{background:var(--gold2);border:0;border-radius:10px;
-      padding:10px 16px;font-weight:700;cursor:pointer}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    code{background:#000;border:1px solid #333;padding:2px 6px;border-radius:6px}
-    .ok{border:1px solid #2f7; background:rgba(0,255,128,.08); padding:10px;border-radius:10px}
-    .err{border:1px solid #f66; background:rgba(255,0,0,.08); padding:10px;border-radius:10px}
 
-    /* Lesson styles */
-    .lesson{margin-top:14px;border:1px solid #333;background:#0a0a0a;border-radius:12px;padding:14px}
-    .big{font-size:46px;line-height:1;margin:0}
-    .row-slim{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-    .input{background:#000;border:1px solid #333;color:#ffe066;border-radius:8px;padding:8px}
-    .chip{border:1px solid #333;border-radius:999px;padding:6px 10px;background:#000}
-    .success{color:#9cffb0}
-    .fail{color:#ff9c9c}
+    header {
+      text-align: center;
+      padding: 40px 10px 20px;
+    }
+
+    header h1 {
+      font-size: 3em;
+      font-weight: bold;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .star-wars {
+      flex: 1;
+      position: relative;
+      height: 60vh;
+      overflow: hidden;
+      perspective: 400px;
+    }
+
+    .crawl {
+      position: absolute;
+      top: 100%;
+      width: 70%;
+      max-width: 800px;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      text-align: justify;
+      transform: rotateX(25deg);
+      transform-origin: 50% 100%;
+      animation: crawl 50s linear infinite; /* loop forever */
+    }
+
+    @keyframes crawl {
+      0%   { top: 100%; }
+      100% { top: -300%; }
+    }
+
+    .buttons {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    /* Shared styling for links and buttons */
+    .buttons a,
+    .buttons button {
+      display: inline-block;
+      background-color: #feda4a;
+      color: black;
+      font-size: 1.2rem;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .buttons a:hover,
+    .buttons button:hover {
+      background-color: #ffe870;
+    }
+
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      padding: 10px 0;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 24px 10px 12px;
+      }
+
+      header h1 {
+        font-size: 2.2em;
+      }
+
+      .star-wars {
+        height: 38vh;
+        min-height: 240px;
+      }
+
+      .crawl {
+        width: 86%;
+        font-size: 0.95rem;
+      }
+
+      .buttons {
+        padding: 18px 10px 24px;
+      }
+
+      .buttons a,
+      .buttons button {
+        width: min(280px, 100%);
+        font-size: 1.05rem;
+        padding: 12px 18px;
+        margin: 6px 0;
+      }
+    }
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1 class="title">Mission 1: Welcome, Space Cadet</h1>
-    <p id="status" class="muted">Authenticating with the Hangul Force…</p>
 
-    <div id="content" hidden>
-      <p class="ok" id="hello"></p>
+  <!-- LOGO -->
+  <header>
+    <h1>STAR<br>WORDS</h1>
+  </header>
 
-      <h3>Your Objective</h3>
-      <p>You just landed in deep space. Say hello and introduce yourself to your Jedi before starting your Hangul mission.</p>
-
-      <section class="lesson" style="margin-top:10px">
-        <h4>Arrival Check-In</h4>
-        <p class="muted">Enter your name and transmit your greeting to your Jedi mentor.</p>
-        <div class="row-slim">
-          <input id="cadetName" class="input" placeholder="Your name, cadet" />
-          <button class="btn" id="btnIntroduce">Introduce Myself</button>
-        </div>
-        <p id="introMsg" class="muted" hidden></p>
-      </section>
-
-      <div class="row">
-        <button class="btn" id="startTask">Start Task</button>
-        <button class="btn" id="toHome">Return to Base</button>
-        <button class="btn" id="signOut">Sign Out</button>
-      </div>
-
-      <!-- Lesson: 고양이 (cat) -->
-      <section id="task" class="lesson" hidden>
-        <h3>오늘의 단어 — <span class="chip">Today’s Word</span></h3>
-        <p class="big" id="word">고양이</p>
-        <div class="row-slim">
-          <span>Pronunciation:</span>
-          <strong id="roman">goyangi</strong>
-          <button class="btn" id="btnSpeak" title="Play pronunciation">🔊 Hear it</button>
-        </div>
-        <div class="row-slim" style="margin-top:8px">
-          <span>Meaning:</span><strong> cat</strong>
-        </div>
-
-        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
-
-        <h4>Example</h4>
-        <p><em id="exKo">저는 고양이를 좋아해요.</em></p>
-        <p class="muted">I like cats.</p>
-
-        <hr style="border:0;border-top:1px solid #333;margin:14px 0">
-
-        <h4>Quick Check</h4>
-        <p class="muted">Type the Korean word for <strong>cat</strong>:</p>
-        <div class="row-slim">
-          <input id="answer" class="input" placeholder="type here: 고양이" />
-          <button class="btn" id="btnCheck">Check</button>
-          <span id="result" class="muted"></span>
-        </div>
-
-        <div style="margin-top:14px">
-          <button class="btn" id="btnDone">Mark Complete ✅</button>
-        </div>
-      </section>
+  <!-- STAR WARS CRAWL -->
+  <div class="star-wars">
+    <div class="crawl">
+      <p>🌠 <strong>Backstory</strong></p>
+      <p>
+        A long time ago, in a galaxy filled with silenced voices, the ancient language of Hangul was nearly forgotten across the stars.
+        A powerful Empire known as The Grammar Order suppressed free speech and erased cultural knowledge.
+      </p>
+      <p>
+        But a small group of rebels discovered ancient scrolls containing the secrets of Hangul.
+        You are one of them — a young Padawan of language, chosen by the Hangul Force.
+      </p>
+      <p>
+        Your mission: restore language, defeat confusion, and bring clarity to the galaxy… one Hangul word at a time.
+      </p>
     </div>
+  </div>
 
-    <div id="error" class="err" hidden></div>
+  <!-- ACTION BUTTONS -->
+  <div class="buttons">
+    <a class="sw-btn" href="mission/mission-1/index.html">Start Mission</a>
+  </div>
 
-  <!-- Free Translate Tool -->
-  <section class="lesson" style="margin-top:20px">
-    <h3>Quick Translate</h3>
-    <p class="muted">Look up any word or sentence without leaving the mission.</p>
+  <!-- COPYRIGHT -->
+  <footer>
+    &copy; 2025 Star Words. All rights reserved.
+  </footer>
 
-    <div class="row-slim">
-      <select id="langDir" class="input">
-        <option value="en-ko">English → Korean</option>
-        <option value="ko-en">Korean → English</option>
-      </select>
-    </div>
-
-    <div class="row-slim" style="margin-top:8px">
-      <input id="translateInput" class="input" style="min-width:260px"
-             placeholder="Type a word or sentence…" />
-      <button class="btn" id="btnTranslate">Translate</button>
-    </div>
-
-    <div class="row-slim" style="margin-top:10px">
-      <strong>Result:</strong>
-      <span id="translateResult" class="chip"></span>
-      <button class="btn" id="btnSpeakResult" title="Hear Korean" hidden>🔊</button>
-    </div>
-  </section>
-
-  <!-- Toast -->
-  <div id="toast" style="
-    position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
-    background:#111;border:1px solid #333;color:#ffe066;
-    padding:10px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.6);
-    display:none;z-index:9999;"></div>
-
-  <!-- Supabase (optional; remove if you’re not using auth here) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // Init only if you actually need auth on this page:
-    const SUPABASE_URL = "https://zvhjoupdxkzbbqanbrby.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2aGpvdXBkeGt6YmJxYW5icmJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3NjYyNjcsImV4cCI6MjA3MDM0MjI2N30.ZCWqACzlCqgbVb1R7goLnmfsdws50wsGYQrnWrYW998";
-
-    let supabaseClient = null;
-    try {
-      supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) || null;
-    } catch(_) { /* ok if not using auth here */ }
-
-    const $ = (id) => document.getElementById(id);
-    const statusEl = $('status');
-    const contentEl = $('content');
-    const errorEl = $('error');
-    const toast = $('toast');
-
-    function showToast(msg, ms=1600){
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      setTimeout(()=> toast.style.display='none', ms);
-    }
-
-    async function init(){
-      try {
-        // If you require sign-in, check it here. Otherwise, just show content.
-        if (supabaseClient) {
-          const { data: { session } } = await supabaseClient.auth.getSession();
-          if (!session) {
-            statusEl.textContent = 'Landing complete, Cadet — no login required for Mission 1.';
-          } else {
-            statusEl.textContent = 'Landing complete. Welcome back, Cadet!';
-          }
-        } else {
-          statusEl.textContent = 'Landing complete. Welcome, Cadet!';
-        }
-
-        $('hello').textContent = 'You landed safely in space. Signal your Jedi mentor to begin.';
-        contentEl.hidden = false;
-
-        // Wire buttons
-        $('startTask').onclick = () => { $('task').hidden = false; showToast('Task unlocked!'); };
-        $('toHome').onclick = () => { window.location.href = '/'; };
-        $('btnIntroduce').onclick = () => {
-          const enteredName = $('cadetName').value.trim();
-          const cadetName = enteredName || 'Cadet';
-          localStorage.setItem('starwordsCadetName', cadetName);
-          $('hello').textContent = `Landing confirmed, ${cadetName}.`;
-          $('introMsg').hidden = false;
-          $('introMsg').textContent = `Hello, Jedi Master. I'm ${cadetName}, ready to learn Hangul in this star system.`;
-          showToast('Introduction sent to your Jedi ✨');
-        };
-
-        const savedName = localStorage.getItem('starwordsCadetName');
-        if (savedName) {
-          $('cadetName').value = savedName;
-        }
-
-        $('signOut').onclick = async () => {
-          try { await supabaseClient?.auth.signOut(); } catch(_){}
-          showToast('Signed out. Returning to base…');
-          setTimeout(()=> window.location.href='/', 600);
-        };
-
-        $('btnCheck').onclick = () => {
-          const ok = $('answer').value.trim() === '고양이';
-          const res = $('result');
-          res.textContent = ok ? '✅ Correct!' : '❌ Try again';
-          res.className = ok ? 'muted success' : 'muted fail';
-          if (ok) showToast('Nice!');
-        };
-
-        $('btnSpeak').onclick = () => {
-          try {
-            const u = new SpeechSynthesisUtterance('go-yan-gee');
-            speechSynthesis.speak(u);
-          } catch(_) { showToast('Speech not supported on this device'); }
-        };
-
-        $('btnDone').onclick = () => {
-          showToast('Mission 1 complete! 🚀');
-          setTimeout(()=> window.location.href='/', 900);
-        };
-      } catch (e){
-        errorEl.hidden = false;
-        errorEl.textContent = 'Error loading mission: ' + e.message;
-      }
-    }
-
-    async function translateText(text, source, target) {
-      const res = await fetch('https://libretranslate.de/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          q: text,
-          source,
-          target,
-          format: 'text'
-        })
-      });
-      const data = await res.json();
-      return data.translatedText;
-    }
-
-    $('btnTranslate').onclick = async () => {
-      const text = $('translateInput').value.trim();
-      if (!text) return showToast('Type something first 🙂');
-
-      const dir = $('langDir').value;
-      const [source, target] = dir.split('-');
-
-      $('translateResult').textContent = 'Translating…';
-      $('btnSpeakResult').hidden = true;
-
-      try {
-        const translated = await translateText(text, source, target);
-        $('translateResult').textContent = translated;
-
-        // Show speaker only for Korean output
-        if (target === 'ko') {
-          $('btnSpeakResult').hidden = false;
-          $('btnSpeakResult').onclick = () => {
-            const u = new SpeechSynthesisUtterance(translated);
-            u.lang = 'ko-KR';
-            speechSynthesis.speak(u);
-          };
-        }
-      } catch (e) {
-        $('translateResult').textContent = 'Error translating 😢';
-      }
-    };
-
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
 </body>
 </html>

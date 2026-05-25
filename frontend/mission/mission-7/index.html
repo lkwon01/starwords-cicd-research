@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Day 1 Survival Korean Camp</title>
+  <title>Day 7 Survival Korean Camp</title>
   <style>
     :root {
       --bg-0: #04070f;
@@ -868,28 +868,6 @@
       color: var(--green);
     }
 
-    .unlock-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 12px;
-      padding: 12px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(130, 246, 176, 0.28);
-      background: linear-gradient(135deg, rgba(130, 246, 176, 0.18), rgba(120, 245, 255, 0.18));
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      transition: transform 180ms ease, box-shadow 180ms ease;
-      box-shadow: 0 12px 24px rgba(130, 246, 176, 0.14);
-    }
-
-    .unlock-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 30px rgba(130, 246, 176, 0.22);
-    }
-
     .report-pill {
       background: rgba(255, 211, 107, 0.08);
       color: var(--gold);
@@ -924,70 +902,85 @@
     .celebration-overlay {
       position: fixed;
       inset: 0;
-      display: none;
+      display: grid;
       place-items: center;
       padding: 24px;
-      background: radial-gradient(circle, rgba(255, 211, 107, 0.16), rgba(4, 7, 15, 0.88) 60%);
-      z-index: 40;
+      background:
+        radial-gradient(circle at center, rgba(120, 245, 255, 0.18), rgba(4, 7, 15, 0.9) 58%),
+        rgba(4, 7, 15, 0.78);
+      opacity: 0;
+      visibility: hidden;
       pointer-events: none;
+      transition: opacity 320ms ease, visibility 320ms ease;
+      z-index: 50;
     }
 
     .celebration-overlay.show {
-      display: grid;
-      animation: celebrationFade 3.2s ease forwards;
+      opacity: 1;
+      visibility: visible;
     }
 
-    .celebration-burst span {
+    .celebration-burst {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 8px;
-      height: 190px;
-      margin: -95px 0 0 -4px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, rgba(121, 246, 255, 0), rgba(121, 246, 255, 0.95), rgba(255, 211, 107, 0));
-      box-shadow: 0 0 18px rgba(121, 246, 255, 0.35);
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255, 211, 107, 0.4), transparent 14%),
+        radial-gradient(circle at 80% 22%, rgba(120, 245, 255, 0.35), transparent 16%),
+        radial-gradient(circle at 32% 76%, rgba(130, 246, 176, 0.32), transparent 18%),
+        radial-gradient(circle at 72% 72%, rgba(112, 163, 255, 0.32), transparent 18%);
+      filter: blur(4px);
+      animation: celebrationFade 2.8s ease-in-out infinite alternate;
     }
-
-    .celebration-burst span:nth-child(1) { transform: rotate(0deg) translateY(-10px); }
-    .celebration-burst span:nth-child(2) { transform: rotate(22deg) translateY(-10px); }
-    .celebration-burst span:nth-child(3) { transform: rotate(45deg) translateY(-10px); }
-    .celebration-burst span:nth-child(4) { transform: rotate(67deg) translateY(-10px); }
-    .celebration-burst span:nth-child(5) { transform: rotate(90deg) translateY(-10px); }
-    .celebration-burst span:nth-child(6) { transform: rotate(112deg) translateY(-10px); }
-    .celebration-burst span:nth-child(7) { transform: rotate(135deg) translateY(-10px); }
-    .celebration-burst span:nth-child(8) { transform: rotate(157deg) translateY(-10px); }
 
     .celebration-card {
       position: relative;
-      z-index: 1;
-      width: min(440px, 100%);
-      padding: 26px 22px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 211, 107, 0.28);
-      background: rgba(10, 18, 35, 0.92);
+      width: min(560px, calc(100vw - 32px));
+      padding: 28px;
+      border-radius: 28px;
       text-align: center;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background:
+        linear-gradient(180deg, rgba(12, 22, 44, 0.96), rgba(7, 12, 24, 0.98)),
+        radial-gradient(circle at top, rgba(255, 211, 107, 0.18), transparent 40%);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
     }
 
-    .celebration-card strong {
-      display: block;
-      margin-top: 6px;
-      font-size: clamp(28px, 4vw, 42px);
+    .celebration-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.16), transparent 80%);
+      transform: translateX(-120%);
+      animation: celebrationFade 2.4s ease-in-out infinite;
+    }
+
+    .celebration-card h3 {
+      position: relative;
+      margin: 0;
+      font-size: clamp(32px, 5vw, 52px);
       color: var(--gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .celebration-card p {
-      margin: 12px 0 0;
+      position: relative;
+      margin: 14px 0 0;
       color: var(--text);
-      line-height: 1.6;
-      font-size: 17px;
+      line-height: 1.7;
+      font-size: 18px;
     }
 
     @keyframes celebrationFade {
-      0% { opacity: 0; transform: scale(0.94); }
-      12%, 82% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1.04); }
+      from {
+        opacity: 0.45;
+        transform: scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1.02);
+      }
     }
 
     @media (max-width: 920px) {
@@ -1044,7 +1037,7 @@
           <div class="brand-mark">✦</div>
           <div class="brand-copy">
             <small>7-Day Survival Korean Camp</small>
-            <h1>Day 1: Arrival of the Jedi Trainee</h1>
+            <h1>Day 7: Friend Invitation Mission</h1>
           </div>
         </div>
         <div class="hud-stats">
@@ -1054,11 +1047,11 @@
           </div>
           <div class="stat-chip">
             <span class="meta-label">XP</span>
-            <strong id="xpValue">0 / 100</strong>
+            <strong id="xpValue">600 / 700</strong>
           </div>
           <div class="stat-chip">
             <span class="meta-label">Camp Progress</span>
-            <strong id="campValue">Day 1 / 7</strong>
+            <strong id="campValue">Day 7 / 7</strong>
           </div>
         </div>
       </div>
@@ -1083,11 +1076,11 @@
         <div class="mission-banner">
           <div>
             <span class="section-label">Primary Mission</span>
-            <h2>Introduce yourself to the Jedi Master in Korean.</h2>
+            <h2>Invite your friend and decide where to go together.</h2>
           </div>
           <div class="mission-rank">
             <span class="meta-label">Mission Code</span>
-            <strong>DAY-01</strong>
+            <strong>DAY-07</strong>
           </div>
         </div>
 
@@ -1100,7 +1093,7 @@
                   <span class="signal-dot" aria-hidden="true"></span>
                   Live Holo Briefing
                 </div>
-                <div class="video-timer" id="videoTimer">Day 1 Transmission</div>
+                <div class="video-timer" id="videoTimer">Day 7 Transmission</div>
               </div>
               <div class="video-layout">
                 <div class="avatar-card" aria-hidden="true">
@@ -1127,48 +1120,41 @@
 
         <section class="mission-card">
           <span class="section-label">Objective</span>
-          <p id="objectiveText">Stand by for mission initialization.</p>
+          <p id="objectiveText">Stand by for final travel-planning mission initialization.</p>
           <ol class="objective-list">
             <li>Start the mission after the briefing completes.</li>
-            <li>Enter your trainee name and choose where you are from.</li>
-            <li>Generate and hear your Korean self-introduction.</li>
+            <li>Select where you want to go in Korea.</li>
+            <li>Generate and hear the invite-and-plan dialogue.</li>
             <li>Report completion to the Jedi master.</li>
           </ol>
           <div class="button-row" style="margin-top: 16px;">
             <button id="startMissionBtn">Start Mission</button>
           </div>
-          <p class="system-note" id="missionHint">Mission controls will unlock after the Jedi master finishes speaking.</p>
+          <p class="system-note" id="missionHint">Mission controls will unlock after the Jedi master finishes the Day 7 briefing.</p>
         </section>
 
         <section class="translator-box">
-          <span class="section-label">Phrase Builder</span>
+          <span class="section-label">Travel Builder</span>
           <div class="translator-grid">
             <div>
-              <label for="nameInput">Trainee Name</label>
-              <input id="nameInput" type="text" maxlength="20" placeholder="Enter your name" disabled />
-            </div>
-
-            <div>
-              <label for="countryInput">Where Are You From?</label>
-              <select id="countryInput" disabled>
-                <option value="미국">America</option>
-                <option value="한국">Korea</option>
-                <option value="일본">Japan</option>
-                <option value="중국">China</option>
-                <option value="캐나다">Canada</option>
-                <option value="벨기에">Belgium</option>
+              <label for="itemInput">Select Destination in Korea</label>
+              <select id="itemInput" disabled>
+                <option value="seoul">Seoul</option>
+                <option value="busan">Busan</option>
+                <option value="jeju">Jeju</option>
+                <option value="gyeongju">Gyeongju</option>
               </select>
             </div>
 
             <div class="button-row">
-              <button id="generateBtn" class="secondary" disabled>Generate Korean Intro</button>
-              <button id="audioBtn" class="secondary" disabled>Play Greeting Audio</button>
+              <button id="generateBtn" class="secondary" disabled>Generate Invite Dialogue</button>
+              <button id="audioBtn" class="secondary" disabled>Play Invite Audio</button>
             </div>
 
             <div class="phrase-output">
-              <p class="phrase-korean" id="phraseKorean">안녕하세요. 저는 [name]입니다. 저는 미국에서 왔어요.</p>
-              <p class="phrase-romanized" id="phraseRomanized">Annyeonghaseyo. Jeoneun [name] imnida. Jeoneun migugeseo wasseoyo.</p>
-              <p class="phrase-translation" id="phraseTranslation">Hello. I am [name]. I am from America.</p>
+              <p class="phrase-korean" id="phraseKorean">어디 가고 싶어요? 저는 서울에 가고 싶어요.</p>
+              <p class="phrase-romanized" id="phraseRomanized">Eodi gago sipeoyo? Jeoneun Seoure gago sipeoyo.</p>
+              <p class="phrase-translation" id="phraseTranslation">Where do you want to go? I want to go to Seoul.</p>
             </div>
 
             <div id="grammarHelpMount"></div>
@@ -1177,21 +1163,20 @@
 
         <section class="reward-box">
           <span class="section-label">Mission Turn-In</span>
-          <p class="reward-copy" id="reportCopy">Generate your intro first, then report back to the Jedi master.</p>
+          <p class="reward-copy" id="reportCopy">Generate your invite dialogue first, then report back to the Jedi master.</p>
           <div class="button-row">
             <button id="reportBtn" class="success" disabled>Report Completion</button>
-            <button id="resetBtn" class="secondary">Reset Day 1</button>
+            <button id="resetBtn" class="secondary">Reset Day 7</button>
           </div>
           <div class="level-flash" id="levelFlash">
             <strong>Level Up</strong>
-            <p style="margin: 8px 0 0;">Day 1 cleared. Mission 2 is now unlocked.</p>
-            <!-- Change: add the Mission 2 progression button under the completion section. -->
+            <p style="margin: 8px 0 0;">Day 7 cleared. You finished Survival Korean Camp.</p>
             <button
               id="nextMissionBtn"
               class="success"
               style="display: none; margin-top: 12px;"
-              onclick="window.location.href='../mission-2/index.html'">
-              Proceed to Mission 2
+              onclick="window.location.href='../congratulations/index.html'">
+              View Graduation
             </button>
           </div>
         </section>
@@ -1201,62 +1186,63 @@
   </main>
 
   <div class="celebration-overlay" id="celebrationOverlay" aria-hidden="true">
-    <div class="celebration-burst" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
+    <div class="celebration-burst"></div>
     <div class="celebration-card">
       <span class="section-label">Mission Reward</span>
-      <strong id="celebrationTitle">Mission Clear</strong>
-      <p id="celebrationText">XP awarded.</p>
+      <h3 id="celebrationTitle">Mission Clear</h3>
+      <p id="celebrationText">XP awarded. The next mission route is now open.</p>
     </div>
   </div>
 
   <script src="../shared/speech-helper.js"></script>
   <script>
-    // This single-file prototype stores all mission state locally so the player can refresh
-    // and continue from the same point in Day 1 of the 7-day campaign.
-    const STORAGE_KEY = "survival-korean-camp-day1";
+    // This single-file lesson stores all mission state locally so the player can refresh
+    // and continue from the same point in Day 7 of the 7-day campaign.
+    const STORAGE_KEY = "survival-korean-camp-day7";
 
     // Central game state keeps the UI and persistence in sync.
     const defaultState = {
-      level: 1,
-      xp: 0,
-      day: 1,
+      level: 7,
+      xp: 600,
+      day: 7,
       missionStarted: false,
       introGenerated: false,
       missionCompleted: false,
       nextMissionUnlocked: false,
-      playerName: "",
-      selectedCountry: "미국",
-      generatedPhrase: "안녕하세요. 저는 [name]입니다. 저는 미국에서 왔어요."
-    };
-
-    const countryRomanizations = {
-      "미국": "migugeseo wasseoyo",
-      "한국": "hangugeseo wasseoyo",
-      "일본": "ilboneseo wasseoyo",
-      "중국": "junggugeseo wasseoyo",
-      "캐나다": "kaenadeseo wasseoyo",
-      "벨기에": "belgieseo wasseoyo"
-    };
-
-    const countryEnglish = {
-      "미국": "America",
-      "한국": "Korea",
-      "일본": "Japan",
-      "중국": "China",
-      "캐나다": "Canada",
-      "벨기에": "Belgium"
+      selectedItem: "seoul",
+      generatedPhrase: "어디 가고 싶어요? 저는 서울에 가고 싶어요."
     };
 
     const briefingLines = [
       "Transmission incoming...",
-      "Jedi Master Han: Trainee, you have landed in Korea for Day 1 of Survival Korean Camp.",
-      "Your first test is simple, but essential.",
-      "Approach your master with respect. Say hello in Korean. Introduce yourself with confidence.",
-      "Complete this and you will earn your first camp XP and unlock the next mission."
+      "Jedi Master Han: Day 7 begins now. This is your final survival mission.",
+      "You will invite your friend, ask where they want to go, and decide on a destination together in Korea.",
+      "Use natural planning Korean to suggest going together and say where you want to go.",
+      "Complete this final mission and you will finish Survival Korean Camp."
     ];
+
+    const destinationData = {
+      seoul: {
+        korean: "서울",
+        english: "Seoul",
+        romanized: "Seoul"
+      },
+      busan: {
+        korean: "부산",
+        english: "Busan",
+        romanized: "Busan"
+      },
+      jeju: {
+        korean: "제주도",
+        english: "Jeju",
+        romanized: "Jejudo"
+      },
+      gyeongju: {
+        korean: "경주",
+        english: "Gyeongju",
+        romanized: "Gyeongju"
+      }
+    };
 
     const state = loadState();
 
@@ -1271,8 +1257,7 @@
     const videoTimer = document.getElementById("videoTimer");
     const objectiveText = document.getElementById("objectiveText");
     const missionHint = document.getElementById("missionHint");
-    const nameInput = document.getElementById("nameInput");
-    const countryInput = document.getElementById("countryInput");
+    const itemInput = document.getElementById("itemInput");
     const generateBtn = document.getElementById("generateBtn");
     const audioBtn = document.getElementById("audioBtn");
     const reportBtn = document.getElementById("reportBtn");
@@ -1284,10 +1269,8 @@
     const reportCopy = document.getElementById("reportCopy");
     const grammarHelpMount = document.getElementById("grammarHelpMount");
     const levelFlash = document.getElementById("levelFlash");
-    // Change: cache the Mission 2 button so its visibility can be toggled in the existing flow.
     const nextMissionBtn = document.getElementById("nextMissionBtn");
     const unlockPill = document.getElementById("unlockPill");
-    const mission2Link = document.getElementById("mission2Link");
     const statusText = document.getElementById("statusText");
     const reportPill = document.getElementById("reportPill");
     const saveStatus = document.getElementById("saveStatus");
@@ -1297,6 +1280,7 @@
     const celebrationText = document.getElementById("celebrationText");
 
     let briefingFinished = false;
+    let briefingForceUnlockTimer = null;
     let celebrationTimer = null;
 
     // Reads the saved state if available and falls back to a clean mission profile.
@@ -1314,21 +1298,19 @@
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       if (saveStatus) {
-        saveStatus.innerHTML = "<strong>Local save online.</strong> Day 1 progress has been stored in this browser.";
+        saveStatus.innerHTML = "<strong>Local save online.</strong> Day 7 progress has been stored in this browser.";
       }
     }
 
+    // Shows a large mission-clear celebration before moving the player onward.
     function triggerCelebration(title, text) {
+      clearTimeout(celebrationTimer);
       celebrationTitle.textContent = title;
       celebrationText.textContent = text;
-      celebrationOverlay.classList.remove("show");
-      void celebrationOverlay.offsetWidth;
       celebrationOverlay.classList.add("show");
-      celebrationOverlay.setAttribute("aria-hidden", "false");
-      clearTimeout(celebrationTimer);
+
       celebrationTimer = setTimeout(() => {
         celebrationOverlay.classList.remove("show");
-        celebrationOverlay.setAttribute("aria-hidden", "true");
       }, 3200);
     }
 
@@ -1345,31 +1327,24 @@
       xpFill.style.width = `${toPercent(state.xp, 100)}%`;
       dayFill.style.width = `${toPercent(state.day, 7)}%`;
       levelFlash.classList.toggle("show", state.missionCompleted);
-      // Change: keep the new Mission 2 button in sync with saved completion state.
       nextMissionBtn.style.display = state.missionCompleted ? "block" : "none";
       unlockPill?.classList.toggle("hidden", !state.nextMissionUnlocked);
-      mission2Link?.classList.toggle("hidden", !state.nextMissionUnlocked);
     }
 
     // Renders mission-specific controls based on the current progress checkpoints.
     function renderMissionState() {
+      const destination = destinationData[state.selectedItem];
       phraseKorean.textContent = state.generatedPhrase;
-      phraseRomanized.textContent = state.playerName
-        ? `Annyeonghaseyo. Jeoneun ${state.playerName} imnida. Jeoneun ${countryRomanizations[state.selectedCountry]}.`
-        : "Annyeonghaseyo. Jeoneun [name] imnida. Jeoneun migugeseo wasseoyo.";
-      phraseTranslation.textContent = state.playerName
-        ? `Hello. I am ${state.playerName}. I am from ${countryEnglish[state.selectedCountry]}.`
-        : "Hello. I am [name]. I am from America.";
-      nameInput.value = state.playerName;
-      countryInput.value = state.selectedCountry;
+      phraseRomanized.textContent = `Eodi gago sipeoyo? Jeoneun ${destination.romanized}e gago sipeoyo.`;
+      phraseTranslation.textContent = `Where do you want to go? I want to go to ${destination.english}.`;
+      itemInput.value = state.selectedItem;
 
       const canStart = briefingFinished && !state.missionStarted;
       const canGenerate = state.missionStarted && !state.missionCompleted;
       const canReport = state.introGenerated && !state.missionCompleted;
 
       startMissionBtn.disabled = !canStart;
-      nameInput.disabled = !canGenerate;
-      countryInput.disabled = !canGenerate;
+      itemInput.disabled = !canGenerate;
       generateBtn.disabled = !canGenerate;
       audioBtn.disabled = !state.introGenerated;
       reportBtn.disabled = !canReport;
@@ -1378,7 +1353,7 @@
         objectiveText.textContent = "Receiving Jedi master briefing...";
         missionHint.textContent = "Mission controls will unlock after the auto-play intro finishes.";
         if (statusText) {
-          statusText.innerHTML = "<strong>Awaiting briefing.</strong> New arrival detected above the Korean peninsula.";
+          statusText.innerHTML = "<strong>Awaiting briefing.</strong> The final planning chamber is preparing a friend invitation drill.";
         }
         if (reportPill) {
           reportPill.textContent = "Jedi Master link: pending";
@@ -1392,10 +1367,10 @@
         }
         videoTimer.textContent = "Signal Syncing";
       } else if (!state.missionStarted) {
-        objectiveText.textContent = "Click Start Mission and prepare to introduce yourself and where you are from.";
-        missionHint.textContent = "Your objective: say hello, say your name, and say where you are from.";
+        objectiveText.textContent = "Click Start Mission and prepare to invite your friend and choose a destination.";
+        missionHint.textContent = "Your objective: ask where your friend wants to go and suggest a place in Korea.";
         if (statusText) {
-          statusText.innerHTML = "<strong>Briefing complete.</strong> The master is waiting for your formal introduction.";
+          statusText.innerHTML = "<strong>Briefing complete.</strong> The final planning room is ready.";
         }
         if (reportPill) {
           reportPill.textContent = "Jedi Master link: open";
@@ -1409,27 +1384,27 @@
         }
         videoTimer.textContent = "Transmission Archived";
       } else if (!state.introGenerated) {
-        objectiveText.textContent = "Enter your name, choose your country, and generate your Korean self-introduction.";
-        missionHint.textContent = "Use your trainee name and choose where you are from.";
+        objectiveText.textContent = "Select a destination and generate your Korean invite dialogue.";
+        missionHint.textContent = "Focus on asking where your friend wants to go and saying where you want to go.";
         if (statusText) {
-          statusText.innerHTML = "<strong>Mission active.</strong> Build your greeting before checking in.";
+          statusText.innerHTML = "<strong>Mission active.</strong> Build your invite dialogue before checking in.";
         }
         if (reportPill) {
           reportPill.textContent = "Jedi Master link: listening";
         }
-        avatarStatus.textContent = "Monitoring introduction console";
+        avatarStatus.textContent = "Monitoring planning chamber comms";
         if (briefingStatusLine) {
           briefingStatusLine.textContent = "Mission channel open";
         }
         if (briefingSummary) {
-          briefingSummary.textContent = "The briefing is complete. Build your intro and prepare to report back.";
+          briefingSummary.textContent = "The briefing is complete. Build your invite dialogue and prepare to report back.";
         }
         videoTimer.textContent = "Mission Feed Open";
       } else if (!state.missionCompleted) {
-        objectiveText.textContent = "Play the audio, practice the line, and report completion to the Jedi master.";
+        objectiveText.textContent = "Play the audio, practice the invite dialogue, and report completion to the Jedi master.";
         missionHint.textContent = "Mission ready for turn-in.";
         if (statusText) {
-          statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your greeting and confirm success.";
+          statusText.innerHTML = "<strong>Phrase acquired.</strong> Deliver your invite dialogue and confirm success.";
         }
         if (reportPill) {
           reportPill.textContent = "Jedi Master link: ready for report";
@@ -1439,15 +1414,15 @@
           briefingStatusLine.textContent = "Awaiting mission turn-in";
         }
         if (briefingSummary) {
-          briefingSummary.textContent = "Your introduction and country phrase are ready. Play them aloud, then complete the report.";
+          briefingSummary.textContent = "Your invite dialogue is ready. Play it aloud, then complete the report.";
         }
         videoTimer.textContent = "Awaiting Report";
       } else {
-        objectiveText.textContent = "Mission complete. Day 1 cleared and Mission 2 unlocked.";
+        objectiveText.textContent = "Mission complete. Day 7 cleared. You finished Survival Korean Camp.";
         missionHint.textContent = "Your progress is saved. Refreshing the page will preserve the unlock.";
-        reportCopy.textContent = "Jedi Master Han: Well done, trainee. You earned 100 XP and cleared Day 1.";
+        reportCopy.textContent = "Jedi Master Han: Well done, trainee. You earned 100 XP and completed all 7 days.";
         if (statusText) {
-          statusText.innerHTML = "<strong>Day 1 complete.</strong> You may proceed to the next mission when ready.";
+          statusText.innerHTML = "<strong>Day 7 complete.</strong> Camp graduation achieved.";
         }
         if (reportPill) {
           reportPill.textContent = "Jedi Master link: mission accepted";
@@ -1457,7 +1432,7 @@
           briefingStatusLine.textContent = "Transmission archived";
         }
         if (briefingSummary) {
-          briefingSummary.textContent = "Day 1 briefing complete. Mission 2 is now unlocked.";
+          briefingSummary.textContent = "Day 7 briefing complete. Survival Korean Camp complete.";
         }
         videoTimer.textContent = "Mission Cleared";
       }
@@ -1476,45 +1451,6 @@
       });
     }
 
-    // Plays the cinematic intro automatically without showing the spoken script on screen.
-    async function playBriefing() {
-      if (state.missionStarted || state.missionCompleted) {
-        briefingFinished = true;
-        briefingVideo.dataset.speaking = "false";
-        renderMissionState();
-        return;
-      }
-
-      briefingVideo.dataset.speaking = "true";
-      if (briefingStatusLine) {
-        briefingStatusLine.textContent = "Broadcasting mission briefing";
-      }
-      if (briefingSummary) {
-        briefingSummary.textContent = "Jedi Master Han is delivering your Day 1 arrival briefing.";
-      }
-      videoTimer.textContent = "Now Playing";
-
-      for (const line of briefingLines) {
-        avatarStatus.textContent = "Broadcasting mission briefing";
-        await autoSpeak(line);
-        await wait(240);
-      }
-
-      briefingFinished = true;
-      briefingVideo.dataset.speaking = "false";
-      renderMissionState();
-    }
-
-    function autoSpeak(line) {
-      return window.mobileSpeechHelper
-        .speakText(line, "en-US", { rate: 1, pitch: 0.82 })
-        .then(() => undefined);
-    }
-
-    function wait(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     function createGrammarHelp(title, intro, items) {
       return `
         <details class="grammar-help">
@@ -1524,7 +1460,7 @@
               <span>${title}</span>
             </span>
             <span class="grammar-help-hint">
-              Adults can open this
+              Adult-friendly notes
               <span class="grammar-help-chevron">▾</span>
             </span>
           </summary>
@@ -1533,8 +1469,8 @@
             <div class="grammar-help-grid">
               ${items.map(item => `
                 <section class="grammar-help-card">
-                  <strong>${item.phrase}</strong>
-                  <p>${item.explanation}</p>
+                  <strong>${item.label}</strong>
+                  <p>${item.copy}</p>
                   <span class="grammar-help-note">${item.note}</span>
                 </section>
               `).join("")}
@@ -1549,69 +1485,123 @@
 
       grammarHelpMount.innerHTML = createGrammarHelp(
         "Why This Works",
-        "The speaking lesson stays simple. Open this only if you want a fast adult explanation of the pattern.",
+        "The lesson stays speaking-first. Open this only if you want a quick adult explanation of the travel-planning pattern.",
         [
           {
-            phrase: "안녕하세요",
-            explanation: "This is a polite hello. You can use it with teachers, staff, and new people without sounding too casual.",
-            note: "Polite greeting"
+            label: "어디 가고 싶어요?",
+            copy: "This means \"where do you want to go?\" `-고 싶어요` is the polite pattern for saying someone wants to do something.",
+            note: "Want-to question"
           },
           {
-            phrase: "저는 __입니다.",
-            explanation: "`저는` means \"as for me\". `-은/는` is the topic marker, and `입니다` is a polite \"am/is\" ending.",
-            note: "Topic marker + polite ending"
+            label: "저는 __에 가고 싶어요",
+            copy: "`에` marks the destination. The whole pattern means \"as for me, I want to go to __.\"",
+            note: "Destination marker + desire pattern"
           },
           {
-            phrase: "저는 __에서 왔어요.",
-            explanation: "`__에서` marks the place you come from. `왔어요` means \"came\" and works like \"I am from __\" in beginner conversation.",
-            note: "Place marker + past form"
+            label: "가고 싶어요",
+            copy: "This is built from the verb \"go\" plus the polite want form. It is one of the most useful planning patterns for adults.",
+            note: "Verb stem + want form"
           }
         ]
       );
     }
 
-    // Builds the required sentence from the player's name and selected country.
-    function generatePhrase() {
-      const trimmedName = nameInput.value.trim();
-      if (!trimmedName) {
-        if (statusText) {
-          statusText.innerHTML = "<strong>Name required.</strong> Enter your trainee name to generate the line.";
-        }
+    function finalizeBriefing() {
+      briefingFinished = true;
+      briefingVideo.dataset.speaking = "false";
+      renderMissionState();
+    }
+
+    // Plays the cinematic intro automatically without showing the spoken script on screen.
+    async function playBriefing() {
+      if (state.missionStarted || state.missionCompleted) {
+        finalizeBriefing();
         return;
       }
 
-      state.playerName = trimmedName;
-      state.selectedCountry = countryInput.value;
-      state.generatedPhrase = `안녕하세요. 저는 ${trimmedName}입니다. 저는 ${state.selectedCountry}에서 왔어요.`;
+      clearTimeout(briefingForceUnlockTimer);
+      briefingForceUnlockTimer = setTimeout(() => {
+        if (!briefingFinished) {
+          avatarStatus.textContent = "Briefing fallback complete";
+          if (briefingStatusLine) {
+            briefingStatusLine.textContent = "Briefing complete";
+          }
+          if (briefingSummary) {
+            briefingSummary.textContent = "Auto-briefing ended. Start Mission is now available.";
+          }
+          videoTimer.textContent = "Transmission Archived";
+          finalizeBriefing();
+        }
+      }, 12000);
+
+      briefingVideo.dataset.speaking = "true";
+      if (briefingStatusLine) {
+        briefingStatusLine.textContent = "Broadcasting mission briefing";
+      }
+      if (briefingSummary) {
+        briefingSummary.textContent = "Jedi Master Han is delivering your Day 7 final planning briefing.";
+      }
+      videoTimer.textContent = "Now Playing";
+
+      for (const line of briefingLines) {
+        avatarStatus.textContent = "Broadcasting mission briefing";
+        await autoSpeak(line);
+        await wait(240);
+      }
+
+      clearTimeout(briefingForceUnlockTimer);
+      finalizeBriefing();
+    }
+
+    function autoSpeak(line) {
+      return window.mobileSpeechHelper
+        .speakText(line, "en-US", { rate: 1, pitch: 0.82 })
+        .then(() => undefined);
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Builds the Day 7 invitation dialogue using a selected destination.
+    function generatePhrase() {
+      const destination = destinationData[itemInput.value];
+      state.selectedItem = itemInput.value;
+      state.generatedPhrase = `어디 가고 싶어요? 저는 ${destination.korean}에 가고 싶어요.`;
       state.introGenerated = true;
-      reportCopy.textContent = `Your introduction is ready. It now includes that you are from ${countryEnglish[state.selectedCountry]}. Play the audio, then report to the Jedi master.`;
+      reportCopy.textContent = `Your invite dialogue for going to ${destination.english} is ready. Play the audio, then report to the Jedi master.`;
       saveState();
       renderMissionState();
     }
 
-    // Awards Day 1 XP, levels up the player, and marks the next mission as unlocked.
+    // Awards Day 7 XP, levels up the player, and marks camp completion.
     function completeMission() {
       if (state.missionCompleted) return;
 
-      state.xp = 100;
-      state.level = 2;
-      state.day = 1;
+      state.xp = 700;
+      state.level = 8;
+      state.day = 7;
       state.missionCompleted = true;
       state.nextMissionUnlocked = true;
-      // Change: reveal the Mission 2 button when the user reports completion.
-      document.getElementById("nextMissionBtn").style.display = "block";
-      reportCopy.textContent = "Mission complete. The Jedi master acknowledges your greeting and unlocks Mission 2.";
-      triggerCelebration("Day 1 Clear", "100 XP awarded. Mission 2 unlocked.");
+      nextMissionBtn.style.display = "block";
+      reportCopy.textContent = "Mission complete. The Jedi master acknowledges your final invite dialogue and awards camp graduation.";
       saveState();
       renderHud();
       renderMissionState();
+      triggerCelebration("Camp Complete", "100 XP awarded. Opening your graduation page.");
+
+      setTimeout(() => {
+        window.location.href = "../congratulations/index.html";
+      }, 3400);
     }
 
-    // Restores the page to a clean Day 1 state for replay testing.
+    // Restores the page to a clean Day 7 state for replay testing.
     function resetMission() {
       Object.assign(state, { ...defaultState });
       briefingFinished = false;
-      speechSynthesis.cancel();
+      if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+      }
       saveState();
       renderHud();
       renderMissionState();
@@ -1620,19 +1610,13 @@
 
     startMissionBtn.addEventListener("click", () => {
       state.missionStarted = true;
-      reportCopy.textContent = "Mission active. Enter your trainee name, choose your country, and generate your greeting.";
+      reportCopy.textContent = "Mission active. Select a destination and generate your invite dialogue.";
       saveState();
       renderMissionState();
-      nameInput.focus();
+      itemInput.focus();
     });
 
     generateBtn.addEventListener("click", generatePhrase);
-
-    nameInput.addEventListener("keydown", event => {
-      if (event.key === "Enter" && !generateBtn.disabled) {
-        generatePhrase();
-      }
-    });
 
     audioBtn.addEventListener("click", async () => {
       if (!window.mobileSpeechHelper.supportsSpeech) {
@@ -1653,7 +1637,7 @@
       }
 
       if (statusText) {
-        statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean line.";
+        statusText.innerHTML = "<strong>Audio playback started.</strong> Listen and repeat after the Korean invite dialogue.";
       }
     });
 

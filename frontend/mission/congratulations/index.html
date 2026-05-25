@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Camp Complete</title>
+  <style>
+    :root {
+      --bg-0: #050915;
+      --bg-1: #0d1a37;
+      --text: #eef6ff;
+      --muted: #9db5d4;
+      --gold: #ffd36b;
+      --cyan: #79f6ff;
+      --green: #89f7b5;
+      --panel: rgba(10, 20, 42, 0.86);
+      --line: rgba(121, 246, 255, 0.22);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(121, 246, 255, 0.18), transparent 26%),
+        radial-gradient(circle at 80% 10%, rgba(255, 211, 107, 0.18), transparent 28%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-0) 62%);
+      overflow: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 1px, transparent 1px) 0 0 / 80px 80px,
+        radial-gradient(circle, rgba(121, 246, 255, 0.7) 0 1px, transparent 1px) 40px 28px / 120px 120px;
+      opacity: 0.5;
+    }
+    .panel {
+      position: relative;
+      width: min(860px, 100%);
+      padding: 40px 28px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      text-align: center;
+      overflow: hidden;
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 86px;
+      height: 86px;
+      border-radius: 24px;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, rgba(255, 211, 107, 0.22), rgba(121, 246, 255, 0.24));
+      border: 1px solid rgba(255, 211, 107, 0.3);
+      color: var(--gold);
+      font-size: 38px;
+      box-shadow: 0 0 28px rgba(255, 211, 107, 0.2);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.04;
+    }
+    .subtitle {
+      margin: 14px auto 0;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+    .stat {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .label {
+      display: block;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 11px;
+    }
+    .value {
+      display: block;
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 28px;
+    }
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 16px;
+      color: #07111f;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background: linear-gradient(135deg, var(--cyan), #b9ffff);
+      box-shadow: 0 14px 28px rgba(121, 246, 255, 0.2);
+    }
+    a.secondary {
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(137, 247, 181, 0.18), rgba(255, 211, 107, 0.18));
+      border: 1px solid rgba(137, 247, 181, 0.2);
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <div class="badge">✦</div>
+    <h1>Congratulations, Jedi Trainee</h1>
+    <p class="subtitle">You completed all 7 days of Survival Korean Camp. You can now introduce yourself, order food, talk about hobbies and family, explain your work, ask for help, and make plans in Korean.</p>
+    <section class="stats">
+      <div class="stat">
+        <span class="label">Campaign</span>
+        <span class="value">7 / 7 Days</span>
+      </div>
+      <div class="stat">
+        <span class="label">Final Level</span>
+        <span class="value">Level 8</span>
+      </div>
+      <div class="stat">
+        <span class="label">Total XP</span>
+        <span class="value">700 XP</span>
+      </div>
+    </section>
+    <div class="actions">
+      <a href="../mission-1/index.html">Replay Mission 1</a>
+      <a class="secondary" href="../mission-7/index.html">Back To Mission 7</a>
+    </div>
+  </main>
+</body>
+</html>
