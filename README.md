@@ -213,33 +213,6 @@ Planned improvements include:
 - Improve Terraform environment separation
 - Add screenshots and architecture diagrams
 
-## What This Project Demonstrates to Recruiters
 
-This project shows practical experience with:
 
-- Cloud engineering
-- DevOps workflows
-- AWS deployment
-- GitHub Actions
-- Infrastructure-as-Code
-- Serverless architecture
-- Frontend/backend project organization
-- Security-conscious deployment practices
-- Building a real application from idea to production
 
-## About Me
-
-I am a Systems Engineering graduate student with experience in technical support, healthcare software systems, troubleshooting, and interface-related work. I am building hands-on skills in Python, AWS, cloud engineering, automation, CI/CD, and DevOps.
-
-StarWords Korean is part of my technical portfolio and represents my transition toward cloud, platform, and software engineering roles.
-
-## Contact
-
-- GitHub: https://github.com/lkwon01
-- Live Project: https://starwordskorean.com
-- Portfolio: Add your portfolio link here
-- LinkedIn: Add your LinkedIn link here
-
----
-
-README complete.
