@@ -44,6 +44,7 @@ This project demonstrates hands-on experience with:
 - Serverless backend architecture
 - Frontend/backend project organization
 - Dev and production environment separation
+- Local video lesson generation for short-form Korean content
 
 ## Tech Stack
 
@@ -93,10 +94,25 @@ StarWords/
 ├── infra/
 │   └── Terraform infrastructure files
 │
+├── video_generator/
+│   └── Python tool for generating lesson videos locally
+│
 ├── .gitignore
 ├── main.py
 └── README.md
 ```
+
+## Video Generator
+
+The `video_generator` folder contains a Python-based local workflow for turning a lesson JSON file into:
+
+- a Shorts-style script
+- narration audio
+- slide visuals
+- SRT captions
+- a final MP4
+
+See `video_generator/README.md` for setup and usage.
 
 ## Cloud Architecture
 
