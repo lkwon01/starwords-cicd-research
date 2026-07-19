@@ -30,3 +30,4 @@ obj/
 
 # publish output
 publish/
+backend/StarWords.Api/login.json
