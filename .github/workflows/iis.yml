@@ -11,10 +11,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "8.0.x"
+      - name: verify .NET
+        shell: powershell
+        run: |
+          dotnet --info
+          dotnet --version
+
 
       - name: Restore dependencies
         run: dotnet restore backend/StarWords.Api/StarWords.Api.csproj
