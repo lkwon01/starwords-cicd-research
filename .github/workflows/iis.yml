@@ -27,7 +27,7 @@ jobs:
       - name: Publish application
         run: dotnet publish backend/StarWords.Api/StarWords.Api.csproj --configuration Release --no-build --output "${{ runner.temp }}\starwords-publish"
 
-            - name: Deploy to IIS
+      - name: Deploy to IIS
         shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
