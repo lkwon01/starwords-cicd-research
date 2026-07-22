@@ -37,14 +37,34 @@ jobs:
           $source = "${{ runner.temp }}\starwords-publish"
           $destination = "E:\starwords\publish\starwords.api"
 
-          robocopy $source $destination /MIR
+          Write-Host "Stopping IIS application pool: $appPool"
+          Stop-WebAppPool -Name $appPool
 
-          if ($LASTEXITCODE -ge 8) {
-              throw "File deployment failed with robocopy exit code $LASTEXITCODE"
+          try {
+              Write-Host "Copying files from:"
+              Write-Host $source
+              Write-Host "Copying files to:"
+              Write-Host $destination
+
+              robocopy $source $destination /MIR
+              $robocopyExitCode = $LASTEXITCODE
+
+              if ($robocopyExitCode -ge 8) {
+                  throw "File deployment failed with Robocopy exit code $robocopyExitCode"
+              }
+
+              Write-Host "Robocopy succeeded with exit code $robocopyExitCode"
+
+              # Robocopy codes 0–7 are successful.
+              # Reset the exit code so GitHub Actions does not mark the step failed.
+              $global:LASTEXITCODE = 0
+          }
+          finally {
+              Write-Host "Starting IIS application pool: $appPool"
+              Start-WebAppPool -Name $appPool
           }
 
-          Start-WebAppPool -Name "StarWordsApi"
-
+          Write-Host "IIS deployment completed successfully."
       - name: Wait for API
         shell: powershell
         run: Start-Sleep -Seconds 5
