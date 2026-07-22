@@ -27,41 +27,52 @@ jobs:
       - name: Publish application
         run: dotnet publish backend/StarWords.Api/StarWords.Api.csproj --configuration Release --no-build --output "${{ runner.temp }}\starwords-publish"
 
-      - name: Deploy to IIS
+            - name: Deploy to IIS
         shell: powershell
         run: |
-          Import-Module WebAdministration
+          $ErrorActionPreference = "Stop"
 
-          Stop-WebAppPool -Name "StarWordsApi"
+          Import-Module WebAdministration
 
           $source = "${{ runner.temp }}\starwords-publish"
           $destination = "E:\starwords\publish\starwords.api"
 
-          Write-Host "Stopping IIS application pool: starwordsapi"
-          Stop-WebAppPool -Name "starwordsapi"
+          $poolState = (Get-WebAppPoolState -Name "StarWordsApi").Value
+          Write-Host "Current application pool state: $poolState"
+
+          if ($poolState -eq "Started") {
+              Write-Host "Stopping IIS application pool: StarWordsApi"
+              Stop-WebAppPool -Name "StarWordsApi"
+          }
+          else {
+              Write-Host "Application pool is already stopped."
+          }
 
           try {
-              Write-Host "Copying files from:"
-              Write-Host $source
-              Write-Host "Copying files to:"
-              Write-Host $destination
+              Write-Host "Copying published files to IIS..."
 
               robocopy $source $destination /MIR
               $robocopyExitCode = $LASTEXITCODE
 
               if ($robocopyExitCode -ge 8) {
-                  throw "File deployment failed with Robocopy exit code $robocopyExitCode"
+                  throw "Robocopy failed with exit code $robocopyExitCode"
               }
 
               Write-Host "Robocopy succeeded with exit code $robocopyExitCode"
 
-              # Robocopy codes 0–7 are successful.
-              # Reset the exit code so GitHub Actions does not mark the step failed.
+              # Robocopy exit codes 0–7 indicate success.
               $global:LASTEXITCODE = 0
           }
           finally {
-              Write-Host "Starting IIS application pool: starwordsapi"
-              Start-WebAppPool -Name "starwordsapi"
+              $poolState = (Get-WebAppPoolState -Name "StarWordsApi").Value
+
+              if ($poolState -ne "Started") {
+                  Write-Host "Starting IIS application pool: StarWordsApi"
+                  Start-WebAppPool -Name "StarWordsApi"
+              }
+              else {
+                  Write-Host "Application pool is already running."
+              }
           }
 
           Write-Host "IIS deployment completed successfully."
