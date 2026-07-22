@@ -37,8 +37,8 @@ jobs:
           $source = "${{ runner.temp }}\starwords-publish"
           $destination = "E:\starwords\publish\starwords.api"
 
-          Write-Host "Stopping IIS application pool: $appPool"
-          Stop-WebAppPool -Name $appPool
+          Write-Host "Stopping IIS application pool: starwordsapi"
+          Stop-WebAppPool -Name "starwordsapi"
 
           try {
               Write-Host "Copying files from:"
@@ -60,8 +60,8 @@ jobs:
               $global:LASTEXITCODE = 0
           }
           finally {
-              Write-Host "Starting IIS application pool: $appPool"
-              Start-WebAppPool -Name $appPool
+              Write-Host "Starting IIS application pool: starwordsapi"
+              Start-WebAppPool -Name "starwordsapi"
           }
 
           Write-Host "IIS deployment completed successfully."
