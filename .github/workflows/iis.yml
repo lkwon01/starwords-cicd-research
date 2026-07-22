@@ -1,0 +1,66 @@
+name: Deploy Star Words API to IIS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore backend/StarWords.Api/StarWords.Api.csproj
+
+      - name: Build application
+        run: dotnet build backend/StarWords.Api/StarWords.Api.csproj --configuration Release --no-restore
+
+      - name: Publish application
+        run: dotnet publish backend/StarWords.Api/StarWords.Api.csproj --configuration Release --no-build --output "${{ runner.temp }}\starwords-publish"
+
+      - name: Deploy to IIS
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+
+          Stop-WebAppPool -Name "StarWordsApi"
+
+          $source = "${{ runner.temp }}\starwords-publish"
+          $destination = "E:\starwords\publish\starwords.api"
+
+          robocopy $source $destination /MIR
+
+          if ($LASTEXITCODE -ge 8) {
+              throw "File deployment failed with robocopy exit code $LASTEXITCODE"
+          }
+
+          Start-WebAppPool -Name "StarWordsApi"
+
+      - name: Wait for API
+        shell: powershell
+        run: Start-Sleep -Seconds 5
+
+      - name: Run smoke test
+        shell: powershell
+        run: |
+          $response = Invoke-WebRequest `
+            -Uri "http://localhost:5270/" `
+            -UseBasicParsing
+
+          if ($response.StatusCode -ne 200) {
+              throw "Smoke test failed. Status: $($response.StatusCode)"
+          }
+
+          if ($response.Content -notmatch "Star Words API is running") {
+              throw "Smoke test failed: expected API message was not found."
+          }
+
+          Write-Host "Smoke test passed."
+          Write-Host $response.Content
