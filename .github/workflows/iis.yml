@@ -8,6 +8,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Record deployment start
+        shell: powershell
+        run: |
+          $startedAt = (Get-Date).ToUniversalTime().ToString("o")
+          "DEPLOY_STARTED_AT=$startedAt" |
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+          Write-Host "Deployment started at: $startedAt"
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -97,3 +105,53 @@ jobs:
 
           Write-Host "Smoke test passed."
           Write-Host $response.Content
+
+              
+      - name: Record deployment result
+        if: always()
+        shell: powershell
+        run: |
+          $endedAt = (Get-Date).ToUniversalTime()
+          $startedAt = [DateTime]::Parse($env:DEPLOY_STARTED_AT)
+          $durationSeconds = ($endedAt - $startedAt).TotalSeconds
+
+          $jobStatus = "${{ job.status }}"
+          $success = $jobStatus -eq "success"
+
+          $resultsFolder = "E:\deployment-metrics"
+          $resultsFile = Join-Path $resultsFolder "deployment_trials.csv"
+
+          New-Item `
+            -ItemType Directory `
+            -Path $resultsFolder `
+            -Force | Out-Null
+
+          $result = [PSCustomObject]@{
+              trial_id            = "${{ github.run_id }}-${{ github.run_attempt }}"
+              method              = "automated"
+              started_at          = $startedAt.ToUniversalTime().ToString("o")
+              ended_at            = $endedAt.ToString("o")
+              duration_seconds    = [Math]::Round($durationSeconds, 2)
+              success             = $success.ToString().ToLower()
+              recovered_at        = ""
+              manual_interventions = 0
+              smoke_test_failures = $(if ($success) { 0 } else { 1 })
+              feature_version     = "${{ github.sha }}"
+              environment_state   = "standard-baseline"
+              notes               = $jobStatus
+          }
+
+          $result | Export-Csv `
+            -Path $resultsFile `
+            -Append `
+            -NoTypeInformation
+
+          Write-Host "Deployment ended at: $($endedAt.ToString('o'))"
+          Write-Host "Duration: $([Math]::Round($durationSeconds, 2)) seconds"
+          Write-Host "First-attempt success: $success"
+          Write-Host "Results saved to: $resultsFile"
+
+          "## Deployment measurement" >> $env:GITHUB_STEP_SUMMARY
+          "- Duration: $([Math]::Round($durationSeconds, 2)) seconds" >> $env:GITHUB_STEP_SUMMARY
+          "- First-attempt success: $success" >> $env:GITHUB_STEP_SUMMARY
+          "- Commit: ${{ github.sha }}" >> $env:GITHUB_STEP_SUMMARY
