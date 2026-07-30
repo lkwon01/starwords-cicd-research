@@ -11,7 +11,7 @@ jobs:
       - name: Record deployment start
         shell: powershell
         run: |
-         $startedAt = [DateTimeOffset]::UtcNow
+          $startedAt = [DateTimeOffset]::UtcNow
           "DEPLOY_STARTED_AT=$($startedAt.ToString('o'))" |
             Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
@@ -34,7 +34,23 @@ jobs:
 
       - name: Publish application
         run: dotnet publish backend/StarWords.Api/StarWords.Api.csproj --configuration Release --no-build --output "${{ runner.temp }}\starwords-publish"
+      - name: Run database migration
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
 
+          & sqlcmd `
+            -S ".\SQLEXPRESS" `
+            -E `
+            -C `
+            -b `
+            -i "${{ github.workspace }}\database\005_add_user_registration.sql"
+
+          if ($LASTEXITCODE -ne 0) {
+              throw "Database migration failed with exit code $LASTEXITCODE"
+          }
+
+          Write-Host "Database migration completed successfully."
       - name: Deploy to IIS
         shell: powershell
         run: |
@@ -68,7 +84,7 @@ jobs:
 
               Write-Host "Robocopy succeeded with exit code $robocopyExitCode"
 
-              # Robocopy exit codes 0–7 indicate success.
+              # Robocopy exit codes 0-7 indicate success.
               $global:LASTEXITCODE = 0
           }
           finally {
@@ -84,6 +100,27 @@ jobs:
           }
 
           Write-Host "IIS deployment completed successfully."
+      - name: Deploy frontend to IIS
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $source = "${{ github.workspace }}\frontend"
+          $destination = "E:\starwords\publish\frontend"
+
+          Write-Host "Copying frontend files to IIS..."
+
+          robocopy $source $destination /MIR
+          $robocopyExitCode = $LASTEXITCODE
+
+          if ($robocopyExitCode -ge 8) {
+              throw "Frontend deployment failed with exit code $robocopyExitCode"
+          }
+
+          Write-Host "Frontend deployment succeeded with exit code $robocopyExitCode"
+
+          # Robocopy exit codes 0-7 indicate success.
+          $global:LASTEXITCODE = 0
       - name: Wait for API
         shell: powershell
         run: Start-Sleep -Seconds 5
@@ -91,20 +128,52 @@ jobs:
       - name: Run smoke test
         shell: powershell
         run: |
-          $response = Invoke-WebRequest `
+          $ErrorActionPreference = "Stop"
+
+          Write-Host "Testing API..."
+
+          $apiResponse = Invoke-WebRequest `
             -Uri "http://localhost:5270/" `
             -UseBasicParsing
 
-          if ($response.StatusCode -ne 200) {
-              throw "Smoke test failed. Status: $($response.StatusCode)"
+          if ($apiResponse.StatusCode -ne 200) {
+              throw "API smoke test failed. Status: $($apiResponse.StatusCode)"
           }
 
-          if ($response.Content -notmatch "Star Words API is running") {
-              throw "Smoke test failed: expected API message was not found."
+          if ($apiResponse.Content -notmatch "Star Words API is running") {
+              throw "API smoke test failed: expected API message was not found."
           }
 
-          Write-Host "Smoke test passed."
-          Write-Host $response.Content
+          Write-Host "API smoke test passed."
+
+          Write-Host "Testing frontend homepage..."
+
+          $homeResponse = Invoke-WebRequest `
+            -Uri "http://localhost/" `
+            -UseBasicParsing
+
+          if ($homeResponse.StatusCode -ne 200) {
+              throw "Frontend homepage failed. Status: $($homeResponse.StatusCode)"
+          }
+
+          if ($homeResponse.Content -notmatch "Join the Rebellion") {
+              throw "Frontend smoke test failed: Join button was not found."
+          }
+
+          Write-Host "Frontend homepage smoke test passed."
+
+          Write-Host "Testing registration page..."
+
+          $registerResponse = Invoke-WebRequest `
+            -Uri "http://localhost/register.html" `
+            -UseBasicParsing
+
+          if ($registerResponse.StatusCode -ne 200) {
+              throw "Registration page failed. Status: $($registerResponse.StatusCode)"
+          }
+
+          Write-Host "Registration page smoke test passed."
+          Write-Host "All smoke tests passed."
 
               
       - name: Record deployment result
