@@ -1,6 +1,4 @@
 using Microsoft.Data.SqlClient;
-using System.Net.Mail;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +18,6 @@ builder.Services.AddCors(options =>
               .AllowAnyOrigin();
     });
 });
-
 
 var app = builder.Build();
 
@@ -136,242 +133,27 @@ app.MapGet("/api/words", async (IConfiguration config) =>
   This is a simple research/demo login using username only.
   It is not production authentication yet.
 */
-app.MapPost("/api/auth/register", async (
-    RegisterRequest request,
-    IConfiguration config) =>
+app.MapPost("/api/auth/login", async (LoginRequest request, IConfiguration config) =>
 {
-    var username = request.Username?.Trim() ?? "";
-    var email = request.Email?.Trim().ToLowerInvariant() ?? "";
-    var password = request.Password ?? "";
-
-    if (username.Length < 3 || username.Length > 100)
+    if (string.IsNullOrWhiteSpace(request.Username))
     {
         return Results.BadRequest(new
         {
             success = false,
-            message = "Username must contain between 3 and 100 characters."
-        });
-    }
-
-    if (email.Length == 0 || email.Length > 255)
-    {
-        return Results.BadRequest(new
-        {
-            success = false,
-            message = "A valid email address is required."
+            message = "Username is required."
         });
     }
 
     try
     {
-        _ = new MailAddress(email);
-    }
-    catch (FormatException)
-    {
-        return Results.BadRequest(new
-        {
-            success = false,
-            message = "Please enter a valid email address."
-        });
-    }
+        var connectionString = config.GetConnectionString("StarWordsDb");
 
-    if (password.Length < 8 || password.Length > 100)
-    {
-        return Results.BadRequest(new
-        {
-            success = false,
-            message = "Password must contain between 8 and 100 characters."
-        });
-    }
-
-    try
-    {
-        var connectionString =
-            config.GetConnectionString("StarWordsDb");
-
-        await using var connection =
-            new SqlConnection(connectionString);
-
-        await connection.OpenAsync();
-
-        var existingCommand = new SqlCommand(
-            """
-            SELECT
-                CASE
-                    WHEN EXISTS
-                    (
-                        SELECT 1
-                        FROM dbo.Students
-                        WHERE Username = @Username
-                    )
-                    THEN 'username'
-
-                    WHEN EXISTS
-                    (
-                        SELECT 1
-                        FROM dbo.Students
-                        WHERE Email = @Email
-                    )
-                    THEN 'email'
-
-                    ELSE NULL
-                END;
-            """,
-            connection
-        );
-
-        existingCommand.Parameters.Add(
-            "@Username",
-            System.Data.SqlDbType.NVarChar,
-            100
-        ).Value = username;
-
-        existingCommand.Parameters.Add(
-            "@Email",
-            System.Data.SqlDbType.NVarChar,
-            255
-        ).Value = email;
-
-        var existingValue =
-            await existingCommand.ExecuteScalarAsync();
-
-        var existingField =
-            existingValue == null ||
-            existingValue == DBNull.Value
-                ? null
-                : Convert.ToString(existingValue);
-
-        if (existingField == "username")
-        {
-            return Results.Conflict(new
-            {
-                success = false,
-                message = "That username is already registered."
-            });
-        }
-
-        if (existingField == "email")
-        {
-            return Results.Conflict(new
-            {
-                success = false,
-                message = "That email address is already registered."
-            });
-        }
-
-        var passwordHasher =
-            new PasswordHasher<string>();
-
-        var passwordHash =
-            passwordHasher.HashPassword(username, password);
-
-        var insertCommand = new SqlCommand(
-            """
-            INSERT INTO dbo.Students
-            (
-                Username,
-                Email,
-                PasswordHash,
-                IsActive
-            )
-            OUTPUT INSERTED.StudentId
-            VALUES
-            (
-                @Username,
-                @Email,
-                @PasswordHash,
-                1
-            );
-            """,
-            connection
-        );
-
-        insertCommand.Parameters.Add(
-            "@Username",
-            System.Data.SqlDbType.NVarChar,
-            100
-        ).Value = username;
-
-        insertCommand.Parameters.Add(
-            "@Email",
-            System.Data.SqlDbType.NVarChar,
-            255
-        ).Value = email;
-
-        insertCommand.Parameters.Add(
-            "@PasswordHash",
-            System.Data.SqlDbType.NVarChar,
-            255
-        ).Value = passwordHash;
-
-        var result =
-            await insertCommand.ExecuteScalarAsync();
-
-        var studentId = Convert.ToInt32(result);
-
-        return Results.Created(
-            "/api/auth/login",
-            new
-            {
-                success = true,
-                studentId,
-                username,
-                email,
-                message = "Your rebel account was created."
-            }
-        );
-    }
-    catch (SqlException ex)
-        when (ex.Number == 2601 || ex.Number == 2627)
-    {
-        return Results.Conflict(new
-        {
-            success = false,
-            message = "That username or email is already registered."
-        });
-    }
-    catch (Exception ex)
-    {
-        return Results.Problem(
-            title: "Registration failed",
-            detail: ex.Message
-        );
-    }
-});
-app.MapPost("/api/auth/login", async (
-    LoginRequest request,
-    IConfiguration config) =>
-{
-    var username = request.Username?.Trim() ?? "";
-    var password = request.Password ?? "";
-
-    if (string.IsNullOrWhiteSpace(username) ||
-        string.IsNullOrWhiteSpace(password))
-    {
-        return Results.BadRequest(new
-        {
-            success = false,
-            message = "Username and password are required."
-        });
-    }
-
-    try
-    {
-        var connectionString =
-            config.GetConnectionString("StarWordsDb");
-
-        await using var connection =
-            new SqlConnection(connectionString);
-
+        await using var connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
 
         var command = new SqlCommand(
             """
-            SELECT
-                StudentId,
-                Username,
-                Email,
-                PasswordHash
+            SELECT StudentId, Username, Email
             FROM dbo.Students
             WHERE Username = @Username
               AND IsActive = 1;
@@ -379,51 +161,31 @@ app.MapPost("/api/auth/login", async (
             connection
         );
 
-        command.Parameters.Add(
-            "@Username",
-            System.Data.SqlDbType.NVarChar,
-            100
-        ).Value = username;
+        command.Parameters.AddWithValue("@Username", request.Username);
 
-        await using var reader =
-            await command.ExecuteReaderAsync();
+        await using var reader = await command.ExecuteReaderAsync();
 
         if (!await reader.ReadAsync())
         {
-            return Results.Unauthorized();
+            return Results.NotFound(new
+            {
+                success = false,
+                message = "Student not found or inactive."
+            });
         }
 
         var studentId = reader.GetInt32(0);
-        var storedUsername = reader.GetString(1);
-        var email =
-            reader.IsDBNull(2) ? "" : reader.GetString(2);
-
-        var passwordHash =
-            reader.IsDBNull(3) ? "" : reader.GetString(3);
+        var username = reader.GetString(1);
+        var email = reader.IsDBNull(2) ? "" : reader.GetString(2);
 
         await reader.CloseAsync();
 
-        if (string.IsNullOrWhiteSpace(passwordHash))
-        {
-            return Results.Unauthorized();
-        }
-
-        var passwordHasher =
-            new PasswordHasher<string>();
-
-        var verificationResult =
-            passwordHasher.VerifyHashedPassword(
-                storedUsername,
-                passwordHash,
-                password
-            );
-
-        if (verificationResult ==
-            PasswordVerificationResult.Failed)
-        {
-            return Results.Unauthorized();
-        }
-
+        /*
+          CI/CD RESEARCH CHANGE:
+          Update LastLoginAt after successful login.
+          This gives your database-backed login a visible data change,
+          which is useful evidence for your research screenshots and testing.
+        */
         var updateCommand = new SqlCommand(
             """
             UPDATE dbo.Students
@@ -433,29 +195,26 @@ app.MapPost("/api/auth/login", async (
             connection
         );
 
-        updateCommand.Parameters.Add(
-            "@StudentId",
-            System.Data.SqlDbType.Int
-        ).Value = studentId;
-
+        updateCommand.Parameters.AddWithValue("@StudentId", studentId);
         await updateCommand.ExecuteNonQueryAsync();
 
         return Results.Ok(new
         {
             success = true,
-            studentId,
-            username = storedUsername,
-            email
+            studentId = studentId,
+            username = username,
+            email = email
         });
     }
     catch (Exception ex)
     {
         return Results.Problem(
-            title: "Login failed",
+            title: "Login failed because the API could not query SQL Server",
             detail: ex.Message
         );
     }
 });
+
 /*
   CI/CD RESEARCH CHANGE:
   app.Run() must stay after all app.MapGet/app.MapPost endpoint definitions.
@@ -469,5 +228,4 @@ app.Run();
   Example request body:
   { "username": "test_student_1" }
 */
-record LoginRequest(string Username, string Password);
-record RegisterRequest(string Username, string Email, string Password);
+record LoginRequest(string Username);

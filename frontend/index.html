@@ -219,13 +219,15 @@
 
   <!-- ACTION BUTTONS -->
   <div class="buttons">
-     <button id="show-login-button" type="button">
-  Start Mission
-</button>
+    <a class="sw-btn" href="mission/mission-1/index.html">Start Mission</a>
 
-<a class="sw-btn" href="register.html">
-  Join the Rebellion
-</a> 
+    <!--
+      CI/CD RESEARCH CHANGE:
+      Added "Join the Rebellion" as a second path.
+      "Start Mission" keeps the original guest/static path.
+      "Join the Rebellion" starts the new database-backed login path.
+    -->
+    <button id="show-login-button" type="button">Join the Rebellion</button>
   </div>
 
   <!--
@@ -234,21 +236,14 @@
     This lets the frontend call the IIS-hosted API login endpoint and prove SQL Server connectivity.
   -->
   <section id="login-panel" class="login-panel hidden">
-    <h2>Rebel Login</h2>
+    <h2>Join the Rebellion</h2>
     <p class="login-subtitle">
-      Enter your rebel username and password to continue your Korean training.
+      Enter your rebel username to continue your Korean training.
     </p>
 
     <label for="username">Username</label>
-    <input id="username" type="text" placeholder="Enter your username" autocomplete="username" />
-    <label for="login-password">Password</label>
+    <input id="username" type="text" value="test_student_1" autocomplete="username" />
 
-    <input
-      id="login-password"
-      type="password"
-      autocomplete="current-password"
-      required
-    />
     <br />
 
     <button id="login-button" type="button">Enter Base</button>
@@ -268,14 +263,13 @@
       This connects the frontend to the API hosted at localhost:8080.
       Later, this can be changed to an AWS EC2/IIS URL for the cloud comparison.
     */
-    const API_BASE_URL = "http://localhost:5270";
+    const API_BASE_URL = "http://localhost:8080";
 
     const showLoginButton = document.getElementById("show-login-button");
     const loginPanel = document.getElementById("login-panel");
     const loginButton = document.getElementById("login-button");
     const loginMessage = document.getElementById("login-message");
     const usernameInput = document.getElementById("username");
-    const passwordInput = document.getElementById("login-password");
 
     /*
       CI/CD RESEARCH CHANGE:
@@ -308,72 +302,57 @@
       index.html -> IIS API -> SQL Server Express -> Students table.
     */
     loginButton.addEventListener("click", async () => {
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value;
+      const username = usernameInput.value.trim();
 
-  if (!username || !password) {
-    loginMessage.textContent =
-      "Please enter your username and password.";
-
-    return;
-  }
-
-  try {
-    loginMessage.textContent =
-      "Contacting the rebel base...";
-
-    const response = await fetch(
-      `${API_BASE_URL}/api/auth/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username,
-          password
-        })
+      if (!username) {
+        loginMessage.textContent = "Please enter your rebel username.";
+        return;
       }
-    );
 
-    const responseText = await response.text();
+      try {
+        loginMessage.textContent = "Contacting the rebel base...";
 
-    const data = responseText
-      ? JSON.parse(responseText)
-      : {};
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username: username })
+        });
 
-    if (!response.ok || !data.success) {
-      loginMessage.textContent =
-        data.message || "Invalid username or password.";
+        const data = await response.json();
 
-      return;
-    }
+        if (!response.ok || !data.success) {
+          loginMessage.textContent = data.message || "Login failed.";
+          return;
+        }
 
-    localStorage.setItem(
-      "studentId",
-      data.studentId
-    );
+        /*
+          CI/CD RESEARCH CHANGE:
+          Stores the logged-in student identity in browser localStorage.
+          This allows later pages, such as mission pages or progress pages,
+          to know which student is using the app.
+        */
+        localStorage.setItem("studentId", data.studentId);
+        localStorage.setItem("username", data.username);
 
-    localStorage.setItem(
-      "username",
-      data.username
-    );
+        loginMessage.textContent = `Welcome, ${data.username}. The Force is with you.`;
 
-    loginMessage.textContent =
-      `Welcome, ${data.username}. The Force is with you.`;
+        /*
+          CI/CD RESEARCH CHANGE:
+          Redirects the authenticated student to Mission 1 after successful login.
+          This keeps the app experience close to the original Start Mission path,
+          but now with a database-backed student identity.
+        */
+        setTimeout(() => {
+          window.location.href = "mission/mission-1/index.html";
+        }, 1200);
 
-    setTimeout(() => {
-      window.location.href =
-        "mission/mission-1/index.html";
-    }, 1200);
-  }
-  catch (error) {
-    loginMessage.textContent =
-      "Could not connect to the rebel base API.";
-
-    console.error(error);
-  }
-});
+      } catch (error) {
+        loginMessage.textContent = "Could not connect to the rebel base API.";
+        console.error(error);
+      }
+    });
   </script>
 
 </body>
