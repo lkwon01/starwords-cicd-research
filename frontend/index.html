@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Star Words: The Hangul Force</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: #feda4a;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 10px 20px;
+    }
+
+    header h1 {
+      font-size: 3em;
+      font-weight: bold;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .star-wars {
+      flex: 1;
+      position: relative;
+      height: 60vh;
+      overflow: hidden;
+      perspective: 400px;
+    }
+
+    .crawl {
+      position: absolute;
+      top: 100%;
+      width: 70%;
+      max-width: 800px;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      text-align: justify;
+      transform: rotateX(25deg);
+      transform-origin: 50% 100%;
+      animation: crawl 50s linear infinite;
+    }
+
+    @keyframes crawl {
+      0%   { top: 100%; }
+      100% { top: -300%; }
+    }
+
+    .buttons {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    /*
+      CI/CD RESEARCH CHANGE:
+      Extended the existing button styling so both the mission link and the new login button
+      use the same Star Words visual style. This keeps the UI consistent while adding
+      database-backed login functionality.
+    */
+    .buttons a,
+    .buttons button,
+    .login-panel button {
+      display: inline-block;
+      background-color: #feda4a;
+      color: black;
+      font-size: 1.2rem;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .buttons a:hover,
+    .buttons button:hover,
+    .login-panel button:hover {
+      background-color: #ffe870;
+      transform: translateY(-1px);
+    }
+
+    /*
+      CI/CD RESEARCH CHANGE:
+      Added a hidden login panel for the "Join the Rebellion" workflow.
+      This supports the research goal of showing a database-backed application flow:
+      frontend -> IIS API -> SQL Server.
+    */
+    .login-panel {
+      width: min(420px, 88%);
+      margin: 0 auto 32px;
+      padding: 22px;
+      border: 1px solid #feda4a;
+      border-radius: 10px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.9);
+      box-shadow: 0 0 18px rgba(254, 218, 74, 0.25);
+    }
+
+    .login-panel h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.6rem;
+    }
+
+    .login-panel p {
+      margin: 10px 0;
+    }
+
+    .login-subtitle {
+      font-style: italic;
+      color: #ffe870;
+    }
+
+    .login-panel label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    .login-panel input {
+      width: 90%;
+      max-width: 300px;
+      padding: 12px;
+      border-radius: 5px;
+      border: 1px solid #feda4a;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    #login-message {
+      min-height: 24px;
+      font-weight: bold;
+    }
+
+    /*
+      CI/CD RESEARCH CHANGE:
+      The login panel is hidden by default and only appears when the user clicks
+      "Join the Rebellion." This preserves the original landing page experience.
+    */
+    .hidden {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      padding: 10px 0;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 24px 10px 12px;
+      }
+
+      header h1 {
+        font-size: 2.2em;
+      }
+
+      .star-wars {
+        height: 38vh;
+        min-height: 240px;
+      }
+
+      .crawl {
+        width: 86%;
+        font-size: 0.95rem;
+      }
+
+      .buttons {
+        padding: 18px 10px 24px;
+      }
+
+      .buttons a,
+      .buttons button,
+      .login-panel button {
+        width: min(280px, 100%);
+        font-size: 1.05rem;
+        padding: 12px 18px;
+        margin: 6px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGO -->
+  <header>
+    <h1>STAR<br>WORDS</h1>
+  </header>
+
+  <!-- STAR WARS CRAWL -->
+  <div class="star-wars">
+    <div class="crawl">
+      <p>🌠 <strong>Backstory</strong></p>
+      <p>
+        A long time ago, in a galaxy filled with silenced voices, the ancient language of Hangul was nearly forgotten across the stars.
+        A powerful Empire known as The Grammar Order suppressed free speech and erased cultural knowledge.
+      </p>
+      <p>
+        But a small group of rebels discovered ancient scrolls containing the secrets of Hangul.
+        You are one of them — a young Padawan of language, chosen by the Hangul Force.
+      </p>
+      <p>
+        Your mission: restore language, defeat confusion, and bring clarity to the galaxy… one Hangul word at a time.
+      </p>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="buttons">
+     <button id="show-login-button" type="button">
+  Start Mission
+</button>
+
+<a class="sw-btn" href="register.html">
+  Join the Rebellion
+</a> 
+  </div>
+
+  <!--
+    CI/CD RESEARCH CHANGE:
+    Added a hidden login panel that appears only after the user clicks "Join the Rebellion."
+    This lets the frontend call the IIS-hosted API login endpoint and prove SQL Server connectivity.
+  -->
+  <section id="login-panel" class="login-panel hidden">
+    <h2>Rebel Login</h2>
+    <p class="login-subtitle">
+      Enter your rebel username and password to continue your Korean training.
+    </p>
+
+    <label for="username">Username</label>
+    <input id="username" type="text" placeholder="Enter your username" autocomplete="username" />
+    <label for="login-password">Password</label>
+
+    <input
+      id="login-password"
+      type="password"
+      autocomplete="current-password"
+      required
+    />
+    <br />
+
+    <button id="login-button" type="button">Enter Base</button>
+
+    <p id="login-message"></p>
+  </section>
+
+  <!-- COPYRIGHT -->
+  <footer>
+    &copy; 2025 Star Words. All rights reserved.
+  </footer>
+
+  <script>
+    /*
+      CI/CD RESEARCH CHANGE:
+      Added API base URL for the local IIS-hosted backend.
+      This connects the frontend to the API hosted at localhost:8080.
+      Later, this can be changed to an AWS EC2/IIS URL for the cloud comparison.
+    */
+    const API_BASE_URL = "http://localhost:5270";
+
+    const showLoginButton = document.getElementById("show-login-button");
+    const loginPanel = document.getElementById("login-panel");
+    const loginButton = document.getElementById("login-button");
+    const loginMessage = document.getElementById("login-message");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("login-password");
+
+    /*
+      CI/CD RESEARCH CHANGE:
+      Shows the login panel only when the user chooses the database-backed path.
+    */
+    showLoginButton.addEventListener("click", () => {
+      loginPanel.classList.remove("hidden");
+      loginMessage.textContent = "";
+      usernameInput.focus();
+    });
+
+    /*
+      CI/CD RESEARCH CHANGE:
+      Allows the user to press Enter instead of clicking the button.
+      This improves usability without changing the backend behavior.
+    */
+    usernameInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        loginButton.click();
+      }
+    });
+
+    /*
+      CI/CD RESEARCH CHANGE:
+      Calls the new backend API endpoint:
+      POST /api/auth/login
+
+      Research purpose:
+      This proves the full local simulated enterprise path:
+      index.html -> IIS API -> SQL Server Express -> Students table.
+    */
+    loginButton.addEventListener("click", async () => {
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!username || !password) {
+    loginMessage.textContent =
+      "Please enter your username and password.";
+
+    return;
+  }
+
+  try {
+    loginMessage.textContent =
+      "Contacting the rebel base...";
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username,
+          password
+        })
+      }
+    );
+
+    const responseText = await response.text();
+
+    const data = responseText
+      ? JSON.parse(responseText)
+      : {};
+
+    if (!response.ok || !data.success) {
+      loginMessage.textContent =
+        data.message || "Invalid username or password.";
+
+      return;
+    }
+
+    localStorage.setItem(
+      "studentId",
+      data.studentId
+    );
+
+    localStorage.setItem(
+      "username",
+      data.username
+    );
+
+    loginMessage.textContent =
+      `Welcome, ${data.username}. The Force is with you.`;
+
+    setTimeout(() => {
+      window.location.href =
+        "mission/mission-1/index.html";
+    }, 1200);
+  }
+  catch (error) {
+    loginMessage.textContent =
+      "Could not connect to the rebel base API.";
+
+    console.error(error);
+  }
+});
+  </script>
+
+</body>
+</html>

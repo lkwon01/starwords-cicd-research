@@ -1,0 +1,1 @@
+trial_id,method,started_at,ended_at,duration_seconds,success,recovered_at,recovery_seconds,manual_interventions,smoke_test_failures,feature_version,environment_state,notes

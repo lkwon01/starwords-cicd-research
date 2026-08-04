@@ -1,28 +1,34 @@
-# Python
+# Terraform local state
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform.lock.hcl
+.env
 __pycache__/
 *.pyc
-.venv/
-venv/
+video_generator/output/
 
-# Environment and secrets
-.env
-*.pem
-*.key
-credentials*
-aws-credentials*
-config.local*
+# Terraform crash logs
+crash.log
+crash.*.log
 
-# OS/editor files
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+# Terraform variable files (often contain secrets)
+*.tfvars
+*.tfvars.json
 
-# Microsoft Office temporary files
-~$*.docx
-~$*.pptx
-~$*.xlsx
+# CLI config
+.terraformrc
+terraform.rc
 
-# Temporary output
-tmp/
-temp/
+# .NET build output
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# publish output
+publish/
+backend/StarWords.Api/login.json
+actions-runner/
