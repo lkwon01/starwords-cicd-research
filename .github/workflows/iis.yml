@@ -1,0 +1,157 @@
+name: Deploy Star Words API to IIS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Record deployment start
+        shell: powershell
+        run: |
+         $startedAt = [DateTimeOffset]::UtcNow
+          "DEPLOY_STARTED_AT=$($startedAt.ToString('o'))" |
+            Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+          Write-Host "Deployment started at: $startedAt"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: verify .NET
+        shell: powershell
+        run: |
+          dotnet --info
+          dotnet --version
+
+
+      - name: Restore dependencies
+        run: dotnet restore backend/StarWords.Api/StarWords.Api.csproj
+
+      - name: Build application
+        run: dotnet build backend/StarWords.Api/StarWords.Api.csproj --configuration Release --no-restore
+
+      - name: Publish application
+        run: dotnet publish backend/StarWords.Api/StarWords.Api.csproj --configuration Release --no-build --output "${{ runner.temp }}\starwords-publish"
+
+      - name: Deploy to IIS
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          Import-Module WebAdministration
+
+          $source = "${{ runner.temp }}\starwords-publish"
+          $destination = "E:\starwords\publish\starwords.api"
+
+          $poolState = (Get-WebAppPoolState -Name "StarWordsApi").Value
+          Write-Host "Current application pool state: $poolState"
+
+          if ($poolState -eq "Started") {
+              Write-Host "Stopping IIS application pool: StarWordsApi"
+              Stop-WebAppPool -Name "StarWordsApi"
+          }
+          else {
+              Write-Host "Application pool is already stopped."
+          }
+
+          try {
+              Write-Host "Copying published files to IIS..."
+
+              robocopy $source $destination /MIR
+              $robocopyExitCode = $LASTEXITCODE
+
+              if ($robocopyExitCode -ge 8) {
+                  throw "Robocopy failed with exit code $robocopyExitCode"
+              }
+
+              Write-Host "Robocopy succeeded with exit code $robocopyExitCode"
+
+              # Robocopy exit codes 0–7 indicate success.
+              $global:LASTEXITCODE = 0
+          }
+          finally {
+              $poolState = (Get-WebAppPoolState -Name "StarWordsApi").Value
+
+              if ($poolState -ne "Started") {
+                  Write-Host "Starting IIS application pool: StarWordsApi"
+                  Start-WebAppPool -Name "StarWordsApi"
+              }
+              else {
+                  Write-Host "Application pool is already running."
+              }
+          }
+
+          Write-Host "IIS deployment completed successfully."
+      - name: Wait for API
+        shell: powershell
+        run: Start-Sleep -Seconds 5
+
+      - name: Run smoke test
+        shell: powershell
+        run: |
+          $response = Invoke-WebRequest `
+            -Uri "http://localhost:5270/" `
+            -UseBasicParsing
+
+          if ($response.StatusCode -ne 200) {
+              throw "Smoke test failed. Status: $($response.StatusCode)"
+          }
+
+          if ($response.Content -notmatch "Star Words API is running") {
+              throw "Smoke test failed: expected API message was not found."
+          }
+
+          Write-Host "Smoke test passed."
+          Write-Host $response.Content
+
+              
+      - name: Record deployment result
+        if: always()
+        shell: powershell
+        run: |
+          $endedAt = [DateTimeOffset]::UtcNow
+          $startedAt = [DateTimeOffset]::Parse($env:DEPLOY_STARTED_AT)
+          $durationSeconds = ($endedAt - $startedAt).TotalSeconds
+
+          $jobStatus = "${{ job.status }}"
+          $success = $jobStatus -eq "success"
+
+          $resultsFolder = "E:\deployment-metrics"
+          $resultsFile = Join-Path $resultsFolder "deployment_trials.csv"
+
+          New-Item `
+            -ItemType Directory `
+            -Path $resultsFolder `
+            -Force | Out-Null
+
+          $result = [PSCustomObject]@{
+              trial_id            = "${{ github.run_id }}-${{ github.run_attempt }}"
+              method              = "automated"
+              started_at = $startedAt.ToString("o")
+              ended_at   = $endedAt.ToString("o")
+              duration_seconds    = [Math]::Round($durationSeconds, 2)
+              success             = $success.ToString().ToLower()
+              recovered_at        = ""
+              manual_interventions = 0
+              smoke_test_failures = $(if ($success) { 0 } else { 1 })
+              feature_version     = "${{ github.sha }}"
+              environment_state   = "standard-baseline"
+              notes               = $jobStatus
+          }
+
+          $result | Export-Csv `
+            -Path $resultsFile `
+            -Append `
+            -NoTypeInformation
+
+          Write-Host "Deployment ended at: $($endedAt.ToString('o'))"
+          Write-Host "Duration: $([Math]::Round($durationSeconds, 2)) seconds"
+          Write-Host "First-attempt success: $success"
+          Write-Host "Results saved to: $resultsFile"
+
+          "## Deployment measurement" >> $env:GITHUB_STEP_SUMMARY
+          "- Duration: $([Math]::Round($durationSeconds, 2)) seconds" >> $env:GITHUB_STEP_SUMMARY
+          "- First-attempt success: $success" >> $env:GITHUB_STEP_SUMMARY
+          "- Commit: ${{ github.sha }}" >> $env:GITHUB_STEP_SUMMARY

@@ -1,0 +1,36 @@
+name: Deploy Frontend DEV
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  push:
+    branches: [ "main", "restructure-project" ]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/deploy-frontend-dev.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::308705121669:role/GitHubActionDeployDev
+          aws-region: us-east-1
+
+      - name: Sync frontend to S3 (DEV)
+        run: |
+          aws s3 sync frontend/ s3://starwords-dev-laura-20251226 --delete
+
+      - name: Invalidate CloudFront (DEV)
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id EN8HM6X3I0LOK \
+            --paths "/*"
