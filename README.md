@@ -1,234 +1,83 @@
-# StarWords Korean
+# Star Words CI/CD Research
 
-StarWords Korean is a cloud-hosted Korean language learning web application designed to make beginner Korean practice more interactive, mission-based, and engaging.
+## Project Title
 
-The project combines language learning, AI-assisted content, cloud deployment, infrastructure automation, and CI/CD practices. It is being developed as both a learning platform and a technical portfolio project focused on cloud-native application design.
-
-## Live Site
-
-- Production: https://starwordskorean.com
-- Development: https://dev.starwordskorean.com
+Measuring the Efficiency of CI/CD Pipeline Automation for Cloud Application Deployment: A Case Study Using the Star Words Application
 
 ## Project Overview
 
-StarWords Korean is designed for beginner Korean learners, heritage learners, and students who want a more engaging way to practice vocabulary, phrases, and short missions.
+This repository contains the research materials for a supervised cloud and DevOps research project focused on measuring the efficiency of CI/CD pipeline automation.
 
-The long-term vision is to create a game-inspired Korean learning platform where users can complete missions, review vocabulary, hear Korean pronunciation, and track progress over time.
+The project uses the Star Words Korean learning application as a case study to compare manual deployment with automated CI/CD deployment. The research focuses on deployment time, number of manual steps, repeatability, validation, reliability, operational effort, and basic security checks.
 
-## Key Features
+## Application Environments
 
-Current and planned features include:
+* Production environment: `https://starwordskorean.com`
+* Development environment: `https://dev.starworkdskorean.com`
 
-- Beginner Korean learning missions
-- Vocabulary and phrase practice
-- Interactive lesson content
-- Korean language learning pages
-- Frontend hosted through AWS S3 and CloudFront
-- Development and production deployment environments
-- Backend API planning with AWS Lambda and API Gateway
-- Progress tracking design using DynamoDB
-- Infrastructure-as-Code using Terraform
-- Automated deployment using GitHub Actions
+The development environment will be used for CI/CD testing before promotion to production.
 
-## Technical Highlights
+## Research Question
 
-This project demonstrates hands-on experience with:
+How does an automated CI/CD pipeline improve the efficiency, reliability, and repeatability of deploying a cloud-hosted web application compared with a manual deployment process?
 
-- Static website hosting on AWS S3
-- CloudFront CDN distribution
-- Custom domain routing
-- HTTPS/TLS certificate setup
-- GitHub Actions CI/CD workflow
-- AWS IAM permissions and least-privilege deployment roles
-- Terraform infrastructure planning
-- Serverless backend architecture
-- Frontend/backend project organization
-- Dev and production environment separation
-- Local video lesson generation for short-form Korean content
+## Research Objectives
 
-## Tech Stack
-
-### Frontend
-
-- HTML
-- CSS
-- JavaScript
-- Static website architecture
-
-### Backend
-
-- Python
-- AWS Lambda
-- API Gateway
-- DynamoDB
-
-### Cloud and DevOps
-
-- AWS S3
-- AWS CloudFront
-- AWS IAM
-- AWS Route 53 / DNS
-- AWS Certificate Manager
-- Terraform
-- GitHub Actions
-- CI/CD deployment pipelines
+1. Document the manual deployment workflow for Star Words.
+2. Build or improve a CI/CD deployment pipeline.
+3. Use Python scripts to validate deployments and collect measurable results.
+4. Compare manual deployment and automated deployment using defined metrics.
+5. Analyze deployment time, manual effort, repeatability, validation, and reliability.
+6. Produce a final report and presentation of findings.
 
 ## Repository Structure
 
 ```text
-StarWords/
-│
-├── .github/
-│   └── workflows/
-│       └── GitHub Actions deployment workflows
-│
-├── backend/
-│   └── Backend API and serverless application code
-│
-├── content/
-│   └── Lesson and learning content
-│
-├── frontend/
-│   └── Frontend website files
-│
-├── infra/
-│   └── Terraform infrastructure files
-│
-├── video_generator/
-│   └── Python tool for generating lesson videos locally
-│
-├── .gitignore
-├── main.py
-└── README.md
+starwords-cicd-research/
+├── proposal/           # Research proposal drafts and final proposal
+├── experiment-plan/    # Metrics, test plan, and experiment design
+├── data/               # CSV or JSON files from deployment tests
+├── scripts/            # Python scripts for analysis and reporting
+├── charts/             # Generated charts and visual results
+├── final-report/       # Final research paper/report
+├── presentation/       # Slides for supervisor, UVA, or work presentation
+├── screenshots/        # Pipeline screenshots and deployment evidence
+└── docs/               # Supporting notes and documentation
 ```
 
-## Video Generator
+## Planned Metrics
 
-The `video_generator` folder contains a Python-based local workflow for turning a lesson JSON file into:
+The project will compare manual deployment and CI/CD deployment using metrics such as:
 
-- a Shorts-style script
-- narration audio
-- slide visuals
-- SRT captions
-- a final MP4
+* Total deployment time
+* Number of manual steps
+* Number of manual error points
+* Deployment success rate
+* Post-deployment validation results
+* Application availability after deployment
+* Response time after deployment
+* Basic security validation
+* Estimated operational effort saved
 
-See `video_generator/README.md` for setup and usage.
+## Python Script Plan
 
-## Cloud Architecture
+Planned Python scripts may include:
 
-StarWords Korean uses a cloud-native architecture designed for scalability, low maintenance, and secure deployment.
+* `deployment_timer.py`
+* `availability_checker.py`
+* `post_deploy_validator.py`
+* `latency_checker.py`
+* `security_header_checker.py`
+* `cost_time_calculator.py`
+* `report_generator.py`
 
-```text
-User
- │
- ▼
-CloudFront CDN
- │
- ▼
-S3 Static Website Frontend
- │
- ▼
-API Gateway
- │
- ▼
-AWS Lambda
- │
- ▼
-DynamoDB
-```
+## Expected Deliverables
 
-## CI/CD Workflow
-
-The project uses GitHub Actions to automate deployment.
-
-Planned deployment flow:
-
-```text
-Push to GitHub
-      │
-      ▼
-GitHub Actions Workflow
-      │
-      ▼
-Assume AWS IAM Role using OIDC
-      │
-      ▼
-Deploy frontend files to S3
-      │
-      ▼
-Create CloudFront invalidation
-      │
-      ▼
-Updated site is available online
-```
-
-This demonstrates a real-world DevOps workflow using source control, automated deployment, AWS permissions, and environment-based release management.
-
-## Infrastructure as Code
-
-The `infra` folder contains Terraform configuration for managing cloud resources.
-
-Infrastructure-as-Code helps make the project:
-
-- Repeatable
-- Documented
-- Easier to maintain
-- Safer to update
-- More aligned with professional cloud engineering practices
-
-## Security Practices
-
-Security considerations in this project include:
-
-- HTTPS with AWS Certificate Manager
-- CloudFront in front of the frontend application
-- IAM roles for GitHub Actions deployment
-- OIDC authentication instead of long-term AWS access keys
-- Separation between development and production environments
-- Least-privilege permissions for deployment workflows
-
-## Why I Built This Project
-
-I built StarWords Korean to combine my interests in language learning, cloud engineering, automation, and software development.
-
-The project allows me to practice real-world platform engineering skills, including:
-
-- Designing a cloud-hosted application
-- Building CI/CD deployment workflows
-- Managing AWS infrastructure
-- Organizing frontend, backend, and infrastructure code
-- Thinking about scalability, security, and maintainability
-- Applying software engineering concepts to a meaningful product
-
-## Research and Portfolio Focus
-
-StarWords Korean is also being used as a platform for studying cloud-native application design.
-
-Areas of focus include:
-
-- Cloud vs. traditional hosting tradeoffs
-- Serverless architecture benefits
-- Deployment automation
-- Infrastructure reliability
-- Performance through CDN caching
-- Security improvements through managed cloud services
-- Operational efficiency using managed AWS services
-
-## Future Improvements
-
-Planned improvements include:
-
-- Add user progress tracking
-- Add DynamoDB-backed lesson completion records
-- Expand backend API functionality
-- Add Korean text-to-speech support
-- Add more interactive missions
-- Improve UI/UX for younger learners
-- Add observability with CloudWatch metrics and logs
-- Add automated testing before deployment
-- Improve Terraform environment separation
-- Add screenshots and architecture diagrams
-
-
-
-
+* Research proposal
+* Manual deployment baseline
+* CI/CD deployment workflow
+* Python validation scripts
+* Deployment test data
+* Charts and comparison tables
+* Final report
+* Presentation slides
